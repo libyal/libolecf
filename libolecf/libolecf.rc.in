@@ -28,7 +28,7 @@ BEGIN
       VALUE "OriginalFilename",		"libolecf.dll\0"
       VALUE "ProductName",		"libolecf\0"
       VALUE "ProductVersion",		"@VERSION@" "\0"
-      VALUE "Comments",			"For more information visit http://code.google.com/p/libolecf/\0"
+      VALUE "Comments",			"For more information visit https://github.com/libyal/libolecf/\0"
     END
   END
   BLOCK "VarFileInfo"
