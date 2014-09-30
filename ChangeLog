@@ -1,0 +1,497 @@
+TODO
+* add support for variant type and multi variant type
+* double check format bounds checks
+* add API support for property types
+  - property values allow to set ascii codepage
+  - add multi values support e.g. 0x101e
+* use libfvalue table for property values in a property set section?
+* fix: info_handle_document_summary_information_fprint: unable to read property set stream
+* libolecf:
+  - restrict stream functions to stream directory types
+  - add stream read random
+  - libolecf_stream_read_buffer change uint8_t* to void* ?
+  - fill unallocated_block_list
+* pyolecf:
+  - add format version function
+  - property values allow to set ascii codepage
+  - add stream read random
+  - pyolecf_property_value add functions
+  - fix pyolecf_property_value get data function
+  - add data_as_integer (allow filetime)
+  - add data_as_string 
+  - add more definitions types
+* olecfmount:
+  - sanitize filenames
+* support files with an empty root directory entry
+* update man pages
+  - update libolecf.3
+  - correct olecfinfo.1
+  - correct olecfexport.1
+  - add olecfmount.1
+* add support for multi types (word2003 test file)
+* refactor libolecf_io_handle_read_stream into libolecf_io_handle_read_stream ?
+* olecfinfo/info handle
+  - add functions to print property streams
+* use libfdata vector to cache sectors ?
+* olecftools: check UTF16 print support
+* implement
+  - libolecf_file_get_number_of_unallocated_blocks
+  - libolecf_file_get_unallocated_block
+
+* implement stream IO
+* implement (document) summary information stream support
+  implement property set stream support
+
+* implement Workbook stream support
+  in separate library
+* implement olecf msg file support (Outlook MSG file format)
+  in separate library
+
+TEST
+* add automated tests
+* files with multi sector MSAT
+
+API
+* file io handle functions
+* file information functions
+* stream support
+* allocation data support
+* compound object support
+* property set support
+
+Library
+* clone file io handle in item
+* directory entry
+  - debug print node color description
+* property set stream
+  - implement api functions and internal structures
+  - debug print remnant and trailing data
+  - debug print property names and values
+* object stream
+  - implement api functions and internal structures
+* code clean up
+  - check for code where list functions should be used instead
+  - check for code where tree functions should be used instead
+
+TOOLS
+olecfinfo
+* print basic file data (partial)
+* print allocation data
+* print stream/directory data (partial)
+* print summary information (partial)
+* print compobj stream info
+
+DEPLOYMENT
+* update manuals
+
+20140930
+* removed README.macosx
+
+20140810
+* worked on libfwps support
+
+20140801
+* bug fix in Python-bindings
+
+20140727
+* worked on olecfmount Dokan support
+
+20140726
+* updated dependencies
+
+20140329
+* small changes to Makefile
+
+20140323
+* worked on Python bindings
+
+20140317
+* worked on setup.py
+
+20140301
+* 2014 update
+* updated dependencies
+* worked on Python bindings
+
+20131209
+* updated dependencies
+
+20131108
+* added support for 0 value sub directory entry not being used as index.
+
+20131012
+* added format version functions
+
+20131011
+* changes for non 512 sector sized files
+
+20131009
+* changes to dpkg files
+
+20131008
+* improved pyolecf as integer functions
+
+20130929
+* worked on setup.py, largely for MSI builds
+
+20120928
+* updated libfvalue and libfdatetime for filetime to integer functionality
+
+20120925
+* worked on API
+
+20120924
+* worked on pyolecf
+* updated msvscpp files
+
+20120923
+* code clean up
+* fixed memory leak in olecfexport for 0 byte streams
+
+20120918
+* worked on API
+* olecfinfo: worked on property values
+
+20120917
+* code clean up
+* worked on tests
+* olecfmount: added extended options
+* worked on API
+* olecfinfo: worked on property values
+
+20120916
+* updated dependencies
+
+20120717
+* updated dependencies
+* worked on tests
+* olecfexport: fixed .export suffix
+
+20120609
+* updated dependencies
+
+20120421
+* worked on tests
+
+20120414
+* Textual changes
+* worked on tests
+* updates and bug fixes in pyolecf
+* fixed codepage 949, 950 and 1255 restriction
+
+20120413
+* updated dependencies
+
+20120319
+* updated dependencies
+
+20130305
+* worked on libcdata integration
+* worked on libfole
+
+20130303
+* worked on PackageMaker files
+
+20130219
+* worked on python bindings
+
+20130218
+* worked on python bindings
+
+20130217
+* fixed bug introduced in libcdata update
+* worked on python bindings
+* code clean up
+* updated msvscpp files
+* fixes in pc and spec file
+
+20130211
+* small changes
+
+20130210
+* 2013 update
+* updated olecfmount added -X
+* fixed olecfmount reading files
+* worked on libcdata changes
+* updated dependencies
+
+20121104
+* updated dependencies
+
+20120920
+* worked on libcdata changes
+
+20120919
+* updated dependencies
+
+20120607
+* olecfexport
+ - worked on moving olecf file into export handle
+* worked on using libfvalue for property values
+
+20120530
+* removed libcsystem_file_stream from export handle
+  replaced by libcfile file
+* code clean up remove item attach and detach functions
+
+20120526
+* fixes for olecfinfo requiring SummaryInformation and
+  DocumentSummaryInformation directory entries
+* updated dependencies
+* worked on olecfmount
+* added functions to retrieve item creation and modification time
+* added missing libolecf_item_get_sub_item_by_utf16_name
+
+20120523
+* updated dependencies
+* changes due to project move
+
+20120508
+* updated dependencies
+* code clean up
+
+20120503
+* fixed issue in olecfexport regarding make directory
+* applied updates
+
+20120102
+* 2012 update
+
+20111023
+* updated configure.ac and m4 scripts
+* updated README files
+* updated spec an pc file
+* updated common, array type, libsystem, libuna, libbfio, libfdatetime,
+  libfvalue
+
+20110704
+* worked on multi value support
+* added libfvalue
+
+20110703
+* changes for: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+* updated libuna, libbfio, libfdatetime
+* refactored property set reading code
+* added debug string for directory entry type
+* added codepage functionality for property set streams
+
+20110623
+* code clean up
+* updated olecfiniput.[ch]
+* added olecftools_libolecf.h
+* added libfdatetime system char support
+* worked on info handle
+
+20110622
+* updated configure.ac
+* 2011 update
+* updated common, libcstring, liberror, libnotify, libsystem,
+  libuna, libbfio, libfdatetime, libfguid, 
+* updated list type, tree type
+* added @INTLLIBS@ to olecftools Makefile.am
+* code clean up
+* added offset list
+
+20101219
+* updated array type
+* updated libsystem, libbfio
+* updated log_handle.[ch]
+* code clean up libolecf and olecftools
+
+20101218
+* worked on libcstring support
+* removed guid.[ch]
+* updated log_handle.[ch]
+* code clean up olecftools
+
+20101216
+* updated configure.ac, added gettext
+* updated include/error.h. include/types.h
+* updated array type, list type, tree type
+* updated common, liberror, libnotify, libsystem, libuna, libbfio,
+  libfdatetime
+* added libcstring, libfguid
+* worked on libcstring support
+* worked on libfguid support
+* changed amount into number
+
+20100319
+* worked on msvscpp build
+* removed MSAT and SAT out-of-range reallocation, caused segfault
+* fixed error handling short stream data
+
+20100122
+* fixed infinite loop in SSAT
+
+20100114
+* updated array type
+* updated check signature
+
+20100113
+* small changes
+* separated directory tree and entry functions
+
+20100112
+* changed directory name into copy of UTF-16 stream
+* worked on functions
+  - libolecf_item_get_utf16_name_size
+  - libolecf_item_get_utf16_name_
+  - libolecf_item_get_sub_item_by_utf8_name
+  - libolecf_item_get_sub_item_by_utf16_name
+
+20100111
+* updated common
+* worked on Word support
+* moved Word support to separate library
+* removed msvscpp and macosx directories
+* remove libolecf_analyze (empty block test)
+
+20100108
+* worked on Word support
+
+20100107
+* updated common, liberror, libuna, libbfio, libsystem
+* worked on Word support
+
+20100106
+* worked on compound object stream
+* worked on property set stream
+
+20100105
+* updated configure and acinclude with libpff version
+* updated common, liberror, libnotify, libuna, libbfio, libfdatetime, libsystem
+* 2010 update
+* removed All rights reserved
+* updated array, list and tree type
+* removed item reference list
+* libnotify update
+* endian to byte_stream update
+* local library support
+  - updated libolecf_error.[ch]
+  - updated libolecf_extern.h
+  - updated libolecf_libuna.h
+  - updated libolecf_libbfio.h
+  - updated libolecf_notify.[ch]
+  - added libolecf_codepage.h
+* libfdatetime update
+  - removed filetime.[ch]
+  - removed libolecf_filetime.[ch]
+  - added libolecf_libfdatetime.h
+* libsystem update
+  - removed date_time.[ch]
+  - removed directory_io.h
+  - removed error_string.[ch]
+  - removed file_stream_io.h
+  - removed file_io.[ch]
+  - removed glob.[ch]
+  - removed notify.[ch]
+  - removed olecfgetopt.[ch]
+  - removed olecfsignal.[ch]
+  - removed string_conversion.[ch]
+  - removed system_string.[ch]
+  - updated guid.[ch]
+  - updated log_handle.[ch]
+* worked on libbfio api functions
+* several clean up and fixes
+  - removed libolecf_property_set.[ch]
+
+20091009
+* corrections in configure
+
+20090911
+* updated libsystem
+
+20090910
+* corrections in configure
+
+20090905
+* updated liberror, libnotify, libuna, libbfio
+* added libsystem
+* updated configure.ac
+* updated spec file
+* updated guid and filetime with libfmapi versions
+
+20090810
+* worked on olecfexport
+* updated system_string, filetime and guid with libpff 20090808 versions
+* removed character_string
+* added langinfo support
+* implemented liberror usage in olecfinfo
+* removed TODO definitions from olecfinfo
+* worked on libolecf.3
+* implemented libnotify
+* updated libolecf_notify
+
+20090809
+* added m4 directory support to autoconf/make files for libtool
+* updated libuna and libbfio with libpff versions
+* added support for building static executables
+* refactored libbfio_file_initialize from libolecf_io_handle to libolecf_file
+* removed libolecf_io_handle_open_wide
+* updated liberror
+* updated common
+* updated include type definitions
+* updated libolecf_error
+* updated libolecf_support
+* moved signal abort from libolecf_support to libolecf_file
+* movedlibrary error functions from libolecf_support to libolecf_error
+
+20090618
+* updated libbfio and libuna
+* added libolecf_types
+* update libolecf for newer libbfio
+* removed debug code
+* changed ole file header to static definition
+
+20090304
+* updated libuna and libbfio with libpff versions
+* Fixed error in configure.ac
+
+20090123
+* Worked on property sets
+
+20090122
+* Worked on property sets
+
+20090121
+* Updated configure to conform to cache value naming schema
+* Updated headers
+* Updated autoconf/make for memwatch
+* Debug output is now only printed when verbose output is enabled
+* Worked on stream IO
+
+20081229
+* Worked on libbfio
+
+20081227
+* Worked on property set stream support
+
+20081225
+* Worked on property set stream support
+* Moved MSAT, SAT and SSAT to io handle
+
+20081224
+* fixed some errors in debug output
+* worked on SSAT
+
+20081221
+* Worked on basic file io library (libbfio)
+* Moved file io handle code into libbfio
+* worked on directory
+
+20081219
+* Worked on filetime string error
+
+20081218
+* worked on directory
+
+20081217
+* worked on file header
+* worked on MSAT
+* worked on SAT
+* worked on directory
+
+20081216
+* Initial version based on libpff and libole code
+* worked on file header
+

@@ -1,0 +1,52 @@
+Source: libolecf
+Section: unknown
+Priority: extra
+Maintainer: Joachim Metz <joachim.metz@gmail.com>
+Build-Depends: debhelper (>= 7), autotools-dev, libfuse-dev, python-dev
+Standards-Version: 3.8.3
+Homepage: http://code.google.com/p/libolecf/
+
+Package: libolecf
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: libolecf-dbg
+Description: Library to access the Object Linking and Embedding (OLE) Compound File (CF) format
+ libolecf is a library to access the Object Linking and Embedding (OLE) Compound File (CF) format.
+
+Package: libolecf-dbg
+Architecture: any
+Section: debug
+Depends: libolecf (= ${Source-Version}), ${misc:Depends}
+Description: Debugging symbols for libolecf
+ Debugging symbols for libolecf.
+
+Package: libolecf-dev
+Section: libdevel
+Architecture: any
+Depends: libolecf (= ${Source-Version})
+Description: Header files and libraries for developing applications for libolecf
+ Header files and libraries for developing applications for libolecf.
+
+Package: libolecf-tools
+Section: utils
+Architecture: any
+Depends: libolecf (= ${Source-Version}), ${shlibs:Depends}
+Description: Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF).
+ Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF).
+
+Package: libolecf-python
+Section: python
+Architecture: any
+Depends: libolecf (= ${Source-Version}), ${shlibs:Depends}, ${python:Depends}
+Suggests: libolecf-python-dbg
+Description: Python bindings for libolecf
+ Python bindings for libolecf.
+
+Package: libolecf-python-dbg
+Section: debug
+Architecture: any
+Depends: libolecf-python (= ${Source-Version})
+Description: Debugging symbols for libolecf-python
+ Debugging symbols for libolecf-python.
+
