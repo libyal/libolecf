@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libolecf],
- [20140930],
+ [20141004],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(

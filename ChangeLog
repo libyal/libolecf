@@ -84,6 +84,9 @@ olecfinfo
 DEPLOYMENT
 * update manuals
 
+20141004
+* bug fix in Python-bindings
+
 20140930
 * removed README.macosx
 * changes for project site move
