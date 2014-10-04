@@ -86,6 +86,7 @@ DEPLOYMENT
 
 20141004
 * bug fix in Python-bindings
+* update Python-bindings tests
 
 20140930
 * removed README.macosx
