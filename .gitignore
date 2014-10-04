@@ -101,6 +101,9 @@ stamp-h1
 /include/libolecf/types.h
 /libolecf/libolecf.rc
 /libolecf/libolecf_definitions.h
+/olecftools/olecfexport
+/olecftools/olecfinfo
+/olecftools/olecfmount
 /pyolecf/setup.py
 /tests/input
 /tests/olecf_test_open_close
