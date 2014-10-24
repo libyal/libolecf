@@ -45,6 +45,7 @@ libolecf_la_SOURCES = \
 	libolecf_libfguid.h \
 	libolecf_libfole.h \
 	libolecf_libfvalue.h \
+	libolecf_libfwps.h \
 	libolecf_libuna.h \
 	libolecf_notify.c libolecf_notify.h \
 	libolecf_ole.h \
