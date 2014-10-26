@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libfwps\libfwps_libfole.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libfwps\libfwps_libuna.h"
 				>
 			</File>

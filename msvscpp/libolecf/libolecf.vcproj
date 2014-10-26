@@ -332,6 +332,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libolecf\libolecf_libfwps.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libolecf\libolecf_libuna.h"
 				>
 			</File>
