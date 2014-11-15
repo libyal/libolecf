@@ -4,7 +4,7 @@
 # Version: 20141004
 
 GIT_URL_PREFIX="https://github.com/libyal";
-LOCAL_LIBS="libbfio libcdata libcerror libcfile libclocale libcnotify libcpath libcsplit libcstring libcsystem ibcthreads libfdatetime libfguid libfole libfvalue libfwps libuna";
+LOCAL_LIBS="libbfio libcdata libcerror libcfile libclocale libcnotify libcpath libcsplit libcstring libcsystem libcthreads libfdatetime libfguid libfole libfvalue libfwps libuna";
 
 OLDIFS=$IFS;
 IFS=" ";
@@ -85,6 +85,11 @@ SED_SCRIPT="/^$/ {
 			echo "${SED_SCRIPT}" >> ${LOCAL_LIB}-$$.sed;
 			sed -i'~' -f ${LOCAL_LIB}-$$.sed ${LOCAL_LIB}/Makefile.am;
 			rm -f ${LOCAL_LIB}-$$.sed;
+
+			if test ${LOCAL_LIB} = "libfvalue";
+			then
+				sed -i'~' '/@LIBFWNT_CPPFLAGS@/d' ${LOCAL_LIB}/Makefile.am;
+			fi
 
 			rm -f ${LOCAL_LIB}/${LOCAL_LIB}.c;
 
