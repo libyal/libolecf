@@ -317,7 +317,7 @@ on_error:
 	return( -1 );
 }
 
-#endif
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Determines if a file is a OLE compound file (CF) using a Basic File IO (bfio) handle
  * It check for the OLE compound file file signature
