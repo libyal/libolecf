@@ -103,8 +103,7 @@ int libolecf_set_codepage(
 
 #endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 
-/* Determines if a file is a OLE compound file (CF)
- * It check for the OLE compound file file signature
+/* Determines if a file contains an OLECF file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libolecf_check_file_signature(
@@ -211,8 +210,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Determines if a file is a OLE compound file (CF)
- * It check for the OLE compound file file signature
+/* Determines if a file contains an OLECF file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libolecf_check_file_signature_wide(
@@ -319,8 +317,7 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Determines if a file is a OLE compound file (CF) using a Basic File IO (bfio) handle
- * It check for the OLE compound file file signature
+/* Determines if a file contains an OLECF file signature using a Basic File IO (bfio) handle
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libolecf_check_file_signature_file_io_handle(

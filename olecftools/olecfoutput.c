@@ -24,14 +24,6 @@
 #include <memory.h>
 #include <types.h>
 
-#if defined( HAVE_STDARG_H ) || defined( WINAPI )
-#include <stdarg.h>
-#elif defined( HAVE_VARARGS_H )
-#include <varargs.h>
-#else
-#error No variable argument support available
-#endif
-
 #include "olecfoutput.h"
 #include "olecftools_libbfio.h"
 #include "olecftools_libcerror.h"

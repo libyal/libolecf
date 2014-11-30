@@ -74,8 +74,7 @@ int libolecf_set_codepage(
      int codepage,
      libolecf_error_t **error );
 
-/* Determines if a file is a OLE compound file (CF)
- * It check for the OLE compound file file signature
+/* Determines if a file contains an OLECF file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBOLECF_EXTERN \
@@ -84,26 +83,28 @@ int libolecf_check_file_signature(
      libolecf_error_t **error );
 
 #if defined( LIBOLECF_HAVE_WIDE_CHARACTER_TYPE )
-/* Determines if a file is a OLE compound file (CF)
- * It check for the OLE compound file file signature
+
+/* Determines if a file contains an OLECF file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBOLECF_EXTERN \
 int libolecf_check_file_signature_wide(
      const wchar_t *filename,
      libolecf_error_t **error );
-#endif
+
+#endif /* defined( LIBOLECF_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBOLECF_HAVE_BFIO )
-/* Determines if a file is a OLE compound file (CF) using a Basic File IO (bfio) handle
- * It check for the OLE compound file file signature
+
+/* Determines if a file contains an OLECF file signature using a Basic File IO (bfio) handle
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBOLECF_EXTERN \
 int libolecf_check_file_signature_file_io_handle(
      libbfio_handle_t *file_io_handle,
      libolecf_error_t **error );
-#endif
+
+#endif /* defined( LIBOLECF_HAVE_BFIO ) */
 
 /* -------------------------------------------------------------------------
  * Notify functions
@@ -225,6 +226,7 @@ int libolecf_file_open(
      libolecf_error_t **error );
 
 #if defined( LIBOLECF_HAVE_WIDE_CHARACTER_TYPE )
+
 /* Opens a file
  * Returns 1 if successful or -1 on error
  */
@@ -234,9 +236,11 @@ int libolecf_file_open_wide(
      const wchar_t *filename,
      int access_flags,
      libolecf_error_t **error );
-#endif
+
+#endif /* defined( LIBOLECF_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBOLECF_HAVE_BFIO )
+
 /* Opens a file using a Basic File IO (bfio) handle
  * Returns 1 if successful or -1 on error
  */
@@ -246,7 +250,8 @@ int libolecf_file_open_file_io_handle(
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libolecf_error_t **error );
-#endif
+
+#endif /* defined( LIBOLECF_HAVE_BFIO ) */
 
 /* Closes a file
  * Returns 0 if successful or -1 on error
