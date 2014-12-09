@@ -254,7 +254,7 @@ Contains a FILETIME
 Refers to the SID of a stream or the SID of short-stream container stream
 | 120 | 4 | | The byte size of the directory +
 Refers to the size of a stream or the size of a short-stream container stream
-| 124 | 4 | | Reserved
+| 124 | 4 | | [yellow-background]*Reserved*
 |===
 
 [NOTE]
