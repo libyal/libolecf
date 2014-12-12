@@ -297,9 +297,9 @@ Some OLECF files do not have directory entries at all.
 |===
 
 === Root directory
-A directory with the name “RootEntry” should be the first directory entry in 
+A directory with the name "RootEntry" should be the first directory entry in 
 the directory chain (stream). The root directory should have a type of 0x05. 
-Some older implementations of OLE CF only store the name “R”.
+Some older implementations of OLE CF only store the name "R".
 
 === Short-sector streams
 When the size of a stream is smaller than the minimum size of a standard stream 
