@@ -56,10 +56,8 @@ PySequenceMethods pyolecf_items_sequence_methods = {
 };
 
 PyTypeObject pyolecf_items_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf._items",
 	/* tp_basicsize */
@@ -258,7 +256,8 @@ int pyolecf_items_init(
 void pyolecf_items_free(
       pyolecf_items_t *pyolecf_items )
 {
-	static char *function = "pyolecf_items_free";
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_items_free";
 
 	if( pyolecf_items == NULL )
 	{
@@ -269,30 +268,33 @@ void pyolecf_items_free(
 
 		return;
 	}
-	if( pyolecf_items->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid items - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_items->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid items - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyolecf_items->item_object != NULL )
 	{
 		Py_DecRef(
 		 (PyObject *) pyolecf_items->item_object );
 	}
-	pyolecf_items->ob_type->tp_free(
+	ob_type = Py_TYPE(
+	           pyolecf_items );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
+		 function );
+
+		return;
+	}
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_items );
 }
 

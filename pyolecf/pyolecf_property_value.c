@@ -132,10 +132,8 @@ PyGetSetDef pyolecf_property_value_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyolecf_property_value_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.property_value",
 	/* tp_basicsize */
@@ -316,8 +314,9 @@ int pyolecf_property_value_init(
 void pyolecf_property_value_free(
       pyolecf_property_value_t *pyolecf_property_value )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyolecf_property_value_free";
+	libcerror_error_t *error    = NULL;
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_property_value_free";
 
 	if( pyolecf_property_value == NULL )
 	{
@@ -328,29 +327,32 @@ void pyolecf_property_value_free(
 
 		return;
 	}
-	if( pyolecf_property_value->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid property value - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_property_value->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid property value - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyolecf_property_value->property_value == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
 		 "%s: invalid property value - missing libolecf property value.",
+		 function );
+
+		return;
+	}
+	ob_type = Py_TYPE(
+	           pyolecf_property_value );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -373,7 +375,7 @@ void pyolecf_property_value_free(
 		Py_DecRef(
 		 (PyObject *) pyolecf_property_value->property_section_object );
 	}
-	pyolecf_property_value->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_value );
 }
 
@@ -385,6 +387,7 @@ PyObject *pyolecf_property_value_get_identifier(
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyolecf_property_value_get_identifier";
 	uint32_t identifier      = 0;
 	int result               = 0;
@@ -422,8 +425,14 @@ PyObject *pyolecf_property_value_get_identifier(
 
 		return( NULL );
 	}
-	return( PyInt_FromLong(
-	         (long) identifier ) );
+#if PY_MAJOR_VERSION >= 3
+	integer_object = PyLong_FromLong(
+	                  (long) identifier );
+#else
+	integer_object = PyInt_FromLong(
+	                  (long) identifier );
+#endif
+	return( integer_object );
 }
 
 /* Retrieves the type
@@ -434,6 +443,7 @@ PyObject *pyolecf_property_value_get_type(
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyolecf_property_value_get_type";
 	uint32_t type            = 0;
 	int result               = 0;
@@ -471,8 +481,14 @@ PyObject *pyolecf_property_value_get_type(
 
 		return( NULL );
 	}
-	return( PyInt_FromLong(
-	         (long) type ) );
+#if PY_MAJOR_VERSION >= 3
+	integer_object = PyLong_FromLong(
+	                  (long) type );
+#else
+	integer_object = PyInt_FromLong(
+	                  (long) type );
+#endif
+	return( integer_object );
 }
 
 /* Retrieves the data
@@ -565,10 +581,15 @@ PyObject *pyolecf_property_value_get_data(
 
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromStringAndSize(
+			 (char *) data,
+			 (Py_ssize_t) data_size );
+#else
 	string_object = PyString_FromStringAndSize(
 			 (char *) data,
 			 (Py_ssize_t) data_size );
-
+#endif
 	PyMem_Free(
 	 data );
 

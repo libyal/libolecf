@@ -57,10 +57,8 @@ PySequenceMethods pyolecf_property_values_sequence_methods = {
 };
 
 PyTypeObject pyolecf_property_values_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf._property_values",
 	/* tp_basicsize */
@@ -259,7 +257,8 @@ int pyolecf_property_values_init(
 void pyolecf_property_values_free(
       pyolecf_property_values_t *pyolecf_property_values )
 {
-	static char *function = "pyolecf_property_values_free";
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_property_values_free";
 
 	if( pyolecf_property_values == NULL )
 	{
@@ -270,30 +269,33 @@ void pyolecf_property_values_free(
 
 		return;
 	}
-	if( pyolecf_property_values->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid property values - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_property_values->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid property values - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyolecf_property_values->property_section_object != NULL )
 	{
 		Py_DecRef(
 		 (PyObject *) pyolecf_property_values->property_section_object );
 	}
-	pyolecf_property_values->ob_type->tp_free(
+	ob_type = Py_TYPE(
+	           pyolecf_property_values );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
+		 function );
+
+		return;
+	}
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_values );
 }
 

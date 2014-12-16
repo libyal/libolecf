@@ -98,10 +98,8 @@ PyMethodDef pyolecf_stream_object_methods[] = {
 };
 
 PyTypeObject pyolecf_stream_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.stream",
 	/* tp_basicsize */
@@ -204,6 +202,7 @@ PyObject *pyolecf_stream_read_buffer(
 {
 	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
+	char *buffer                = NULL;
 	static char *function       = "pyolecf_stream_read_buffer";
 	static char *keyword_list[] = { "size", NULL };
 	ssize_t read_count          = 0;
@@ -247,16 +246,27 @@ PyObject *pyolecf_stream_read_buffer(
 
 		return( NULL );
 	}
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromStringAndSize(
+	                 NULL,
+	                 read_size );
+#else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
-
+#endif
 	Py_BEGIN_ALLOW_THREADS
 
+#if PY_MAJOR_VERSION >= 3
+	buffer = PyBytes_AsString(
+	          string_object );
+#else
+	buffer = PyString_AsString(
+	          string_object );
+#endif
 	read_count = libolecf_stream_read_buffer(
 	              pyolecf_item->item,
-	              (uint8_t *) PyString_AsString(
-	               string_object ),
+	              (uint8_t *) buffer,
 	              (size_t) read_size,
 	              &error );
 
@@ -280,9 +290,15 @@ PyObject *pyolecf_stream_read_buffer(
 	}
 	/* Need to resize the string here in case read_size was not fully read.
 	 */
+#if PY_MAJOR_VERSION >= 3
+	if( _PyBytes_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+#else
 	if( _PyString_Resize(
 	     &string_object,
 	     (Py_ssize_t) read_count ) != 0 )
+#endif
 	{
 		Py_DecRef(
 		 (PyObject *) string_object );
@@ -302,6 +318,7 @@ PyObject *pyolecf_stream_read_buffer_at_offset(
 {
 	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
+	char *buffer                = NULL;
 	static char *function       = "pyolecf_stream_read_buffer_at_offset";
 	static char *keyword_list[] = { "size", "offset", NULL };
 	off64_t read_offset         = 0;
@@ -358,16 +375,27 @@ PyObject *pyolecf_stream_read_buffer_at_offset(
 	}
 	/* Make sure the data fits into the memory buffer
 	 */
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromStringAndSize(
+	                 NULL,
+	                 read_size );
+#else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
-
+#endif
 	Py_BEGIN_ALLOW_THREADS
 
+#if PY_MAJOR_VERSION >= 3
+	buffer = PyBytes_AsString(
+	          string_object );
+#else
+	buffer = PyString_AsString(
+	          string_object );
+#endif
 	read_count = libolecf_stream_read_buffer_at_offset(
 	              pyolecf_item->item,
-	              (uint8_t *) PyString_AsString(
-	               string_object ),
+	              (uint8_t *) buffer,
 	              (size_t) read_size,
 	              (off64_t) read_offset,
 	              &error );
@@ -392,9 +420,15 @@ PyObject *pyolecf_stream_read_buffer_at_offset(
 	}
 	/* Need to resize the string here in case read_size was not fully read.
 	 */
+#if PY_MAJOR_VERSION >= 3
+	if( _PyBytes_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+#else
 	if( _PyString_Resize(
 	     &string_object,
 	     (Py_ssize_t) read_count ) != 0 )
+#endif
 	{
 		Py_DecRef(
 		 (PyObject *) string_object );

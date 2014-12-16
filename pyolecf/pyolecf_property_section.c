@@ -94,10 +94,8 @@ PyGetSetDef pyolecf_property_section_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyolecf_property_section_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.property_section",
 	/* tp_basicsize */
@@ -278,8 +276,9 @@ int pyolecf_property_section_init(
 void pyolecf_property_section_free(
       pyolecf_property_section_t *pyolecf_property_section )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyolecf_property_section_free";
+	libcerror_error_t *error    = NULL;
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_property_section_free";
 
 	if( pyolecf_property_section == NULL )
 	{
@@ -290,29 +289,32 @@ void pyolecf_property_section_free(
 
 		return;
 	}
-	if( pyolecf_property_section->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid property section - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_property_section->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid property section - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyolecf_property_section->property_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
 		 "%s: invalid property section - missing libolecf property section.",
+		 function );
+
+		return;
+	}
+	ob_type = Py_TYPE(
+	           pyolecf_property_section );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -335,7 +337,7 @@ void pyolecf_property_section_free(
 		Py_DecRef(
 		 (PyObject *) pyolecf_property_section->property_set_object );
 	}
-	pyolecf_property_section->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_section );
 }
 
@@ -402,6 +404,7 @@ PyObject *pyolecf_property_section_get_number_of_properties(
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyolecf_property_section_get_number_of_properties";
 	int number_of_properties = 0;
 	int result               = 0;
@@ -439,8 +442,14 @@ PyObject *pyolecf_property_section_get_number_of_properties(
 
 		return( NULL );
 	}
-	return( PyInt_FromLong(
-	         (long) number_of_properties ) );
+#if PY_MAJOR_VERSION >= 3
+	integer_object = PyLong_FromLong(
+	                  (long) number_of_properties );
+#else
+	integer_object = PyInt_FromLong(
+	                  (long) number_of_properties );
+#endif
+	return( integer_object );
 }
 
 /* Retrieves a specific property by index

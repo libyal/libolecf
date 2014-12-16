@@ -186,9 +186,13 @@ PyObject *pyolecf_check_file_signature(
 		exception_string = PyObject_Repr(
 		                    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+		error_string = PyBytes_AsString(
+		                exception_string );
+#else
 		error_string = PyString_AsString(
 		                exception_string );
-
+#endif
 		if( error_string != NULL )
 		{
 			PyErr_Format(
@@ -237,9 +241,13 @@ PyObject *pyolecf_check_file_signature(
 			exception_string = PyObject_Repr(
 					    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+			error_string = PyBytes_AsString(
+					exception_string );
+#else
 			error_string = PyString_AsString(
 					exception_string );
-
+#endif
 			if( error_string != NULL )
 			{
 				PyErr_Format(
@@ -260,9 +268,13 @@ PyObject *pyolecf_check_file_signature(
 
 			return( NULL );
 		}
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   utf8_string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   utf8_string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_check_file_signature(
@@ -301,10 +313,15 @@ PyObject *pyolecf_check_file_signature(
 	}
 	PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+	result = PyObject_IsInstance(
+		  string_object,
+		  (PyObject *) &PyBytes_Type );
+#else
 	result = PyObject_IsInstance(
 		  string_object,
 		  (PyObject *) &PyString_Type );
-
+#endif
 	if( result == -1 )
 	{
 		PyErr_Fetch(
@@ -315,9 +332,13 @@ PyObject *pyolecf_check_file_signature(
 		exception_string = PyObject_Repr(
 				    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+		error_string = PyBytes_AsString(
+				exception_string );
+#else
 		error_string = PyString_AsString(
 				exception_string );
-
+#endif
 		if( error_string != NULL )
 		{
 			PyErr_Format(
@@ -342,9 +363,13 @@ PyObject *pyolecf_check_file_signature(
 	{
 		PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_check_file_signature(
@@ -486,16 +511,42 @@ on_error:
 	return( NULL );
 }
 
-/* Declarations for DLL import/export
+#if PY_MAJOR_VERSION >= 3
+
+/* The pyolecf module definition
  */
-#ifndef PyMODINIT_FUNC
-#define PyMODINIT_FUNC void
-#endif
+PyModuleDef pyolecf_module_definition = {
+	PyModuleDef_HEAD_INIT,
+
+	/* m_name */
+	"pyolecf",
+	/* m_doc */
+	"Python libolecf module (pyolecf).",
+	/* m_size */
+	-1,
+	/* m_methods */
+	pyolecf_module_methods,
+	/* m_reload */
+	NULL,
+	/* m_traverse */
+	NULL,
+	/* m_clear */
+	NULL,
+	/* m_free */
+	NULL,
+};
+
+#endif /* PY_MAJOR_VERSION >= 3 */
 
 /* Initializes the pyolecf module
  */
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_pyolecf(
+                void )
+#else
 PyMODINIT_FUNC initpyolecf(
                 void )
+#endif
 {
 	PyObject *module                              = NULL;
 	PyTypeObject *file_type_object                = NULL;
@@ -515,11 +566,23 @@ PyMODINIT_FUNC initpyolecf(
 	 * This function must be called before grabbing the GIL
 	 * otherwise the module will segfault on a version mismatch
 	 */
+#if PY_MAJOR_VERSION >= 3
+	module = PyModule_Create(
+	          &pyolecf_module_definition );
+#else
 	module = Py_InitModule3(
 	          "pyolecf",
 	          pyolecf_module_methods,
 	          "Python libolecf module (pyolecf)." );
-
+#endif
+	if( module == NULL )
+	{
+#if PY_MAJOR_VERSION >= 3
+		return( NULL );
+#else
+		return;
+#endif
+	}
 	PyEval_InitThreads();
 
 	gil_state = PyGILState_Ensure();
@@ -738,8 +801,23 @@ PyMODINIT_FUNC initpyolecf(
 	 "value_types",
 	 (PyObject *) value_types_type_object );
 
+	PyGILState_Release(
+	 gil_state );
+
+#if PY_MAJOR_VERSION >= 3
+	return( module );
+#else
+	return;
+#endif
+
 on_error:
 	PyGILState_Release(
 	 gil_state );
+
+#if PY_MAJOR_VERSION >= 3
+	return( NULL );
+#else
+	return;
+#endif
 }
 

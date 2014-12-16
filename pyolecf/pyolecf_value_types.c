@@ -32,10 +32,8 @@
 #include "pyolecf_value_types.h"
 
 PyTypeObject pyolecf_value_types_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.value_types",
 	/* tp_basicsize */
@@ -134,6 +132,8 @@ PyTypeObject pyolecf_value_types_type_object = {
 int pyolecf_value_types_init_type(
      PyTypeObject *type_object )
 {
+	PyObject *value_object = NULL;
+
 	if( type_object == NULL )
 	{
 		return( -1 );
@@ -144,342 +144,594 @@ int pyolecf_value_types_init_type(
 	{
 		return( -1 );
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_EMPTY );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_EMPTY );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "EMPTY",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_EMPTY ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_NULL );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_NULL );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "NULL",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_NULL ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_16BIT_SIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_16BIT_SIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_16BIT_SIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_16BIT_SIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_32BIT_SIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_32BIT_SIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_32BIT_SIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_32BIT_SIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_FLOAT_32BIT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_FLOAT_32BIT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "FLOAT_32BIT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_FLOAT_32BIT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_DOUBLE_64BIT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_DOUBLE_64BIT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "DOUBLE_64BIT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_DOUBLE_64BIT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_CURRENCY );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_CURRENCY );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "CURRENCY",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_CURRENCY ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_APPLICATION_TIME );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_APPLICATION_TIME );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "APPLICATION_TIME",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_APPLICATION_TIME ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_STRING );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_STRING );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "BINARY_STRING",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_BINARY_STRING ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_IDISPATCH );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_IDISPATCH );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "IDISPATCH",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_IDISPATCH ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_ERROR );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_ERROR );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "ERROR",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_ERROR ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_BOOLEAN );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_BOOLEAN );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "BOOLEAN",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_BOOLEAN ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_VARIANT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_VARIANT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "VARIANT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_VARIANT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_IUNKNOWN );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_IUNKNOWN );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "IUNKNOWN",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_IUNKNOWN ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_FIXED_POINT_128BIT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_FIXED_POINT_128BIT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "FIXED_POINT_128BIT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_FIXED_POINT_128BIT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
 
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_8BIT_SIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_8BIT_SIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_8BIT_SIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_8BIT_SIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_8BIT_UNSIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_8BIT_UNSIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_8BIT_UNSIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_8BIT_UNSIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_16BIT_UNSIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_16BIT_UNSIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_16BIT_UNSIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_16BIT_UNSIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_32BIT_UNSIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_32BIT_UNSIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_32BIT_UNSIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_32BIT_UNSIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_64BIT_SIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_64BIT_SIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_64BIT_SIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_64BIT_SIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_64BIT_UNSIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_64BIT_UNSIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_64BIT_UNSIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_64BIT_UNSIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_SIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_SIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_SIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_SIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_UNSIGNED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_INTEGER_UNSIGNED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "INTEGER_UNSIGNED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_INTEGER_UNSIGNED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_VOID );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_VOID );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "VOID",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_VOID ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_HRESULT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_HRESULT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "HRESULT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_HRESULT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_POINTER );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_POINTER );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "POINTER",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_POINTER ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_SAFE_ARRAY );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_SAFE_ARRAY );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "SAFE_ARRAY",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_SAFE_ARRAY ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_ARRAY );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_ARRAY );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "ARRAY",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_ARRAY ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_USER_DEFINED );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_USER_DEFINED );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "USER_DEFINED",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_USER_DEFINED ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STRING_ASCII );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STRING_ASCII );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STRING_ASCII",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STRING_ASCII ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STRING_UNICODE );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STRING_UNICODE );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STRING_UNICODE",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STRING_UNICODE ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
 
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_FILETIME );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_FILETIME );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "FILETIME",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_FILETIME ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_DATA );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_DATA );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "BINARY_DATA",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_BINARY_DATA ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STREAM );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STREAM );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STREAM",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STREAM ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STORAGE );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STORAGE );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STORAGE",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STORAGE ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STREAMED_OBJECT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STREAMED_OBJECT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STREAMED_OBJECT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STREAMED_OBJECT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_STORED_OBJECT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_STORED_OBJECT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "STORED_OBJECT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_STORED_OBJECT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_DATA_OBJECT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_BINARY_DATA_OBJECT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "BINARY_DATA_OBJECT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_BINARY_DATA_OBJECT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_CLIPBOARD_FORMAT );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_CLIPBOARD_FORMAT );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "CLIPBOARD_FORMAT",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_CLIPBOARD_FORMAT ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_GUID );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_GUID );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "GUID",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_GUID ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                LIBOLECF_VALUE_TYPE_VERSIONED_STREAM );
+#else
+	value_object = PyInt_FromLong(
+	                LIBOLECF_VALUE_TYPE_VERSIONED_STREAM );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "VERSIONED_STREAM",
-	     PyInt_FromLong(
-	      LIBOLECF_VALUE_TYPE_VERSIONED_STREAM ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
 
+#if PY_MAJOR_VERSION >= 3
+	value_object = PyLong_FromLong(
+	                0x00001000UL );
+#else
+	value_object = PyInt_FromLong(
+	                0x00001000UL );
+#endif
 	if( PyDict_SetItemString(
 	     type_object->tp_dict,
 	     "MULTI_VALUE",
-	     PyInt_FromLong(
-	      0x00001000UL ) ) != 0 )
+	     value_object ) != 0 )
 	{
 		goto on_error;
 	}
@@ -564,7 +816,8 @@ int pyolecf_value_types_init(
 void pyolecf_value_types_free(
       pyolecf_value_types_t *pyolecf_value_types )
 {
-	static char *function = "pyolecf_value_types_free";
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_value_types_free";
 
 	if( pyolecf_value_types == NULL )
 	{
@@ -575,25 +828,28 @@ void pyolecf_value_types_free(
 
 		return;
 	}
-	if( pyolecf_value_types->ob_type == NULL )
+	ob_type = Py_TYPE(
+	           pyolecf_value_types );
+
+	if( ob_type == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid value types - missing ob_type.",
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
 		 function );
 
 		return;
 	}
-	if( pyolecf_value_types->ob_type->tp_free == NULL )
+	if( ob_type->tp_free == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid value types - invalid ob_type - missing tp_free.",
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
 	}
-	pyolecf_value_types->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_value_types );
 }
 

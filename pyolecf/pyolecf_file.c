@@ -135,10 +135,8 @@ PyGetSetDef pyolecf_file_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyolecf_file_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.file",
 	/* tp_basicsize */
@@ -362,9 +360,10 @@ int pyolecf_file_init(
 void pyolecf_file_free(
       pyolecf_file_t *pyolecf_file )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyolecf_file_free";
-	int result               = 0;
+	libcerror_error_t *error    = NULL;
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyolecf_file_free";
+	int result                  = 0;
 
 	if( pyolecf_file == NULL )
 	{
@@ -375,29 +374,32 @@ void pyolecf_file_free(
 
 		return;
 	}
-	if( pyolecf_file->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_file->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyolecf_file->file == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
 		 "%s: invalid file - missing libolecf file.",
+		 function );
+
+		return;
+	}
+	ob_type = Py_TYPE(
+	           pyolecf_file );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -421,7 +423,7 @@ void pyolecf_file_free(
 		libcerror_error_free(
 		 &error );
 	}
-	pyolecf_file->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyolecf_file );
 }
 
@@ -552,9 +554,13 @@ PyObject *pyolecf_file_open(
 		exception_string = PyObject_Repr(
 		                    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+		error_string = PyBytes_AsString(
+		                exception_string );
+#else
 		error_string = PyString_AsString(
 		                exception_string );
-
+#endif
 		if( error_string != NULL )
 		{
 			PyErr_Format(
@@ -605,9 +611,13 @@ PyObject *pyolecf_file_open(
 			exception_string = PyObject_Repr(
 					    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+			error_string = PyBytes_AsString(
+					exception_string );
+#else
 			error_string = PyString_AsString(
 					exception_string );
-
+#endif
 			if( error_string != NULL )
 			{
 				PyErr_Format(
@@ -628,9 +638,13 @@ PyObject *pyolecf_file_open(
 
 			return( NULL );
 		}
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   utf8_string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   utf8_string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_file_open(
@@ -664,10 +678,15 @@ PyObject *pyolecf_file_open(
 	}
 	PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+	result = PyObject_IsInstance(
+		  string_object,
+		  (PyObject *) &PyBytes_Type );
+#else
 	result = PyObject_IsInstance(
 		  string_object,
 		  (PyObject *) &PyString_Type );
-
+#endif
 	if( result == -1 )
 	{
 		PyErr_Fetch(
@@ -678,9 +697,13 @@ PyObject *pyolecf_file_open(
 		exception_string = PyObject_Repr(
 				    exception_value );
 
+#if PY_MAJOR_VERSION >= 3
+		error_string = PyBytes_AsString(
+				exception_string );
+#else
 		error_string = PyString_AsString(
 				exception_string );
-
+#endif
 		if( error_string != NULL )
 		{
 			PyErr_Format(
@@ -705,9 +728,13 @@ PyObject *pyolecf_file_open(
 	{
 		PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_file_open(
@@ -976,9 +1003,13 @@ PyObject *pyolecf_file_get_ascii_codepage(
 
 		return( NULL );
 	}
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromString(
+	                 codepage_string );
+#else
 	string_object = PyString_FromString(
 	                 codepage_string );
-
+#endif
 	if( string_object == NULL )
 	{
 		PyErr_Format(
@@ -1119,9 +1150,13 @@ int pyolecf_file_set_ascii_codepage_setter(
 
 	PYOLECF_UNREFERENCED_PARAMETER( closure )
 
+#if PY_MAJOR_VERSION >= 3
+	codepage_string = PyBytes_AsString(
+	                   value_object );
+#else
 	codepage_string = PyString_AsString(
 	                   value_object );
-
+#endif
 	if( codepage_string == NULL )
 	{
 		return( -1 );

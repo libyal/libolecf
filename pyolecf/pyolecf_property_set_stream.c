@@ -64,10 +64,8 @@ PyGetSetDef pyolecf_property_set_stream_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyolecf_property_set_stream_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyolecf.property_set_stream",
 	/* tp_basicsize */
