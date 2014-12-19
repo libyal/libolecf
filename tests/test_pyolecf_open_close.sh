@@ -63,7 +63,7 @@ test_open_close()
 	return ${RESULT};
 }
 
-PYTHON=`which python`;
+PYTHON=`which python${PYTHON_VERSION} 2> /dev/null`;
 
 if ! test -x ${PYTHON};
 then
@@ -102,9 +102,9 @@ then
 else
 	IGNORELIST="";
 
-	if test -f "input/.libolecf/ignore";
+	if test -f "input/.pyolecf/ignore";
 	then
-		IGNORELIST=`cat input/.libolecf/ignore | sed '/^#/d'`;
+		IGNORELIST=`cat input/.pyolecf/ignore | sed '/^#/d'`;
 	fi
 	for TESTDIR in input/*;
 	do
@@ -114,9 +114,9 @@ else
 
 			if ! list_contains "${IGNORELIST}" "${DIRNAME}";
 			then
-				if test -f "input/.libolecf/${DIRNAME}/files";
+				if test -f "input/.pyolecf/${DIRNAME}/files";
 				then
-					TEST_FILES=`cat input/.libolecf/${DIRNAME}/files | sed "s?^?${TESTDIR}/?"`;
+					TEST_FILES=`cat input/.pyolecf/${DIRNAME}/files | sed "s?^?${TESTDIR}/?"`;
 				else
 					TEST_FILES=`ls -1 ${TESTDIR}/* 2> /dev/null`;
 				fi

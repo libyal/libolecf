@@ -105,7 +105,7 @@ PyObject *pyolecf_file_set_ascii_codepage(
 
 int pyolecf_file_set_ascii_codepage_setter(
      pyolecf_file_t *pyolecf_file,
-     PyObject *value_object,
+     PyObject *string_object,
      void *closure );
 
 PyObject *pyolecf_file_get_root_item(
