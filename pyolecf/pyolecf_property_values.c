@@ -269,11 +269,6 @@ void pyolecf_property_values_free(
 
 		return;
 	}
-	if( pyolecf_property_values->property_section_object != NULL )
-	{
-		Py_DecRef(
-		 (PyObject *) pyolecf_property_values->property_section_object );
-	}
 	ob_type = Py_TYPE(
 	           pyolecf_property_values );
 
@@ -294,6 +289,11 @@ void pyolecf_property_values_free(
 		 function );
 
 		return;
+	}
+	if( pyolecf_property_values->property_section_object != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyolecf_property_values->property_section_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_values );
