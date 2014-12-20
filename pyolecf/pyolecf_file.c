@@ -484,23 +484,18 @@ PyObject *pyolecf_file_open(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *exception_string    = NULL;
-	PyObject *exception_traceback = NULL;
-	PyObject *exception_type      = NULL;
-	PyObject *exception_value     = NULL;
-	PyObject *string_object       = NULL;
-	libcerror_error_t *error      = NULL;
-	static char *function         = "pyolecf_file_open";
-	static char *keyword_list[]   = { "filename", "mode", NULL };
-	const char *filename_narrow   = NULL;
-	char *error_string            = NULL;
-	char *mode                    = NULL;
-	int result                    = 0;
+	PyObject *string_object      = NULL;
+	libcerror_error_t *error     = NULL;
+	static char *function        = "pyolecf_file_open";
+	static char *keyword_list[]  = { "filename", "mode", NULL };
+	const char *filename_narrow  = NULL;
+	char *mode                   = NULL;
+	int result                   = 0;
 
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	const wchar_t *filename_wide  = NULL;
+	const wchar_t *filename_wide = NULL;
 #else
-	PyObject *utf8_string_object  = NULL;
+	PyObject *utf8_string_object = NULL;
 #endif
 
 	if( pyolecf_file == NULL )
@@ -546,38 +541,10 @@ PyObject *pyolecf_file_open(
 
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-		                    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-		error_string = PyBytes_AsString(
-		                exception_string );
-#else
-		error_string = PyString_AsString(
-		                exception_string );
-#endif
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyolecf_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type unicode.",
+		 function );
 
 		return( NULL );
 	}
@@ -603,38 +570,10 @@ PyObject *pyolecf_file_open(
 
 		if( utf8_string_object == NULL )
 		{
-			PyErr_Fetch(
-			 &exception_type,
-			 &exception_value,
-			 &exception_traceback );
-
-			exception_string = PyObject_Repr(
-					    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-			error_string = PyBytes_AsString(
-					exception_string );
-#else
-			error_string = PyString_AsString(
-					exception_string );
-#endif
-			if( error_string != NULL )
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8 with error: %s.",
-				 function,
-				 error_string );
-			}
-			else
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8.",
-				 function );
-			}
-			Py_DecRef(
-			 exception_string );
+			pyolecf_error_fetch_and_raise(
+			 PyExc_RuntimeError,
+			 "%s: unable to convert unicode string to UTF-8.",
+			 function );
 
 			return( NULL );
 		}
@@ -689,38 +628,10 @@ PyObject *pyolecf_file_open(
 #endif
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-				    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-		error_string = PyBytes_AsString(
-				exception_string );
-#else
-		error_string = PyString_AsString(
-				exception_string );
-#endif
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyolecf_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type string.",
+		 function );
 
 		return( NULL );
 	}
@@ -1145,15 +1056,10 @@ int pyolecf_file_set_ascii_codepage_setter(
      PyObject *string_object,
      void *closure PYOLECF_ATTRIBUTE_UNUSED )
 {
-	PyObject *exception_string    = NULL;
-	PyObject *exception_traceback = NULL;
-	PyObject *exception_type      = NULL;
-	PyObject *exception_value     = NULL;
-	PyObject *utf8_string_object  = NULL;
-	static char *function         = "pyolecf_file_set_ascii_codepage_setter";
-	char *codepage_string         = NULL;
-	char *error_string            = NULL;
-	int result                    = 0;
+	PyObject *utf8_string_object = NULL;
+	static char *function        = "pyolecf_file_set_ascii_codepage_setter";
+	char *codepage_string        = NULL;
+	int result                   = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( closure )
 
@@ -1165,38 +1071,10 @@ int pyolecf_file_set_ascii_codepage_setter(
 
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-		                    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-		error_string = PyBytes_AsString(
-		                exception_string );
-#else
-		error_string = PyString_AsString(
-		                exception_string );
-#endif
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyolecf_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type unicode.",
+		 function );
 
 		return( -1 );
 	}
@@ -1209,38 +1087,10 @@ int pyolecf_file_set_ascii_codepage_setter(
 
 		if( utf8_string_object == NULL )
 		{
-			PyErr_Fetch(
-			 &exception_type,
-			 &exception_value,
-			 &exception_traceback );
-
-			exception_string = PyObject_Repr(
-					    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-			error_string = PyBytes_AsString(
-					exception_string );
-#else
-			error_string = PyString_AsString(
-					exception_string );
-#endif
-			if( error_string != NULL )
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8 with error: %s.",
-				 function,
-				 error_string );
-			}
-			else
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8.",
-				 function );
-			}
-			Py_DecRef(
-			 exception_string );
+			pyolecf_error_fetch_and_raise(
+			 PyExc_RuntimeError,
+			 "%s: unable to convert unicode string to UTF-8.",
+			 function );
 
 			return( -1 );
 		}
@@ -1278,38 +1128,10 @@ int pyolecf_file_set_ascii_codepage_setter(
 #endif
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-				    exception_value );
-
-#if PY_MAJOR_VERSION >= 3
-		error_string = PyBytes_AsString(
-				exception_string );
-#else
-		error_string = PyString_AsString(
-				exception_string );
-#endif
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyolecf_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type string.",
+		 function );
 
 		return( -1 );
 	}

@@ -84,6 +84,10 @@ olecfinfo
 DEPLOYMENT
 * update manuals
 
+20141220
+* worked on Python 3 support
+* worked on tests
+
 20141219
 * worked on Python 3 support
 
