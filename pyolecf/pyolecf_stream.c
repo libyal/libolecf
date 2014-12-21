@@ -250,20 +250,19 @@ PyObject *pyolecf_stream_read_buffer(
 	string_object = PyBytes_FromStringAndSize(
 	                 NULL,
 	                 read_size );
+
+	buffer = PyBytes_AsString(
+	          string_object );
 #else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
-#endif
-	Py_BEGIN_ALLOW_THREADS
 
-#if PY_MAJOR_VERSION >= 3
-	buffer = PyBytes_AsString(
-	          string_object );
-#else
 	buffer = PyString_AsString(
 	          string_object );
 #endif
+	Py_BEGIN_ALLOW_THREADS
+
 	read_count = libolecf_stream_read_buffer(
 	              pyolecf_item->item,
 	              (uint8_t *) buffer,
@@ -379,20 +378,19 @@ PyObject *pyolecf_stream_read_buffer_at_offset(
 	string_object = PyBytes_FromStringAndSize(
 	                 NULL,
 	                 read_size );
+
+	buffer = PyBytes_AsString(
+	          string_object );
 #else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
-#endif
-	Py_BEGIN_ALLOW_THREADS
 
-#if PY_MAJOR_VERSION >= 3
-	buffer = PyBytes_AsString(
-	          string_object );
-#else
 	buffer = PyString_AsString(
 	          string_object );
 #endif
+	Py_BEGIN_ALLOW_THREADS
+
 	read_count = libolecf_stream_read_buffer_at_offset(
 	              pyolecf_item->item,
 	              (uint8_t *) buffer,
