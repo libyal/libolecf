@@ -1,7 +1,7 @@
 /*
  * Python bindings module for libolecf (pyolecf)
  *
- * Copyright (c) 2008-2014, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2015, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -472,6 +472,14 @@ PyMODINIT_FUNC initpyolecf(
 	PyTypeObject *property_values_type_object     = NULL;
 	PyTypeObject *value_types_type_object         = NULL;
 	PyGILState_STATE gil_state                    = 0;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+	libolecf_notify_set_stream(
+	 stderr,
+	 NULL );
+	libolecf_notify_set_verbose(
+	 1 );
+#endif
 
 	/* Create the module
 	 * This function must be called before grabbing the GIL
