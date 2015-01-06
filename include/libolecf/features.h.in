@@ -29,7 +29,17 @@
 #endif
 
 #if defined( HAVE_LIBBFIO ) || ( !defined( WINAPI ) && @HAVE_LIBBFIO@ )
-#define LIBPFF_HAVE_BFIO			1
+#define LIBOLECF_HAVE_BFIO			1
+#endif
+
+#if !defined( LIBOLECF_DEPRECATED )
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define LIBOLECF_DEPRECATED	__attribute__ ((__deprecated__))
+#elif defined( _MSC_VER )
+#define LIBOLECF_DEPRECATED	__declspec(deprecated)
+#else
+#define LIBOLECF_DEPRECATED
+#endif
 #endif
 
 #endif
