@@ -2279,6 +2279,18 @@ int libolecf_io_handle_read_directory_entries(
 			 "\n" );
 		}
 #endif
+		if( directory_sector_identifier >= sat->number_of_sector_identifiers )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid directory sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 directory_sector_identifier );
+
+			goto on_error;
+		}
 		directory_sector_identifier = sat->sector_identifier[ directory_sector_identifier ];
 	}
 	memory_free(
@@ -2478,6 +2490,18 @@ ssize_t libolecf_io_handle_read_stream(
 
 			return( -1 );
 		}
+		if( sector_identifier >= allocation_table->number_of_sector_identifiers )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 sector_identifier );
+
+			return( -1 );
+		}
 		sector_identifier = allocation_table->sector_identifier[ sector_identifier ];
 	}
 	while( size > 0 )
@@ -2505,6 +2529,18 @@ ssize_t libolecf_io_handle_read_stream(
 
 			while( read_offset >= (off64_t) io_handle->sector_size )
 			{
+				if( short_sector_stream_sector_identifier >= sat->number_of_sector_identifiers )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+					 "%s: invalid short sector stream sector identifier: 0x%08" PRIx32 " value out of bounds.",
+					 function,
+					 short_sector_stream_sector_identifier );
+
+					return( -1 );
+				}
 				short_sector_stream_sector_identifier = sat->sector_identifier[ short_sector_stream_sector_identifier ];
 
 				read_offset -= io_handle->sector_size;
@@ -2566,6 +2602,18 @@ ssize_t libolecf_io_handle_read_stream(
 		*offset       += read_size;
 		size          -= read_size;
 
+		if( sector_identifier >= allocation_table->number_of_sector_identifiers )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 sector_identifier );
+
+			return( -1 );
+		}
 		sector_identifier = allocation_table->sector_identifier[ sector_identifier ];
 
 		sector_identifier_index++;
