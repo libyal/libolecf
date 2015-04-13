@@ -1567,28 +1567,29 @@ int libolecf_io_handle_read_directory_entries(
      uint32_t root_directory_sector_identifier,
      libcerror_error_t **error )
 {
-	libolecf_directory_entry_t *directory_entry = NULL;
-	uint8_t *directory_entry_data               = NULL;
-	uint8_t *directory_sector                   = NULL;
-	static char *function                       = "libolecf_io_handle_read_directory_entries";
-	off64_t directory_sector_offset             = 0;
-	size_t number_of_directory_sector_entries   = 0;
-	ssize_t read_count                          = 0;
-	uint32_t directory_sector_identifier        = 0;
-	uint16_t name_byte_size                     = 0;
-	int directory_entry_index                   = 0;
-	int directory_sector_index                  = 0;
+	libcdata_range_list_t *read_directory_sector_list = NULL;
+	libolecf_directory_entry_t *directory_entry       = NULL;
+	uint8_t *directory_entry_data                     = NULL;
+	uint8_t *directory_sector                         = NULL;
+	static char *function                             = "libolecf_io_handle_read_directory_entries";
+	off64_t directory_sector_offset                   = 0;
+	size_t number_of_directory_sector_entries         = 0;
+	ssize_t read_count                                = 0;
+	uint32_t directory_sector_identifier              = 0;
+	uint16_t name_byte_size                           = 0;
+	int directory_entry_index                         = 0;
+	int directory_sector_index                        = 0;
+	int result                                        = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	libcstring_system_character_t filetime_string[ 32 ];
 	libcstring_system_character_t guid_string[ 48 ];
 
-	libfdatetime_filetime_t *filetime           = NULL;
-	libfguid_identifier_t *guid                 = NULL;
-	libcstring_system_character_t *name_string  = NULL;
-	size_t name_string_size                     = 0;
-	uint32_t value_32bit                        = 0;
-	int result                                  = 0;
+	libfdatetime_filetime_t *filetime                 = NULL;
+	libfguid_identifier_t *guid                       = NULL;
+	libcstring_system_character_t *name_string        = NULL;
+	size_t name_string_size                           = 0;
+	uint32_t value_32bit                              = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -1673,11 +1674,45 @@ int libolecf_io_handle_read_directory_entries(
 
 		goto on_error;
 	}
+	if( libcdata_range_list_initialize(
+	     &read_directory_sector_list,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create read directory sector list.",
+		 function );
+
+		goto on_error;
+	}
 	directory_sector_identifier = root_directory_sector_identifier;
 
 	while( ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	    && ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_UNUSED ) )
 	{
+		result = libcdata_range_list_range_is_present(
+		          read_directory_sector_list,
+		          (uint64_t) directory_sector_identifier,
+		          (uint64_t) 1,
+		          error );
+
+		if( result == -1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to determine if directory sector is in range list.",
+			 function );
+
+			goto on_error;
+		}
+		else if( result != 0 )
+		{
+			break;
+		}
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -2279,7 +2314,29 @@ int libolecf_io_handle_read_directory_entries(
 			 "\n" );
 		}
 #endif
-		if( directory_sector_identifier >= sat->number_of_sector_identifiers )
+		if( libcdata_range_list_insert_range(
+		     read_directory_sector_list,
+		     (uint64_t) directory_sector_identifier,
+		     (uint64_t) 1,
+		     NULL,
+		     NULL,
+		     NULL,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to insert directory sector into range list.",
+			 function );
+
+			goto on_error;
+		}
+#if SIZE_OF_INT <= 4
+		if( directory_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
+#else
+		if( (int) directory_sector_identifier >= sat->number_of_sector_identifiers )
+#endif
 		{
 			libcerror_error_set(
 			 error,
@@ -2293,8 +2350,24 @@ int libolecf_io_handle_read_directory_entries(
 		}
 		directory_sector_identifier = sat->sector_identifier[ directory_sector_identifier ];
 	}
+	if( libcdata_range_list_free(
+	     &read_directory_sector_list,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free read directory sector list.",
+		 function );
+
+		goto on_error;
+	}
 	memory_free(
 	 directory_sector );
+
+	directory_sector = NULL;
 
 	return( 1 );
 
@@ -2322,6 +2395,13 @@ on_error:
 	{
 		libolecf_directory_entry_free(
 		 &directory_entry,
+		 NULL );
+	}
+	if( read_directory_sector_list != NULL )
+	{
+		libcdata_range_list_free(
+		 &read_directory_sector_list,
+		 NULL,
 		 NULL );
 	}
 	if( directory_sector != NULL )
@@ -2490,7 +2570,11 @@ ssize_t libolecf_io_handle_read_stream(
 
 			return( -1 );
 		}
-		if( sector_identifier >= allocation_table->number_of_sector_identifiers )
+#if SIZE_OF_INT <= 4
+		if( sector_identifier >= (uint32_t) allocation_table->number_of_sector_identifiers )
+#else
+		if( (int) sector_identifier >= allocation_table->number_of_sector_identifiers )
+#endif
 		{
 			libcerror_error_set(
 			 error,
@@ -2529,7 +2613,11 @@ ssize_t libolecf_io_handle_read_stream(
 
 			while( read_offset >= (off64_t) io_handle->sector_size )
 			{
-				if( short_sector_stream_sector_identifier >= sat->number_of_sector_identifiers )
+#if SIZE_OF_INT <= 4
+				if( short_sector_stream_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
+#else
+				if( (int) short_sector_stream_sector_identifier >= sat->number_of_sector_identifiers )
+#endif
 				{
 					libcerror_error_set(
 					 error,
@@ -2602,7 +2690,11 @@ ssize_t libolecf_io_handle_read_stream(
 		*offset       += read_size;
 		size          -= read_size;
 
-		if( sector_identifier >= allocation_table->number_of_sector_identifiers )
+#if SIZE_OF_INT <= 4
+		if( sector_identifier >= (uint32_t) allocation_table->number_of_sector_identifiers )
+#else
+		if( (int) sector_identifier >= allocation_table->number_of_sector_identifiers )
+#endif
 		{
 			libcerror_error_set(
 			 error,

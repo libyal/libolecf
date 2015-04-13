@@ -807,6 +807,7 @@ int libolecf_file_open_read(
 	uint32_t ssat_sector_identifier           = 0;
 	uint32_t number_of_ssat_sectors           = 0;
 	uint32_t root_directory_sector_identifier = 0;
+	int result                                = 0;
 
 	if( internal_file == NULL )
 	{
@@ -1072,14 +1073,16 @@ int libolecf_file_open_read(
 		 "Creating directory tree:\n" );
 	}
 #endif
-	if( libolecf_directory_tree_create(
-	     &( internal_file->directory_tree_root_node ),
-	     &( internal_file->io_handle->short_sector_stream_start_sector_identifier ),
-	     &( internal_file->document_summary_information_directory_entry ),
-	     &( internal_file->summary_information_directory_entry ),
-	     directory_entry_list,
-	     internal_file->io_handle->byte_order,
-	     error ) != 1 )
+	result = libolecf_directory_tree_create(
+	          &( internal_file->directory_tree_root_node ),
+	          &( internal_file->io_handle->short_sector_stream_start_sector_identifier ),
+	          &( internal_file->document_summary_information_directory_entry ),
+	          &( internal_file->summary_information_directory_entry ),
+	          directory_entry_list,
+	          internal_file->io_handle->byte_order,
+	          error );
+
+	if( result == -1 )
 	{
 		libcerror_error_set(
 		 error,

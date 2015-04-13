@@ -33,7 +33,7 @@
 #include "olecf_directory.h"
 
 /* Create the directory tree from the directory entry list
- * Returns 1 if succesful or -1 on error
+ * Returns 1 if succesful, 0 if no directory entries or -1 on error
  */
 int libolecf_directory_tree_create(
      libcdata_tree_node_t **directory_tree_root_node,
@@ -111,16 +111,9 @@ int libolecf_directory_tree_create(
 
 		goto on_error;
 	}
-	if( number_of_elements <= 0 )
+	if( number_of_elements == 0 )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid directory entry list - missing elements.",
-		 function );
-
-		goto on_error;
+		return( 0 );
 	}
 	for( element_index = 0;
 	     element_index < number_of_elements;
