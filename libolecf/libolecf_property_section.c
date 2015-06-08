@@ -374,9 +374,13 @@ int libolecf_property_section_read_list_entry(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: class identifier\t\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "%s: class identifier\t\t: %" PRIs_LIBCSTRING_SYSTEM " (%s : %s)\n",
 		 function,
-		 guid_string );
+		 guid_string,
+                 libfwps_format_class_identifier_get_identifier(
+                  internal_property_section->class_identifier ),
+                 libfwps_format_class_identifier_get_description(
+                  internal_property_section->class_identifier ) );
 
 		if( libfguid_identifier_free(
 		     &guid,

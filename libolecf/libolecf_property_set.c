@@ -30,6 +30,7 @@
 #include "libolecf_libcerror.h"
 #include "libolecf_libcnotify.h"
 #include "libolecf_libfguid.h"
+#include "libolecf_libfwps.h"
 #include "libolecf_property_section.h"
 #include "libolecf_property_set.h"
 #include "libolecf_stream.h"
@@ -399,9 +400,13 @@ int libolecf_property_set_read(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: property set header class identifier\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "%s: property set header class identifier\t: %" PRIs_LIBCSTRING_SYSTEM " (%s : %s)\n",
 		 function,
-		 guid_string );
+		 guid_string,
+		 libfwps_format_class_identifier_get_identifier(
+		  internal_property_set->class_identifier ),
+		 libfwps_format_class_identifier_get_description(
+		  internal_property_set->class_identifier ) );
 
 		if( libfguid_identifier_free(
 		     &guid,
