@@ -502,7 +502,7 @@ properties. A property set section property is variable of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 4 | | The property value type +
-Contains an OLE defines property (variant) types. Also see `[LIBFOLE]`.
+Contains an OLE defines property (variant) types. Also see https://github.com/libyal/libfole/blob/master/documentation/OLE%20definitions.asciidoc[[LIBFOLE\]].
 | 4 | 4 | | The property value data
 |===
 
