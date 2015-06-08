@@ -460,7 +460,7 @@ property set section list entry is 20 bytes of size and consists of:
 
 ==== The property set class identifier
 The following property set identifiers are known to be used. For more 
-information about the property sets and values see: `[LIBFWPS]`.
+information about the property sets and values see: https://github.com/libyal/libfwps/blob/master/documentation/Windows%20Property%20Store%20format.asciidoc[[LIBFWPS\]].
 
 [cols="1,1",options="header"]
 |===
