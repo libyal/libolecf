@@ -398,14 +398,12 @@ int libolecf_property_value_read_data(
 
 		case LIBOLECF_VALUE_TYPE_STRING_ASCII:
 			value_type       = LIBFVALUE_VALUE_TYPE_STRING_BYTE_STREAM;
-			value_data_size  = 0;
 			value_encoding   = io_handle->ascii_codepage;
 			is_variable_size = 1;
 			break;
 
 		case LIBOLECF_VALUE_TYPE_STRING_UNICODE:
 			value_type       = LIBFVALUE_VALUE_TYPE_STRING_UTF16;
-			value_data_size  = 0;
 			value_encoding   = LIBFVALUE_CODEPAGE_UTF16_LITTLE_ENDIAN;
 			is_variable_size = 1;
 			break;
@@ -419,7 +417,7 @@ int libolecf_property_value_read_data(
 /* TODO handle multi values */
 		case LIBOLECF_VALUE_TYPE_MULTI_VALUE_STRING_ASCII:
 		case LIBOLECF_VALUE_TYPE_MULTI_VALUE_STRING_UNICODE:
-			value_type      = LIBFVALUE_VALUE_TYPE_BINARY_DATA;
+			value_type     = LIBFVALUE_VALUE_TYPE_BINARY_DATA;
 			is_multi_value = 1;
 			break;
 
@@ -447,15 +445,17 @@ int libolecf_property_value_read_data(
 			break;
 
 		default:
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported property value type: 0x%08" PRIx32 ".",
-			 function,
-			 internal_property_value->value_type );
-
-			goto on_error;
+#if defined( HAVE_DEBUG_OUTPUT )
+			if( libcnotify_verbose != 0 )
+			{
+				libcnotify_printf(
+				 "%s: unsupported property value type: 0x%08" PRIx32 ".\n",
+				 function,
+				 internal_property_value->value_type );
+			}
+#endif
+			value_type = LIBFVALUE_VALUE_TYPE_UNDEFINED;
+			break;
 	}
 /* TODO handle multi values */
 	if( is_multi_value != 0 )
@@ -631,7 +631,7 @@ int libolecf_property_value_read_data(
 			data = NULL;
 		}
 	}
-	else
+	else if( value_type != LIBFVALUE_VALUE_TYPE_UNDEFINED )
 	{
 		if( is_variable_size != 0 )
 		{
@@ -781,20 +781,23 @@ int libolecf_property_value_read_data(
 				}
 				value_data_size = string_size;
 			}
-			if( libfvalue_value_type_initialize(
-			     &( internal_property_value->data_value ),
-			     value_type,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-				 "%s: unable to create data value.",
-				 function );
+		}
+		if( libfvalue_value_type_initialize(
+		     &( internal_property_value->data_value ),
+		     value_type,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create data value.",
+			 function );
 
-				goto on_error;
-			}
+			goto on_error;
+		}
+		if( value_data_size > 0 )
+		{
 			if( libfvalue_value_set_data(
 			     internal_property_value->data_value,
 			     data,
