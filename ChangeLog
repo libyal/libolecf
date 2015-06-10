@@ -20,7 +20,9 @@ TODO
   - add data_as_integer (allow filetime)
   - add data_as_string 
   - add more definitions types
-* olecfmount:
+* olecfexport
+  - add stream name to export failed error, if possible
+* olecfmount
   - sanitize filenames
 * support files with an empty root directory entry
 * update man pages

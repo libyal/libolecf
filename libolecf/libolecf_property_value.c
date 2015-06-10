@@ -199,17 +199,20 @@ int libolecf_property_value_read_data(
 {
 	uint8_t property_value_buffer[ 4 ];
 
-	uint8_t *data             = NULL;
-	static char *function     = "libolecf_property_value_read_data";
-	ssize_t read_count        = 0;
-	uint32_t number_of_values = 0;
-	uint32_t string_size      = 0;
-	uint32_t value_data_size  = 0;
-	uint32_t value_index      = 0;
-	uint8_t is_multi_value    = 0;
-	uint8_t is_variable_size  = 0;
-	uint8_t value_type        = 0;
-	int value_encoding        = 0;
+	uint8_t *data                  = NULL;
+	static char *function          = "libolecf_property_value_read_data";
+	ssize_t read_count             = 0;
+	uint32_t aligment_padding_size = 0;
+	uint32_t number_of_values      = 0;
+	uint32_t read_size             = 0;
+	uint32_t string_size           = 0;
+	uint32_t value_data_end_offset = 0;
+	uint32_t value_data_size       = 0;
+	uint32_t value_index           = 0;
+	uint8_t is_multi_value         = 0;
+	uint8_t is_variable_size       = 0;
+	uint8_t value_type             = 0;
+	int value_encoding             = 0;
 
 	if( internal_property_value == NULL )
 	{
@@ -257,6 +260,17 @@ int libolecf_property_value_read_data(
 
 		return( -1 );
 	}
+	if( property_data_offset >= (uint32_t) ( UINT32_MAX - 4 ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid property data offset value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
 	if( libolecf_stream_seek_offset(
 	     property_set_stream,
 	     (off64_t) property_data_offset,
@@ -290,6 +304,8 @@ int libolecf_property_value_read_data(
 
 		goto on_error;
 	}
+	property_data_offset += 4;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -460,6 +476,17 @@ int libolecf_property_value_read_data(
 /* TODO handle multi values */
 	if( is_multi_value != 0 )
 	{
+		if( property_data_offset >= (uint32_t) ( UINT32_MAX - 4 ) )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid property data offset value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
 		read_count = libolecf_stream_read_buffer(
 			      property_set_stream,
 			      property_value_buffer,
@@ -477,6 +504,8 @@ int libolecf_property_value_read_data(
 
 			goto on_error;
 		}
+		property_data_offset += 4;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -515,6 +544,17 @@ int libolecf_property_value_read_data(
 		     value_index++ )
 		{
 /* TODO handle different types of multi values differently */
+			if( property_data_offset >= (uint32_t) ( UINT32_MAX - 4 ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid property data offset value out of bounds.",
+				 function );
+
+				goto on_error;
+			}
 			read_count = libolecf_stream_read_buffer(
 				      property_set_stream,
 				      property_value_buffer,
@@ -532,6 +572,8 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
+			property_data_offset += 4;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -567,8 +609,38 @@ int libolecf_property_value_read_data(
 				 value_data_size );
 			}
 #endif
+			if( property_data_offset >= (uint32_t) ( UINT32_MAX - value_data_size ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid property data offset value out of bounds.",
+				 function );
+
+				goto on_error;
+			}
+/* TODO
+			if( ( internal_property_value->value_type == LIBOLECF_VALUE_TYPE_MULTI_VALUE_STRING_ASCII )
+			 || ( internal_property_value->value_type == LIBOLECF_VALUE_TYPE_MULTI_VALUE_STRING_UNICODE ) )
+			{
+				value_data_end_offset = property_data_offset + value_data_size;
+				aligment_padding_size = value_data_end_offset % 16;
+
+				if( aligment_padding_size != 0 )
+				{
+					aligment_padding_size = 16 - aligment_padding_size;
+				}
+			}
+			else
+*/
+			{
+				aligment_padding_size = 0;
+			}
+			read_size = value_data_size + aligment_padding_size;
+
 #if SIZEOF_SIZE_T <= 4
-			if( value_data_size > (uint32_t) SSIZE_MAX )
+			if( read_size > (uint32_t) SSIZE_MAX )
 			{
 				libcerror_error_set(
 				 error,
@@ -581,7 +653,7 @@ int libolecf_property_value_read_data(
 			}
 #endif
 			data = (uint8_t *) memory_allocate(
-			                    sizeof( uint8_t ) * value_data_size );
+			                    sizeof( uint8_t ) * read_size );
 
 			if( data == NULL )
 			{
@@ -597,10 +669,10 @@ int libolecf_property_value_read_data(
 			read_count = libolecf_stream_read_buffer(
 				      property_set_stream,
 				      data,
-				      (size_t) value_data_size,
+				      (size_t) read_size,
 				      error );
 
-			if( read_count != (ssize_t) value_data_size )
+			if( read_count != (ssize_t) read_size )
 			{
 				libcerror_error_set(
 				 error,
@@ -611,6 +683,8 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
+			property_data_offset += read_size;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -622,6 +696,18 @@ int libolecf_property_value_read_data(
 				 data,
 				 (size_t) value_data_size,
 				 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
+
+				if( aligment_padding_size > 0 )
+				{
+					libcnotify_printf(
+					 "%s: value: %" PRIu32 " alignment padding:\n",
+					 function,
+					 value_index );
+					libcnotify_print_data(
+					 &( data[ value_data_size ] ),
+					 (size_t) aligment_padding_size,
+					 0 );
+				}
 			}
 #endif
 /* TODO set up multi value */
@@ -652,6 +738,8 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
+			property_data_offset += 4;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -732,6 +820,8 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
+			property_data_offset += value_data_size;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
