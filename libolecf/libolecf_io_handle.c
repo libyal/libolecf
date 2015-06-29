@@ -879,8 +879,23 @@ int libolecf_io_handle_read_msat(
 		number_of_msat_sectors = 1;
 	}
 	number_of_msat_sector_entries = io_handle->sector_size / 4;
-	number_of_msat_entries        = ( number_of_msat_sectors * ( number_of_msat_sector_entries - 1 ) )
-	                              + 109;
+
+	if( number_of_msat_sector_entries == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid number of MSAT sector entries value out of bounds.",
+		 function );
+
+		goto on_error;
+	}
+	/* The last MSAT entry is reserved for the next MSAT sector identifier.
+	 */
+	number_of_msat_sector_entries -= 1;
+
+	number_of_msat_entries = 109 + ( number_of_msat_sectors * number_of_msat_sector_entries );
 
 	if( msat->number_of_sector_identifiers < number_of_msat_entries )
 	{
@@ -978,7 +993,7 @@ int libolecf_io_handle_read_msat(
 		msat_entry = msat_sector;
 
 		for( msat_sector_index = 0;
-		     (size_t) msat_sector_index < ( number_of_msat_sector_entries - 1 );
+		     (size_t) msat_sector_index < number_of_msat_sector_entries;
 		     msat_sector_index++ )
 		{
 			if( ( msat_index < 0 )
