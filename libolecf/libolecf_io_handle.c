@@ -1504,6 +1504,22 @@ int libolecf_io_handle_read_ssat(
 		     (size_t) ssat_sector_entry_index < number_of_ssat_sector_entries;
 		     ssat_sector_entry_index++ )
 		{
+#if SIZE_OF_INT <= 4
+			if( ssat_index >= (uint32_t) ssat->number_of_sector_identifiers )
+#else
+			if( (int) ssat_index >= ssat->number_of_sector_identifiers )
+#endif
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid SSAT entry: %04d index value out of bounds.",
+				 function,
+				 ssat_index );
+
+				goto on_error;
+			}
 			if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
 			{
 				byte_stream_copy_to_uint32_little_endian(
@@ -1537,6 +1553,22 @@ int libolecf_io_handle_read_ssat(
 			 "\n" );
 		}
 #endif
+#if SIZE_OF_INT <= 4
+		if( ssat_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
+#else
+		if( (int) ssat_sector_identifier >= sat->number_of_sector_identifiers )
+#endif
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid short sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 ssat_sector_identifier );
+
+			goto on_error;
+		}
 		ssat_sector_identifier = sat->sector_identifier[ ssat_sector_identifier ];
 
 		ssat_sector_index++;
