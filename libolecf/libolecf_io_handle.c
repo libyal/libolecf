@@ -981,6 +981,19 @@ int libolecf_io_handle_read_msat(
 		     (size_t) msat_sector_index < ( number_of_msat_sector_entries - 1 );
 		     msat_sector_index++ )
 		{
+			if( ( msat_index < 0 )
+			 || ( msat_index >= msat->number_of_sector_identifiers ) )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid MSAT entry: %04d value out of bounds.",
+				 function,
+				 msat_index );
+
+				goto on_error;
+			}
 			if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
 			{
 				byte_stream_copy_to_uint32_little_endian(
@@ -1504,17 +1517,14 @@ int libolecf_io_handle_read_ssat(
 		     (size_t) ssat_sector_entry_index < number_of_ssat_sector_entries;
 		     ssat_sector_entry_index++ )
 		{
-#if SIZE_OF_INT <= 4
-			if( ssat_index >= (uint32_t) ssat->number_of_sector_identifiers )
-#else
-			if( (int) ssat_index >= ssat->number_of_sector_identifiers )
-#endif
+			if( ( ssat_index < 0 )
+			 || ( ssat_index >= ssat->number_of_sector_identifiers ) )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-				 "%s: invalid SSAT entry: %04d index value out of bounds.",
+				 "%s: invalid SSAT entry: %04d value out of bounds.",
 				 function,
 				 ssat_index );
 
