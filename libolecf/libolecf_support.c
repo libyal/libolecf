@@ -418,7 +418,7 @@ int libolecf_check_file_signature_file_io_handle(
 			 "%s: unable to close file.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	if( memory_compare(
