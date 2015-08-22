@@ -115,7 +115,6 @@ stamp-h[1-9]
 /olecftools/olecfexport
 /olecftools/olecfinfo
 /olecftools/olecfmount
-/pyolecf/setup.py
 /tests/input
 /tests/olecf_test_open_close
 /tests/olecf_test_set_ascii_codepage
