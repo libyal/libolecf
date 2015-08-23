@@ -86,6 +86,9 @@ olecfinfo
 DEPLOYMENT
 * update manuals
 
+20150823
+* changed version for pypi repacking
+
 20150822
 * worked on setup.py
 
