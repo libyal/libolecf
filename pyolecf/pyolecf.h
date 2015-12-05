@@ -45,8 +45,13 @@ PyObject *pyolecf_check_file_signature_file_object(
            PyObject *arguments,
            PyObject *keywords );
 
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_pyolecf(
+                void );
+#else
 PyMODINIT_FUNC initpyolecf(
                 void );
+#endif
 
 #if defined( __cplusplus )
 }
