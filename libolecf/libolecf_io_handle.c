@@ -1785,7 +1785,7 @@ int libolecf_io_handle_read_directory_entries(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: directory sector offset\t: %" PRIu64 "\n",
+			 "%s: directory sector offset\t: 0x%08" PRIx64 "\n",
 			 function,
 			 directory_sector_offset );
 		}
@@ -1841,21 +1841,23 @@ int libolecf_io_handle_read_directory_entries(
 		     (size_t) directory_sector_index < number_of_directory_sector_entries;
 		     directory_sector_index++ )
 		{
-			if( ( (olecf_directory_entry_t *) directory_entry_data )->type != LIBOLECF_ITEM_TYPE_EMPTY )
+			if( libolecf_directory_entry_initialize(
+			     &directory_entry,
+			     error ) != 1 )
 			{
-				if( libolecf_directory_entry_initialize(
-				     &directory_entry,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-					 "%s: unable to create directory entry.",
-					 function );
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create directory entry.",
+				 function );
 
-					goto on_error;
-				}
+				goto on_error;
+			}
+			directory_entry->type = ( (olecf_directory_entry_t *) directory_entry_data )->type;
+
+			if( directory_entry->type != LIBOLECF_ITEM_TYPE_EMPTY )
+			{
 				if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
 				{
 					byte_stream_copy_to_uint16_little_endian(
@@ -1911,8 +1913,6 @@ int libolecf_io_handle_read_directory_entries(
 					}
 				}
 				directory_entry->name_size = (size_t) name_byte_size;
-
-				directory_entry->type = ( (olecf_directory_entry_t *) directory_entry_data )->type;
 
 				if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
 				{
@@ -2335,23 +2335,6 @@ int libolecf_io_handle_read_directory_entries(
 					 0 );
 				}
 #endif
-				if( libcdata_list_append_value(
-				     directory_entry_list,
-				     (intptr_t *) directory_entry,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-					 "%s: unable to append directory entry.",
-					 function );
-
-					goto on_error;
-				}
-				directory_entry = NULL;
-
-				directory_entry_index++;
 			}
 #if defined( HAVE_DEBUG_OUTPUT )
 			else if( libcnotify_verbose != 0 )
@@ -2362,6 +2345,27 @@ int libolecf_io_handle_read_directory_entries(
 				 directory_sector_index );
 			}
 #endif
+			/* Empty directory entries need to be included for the indentifier
+			 * to point to the correct directory entry in the list.
+			 */
+			if( libcdata_list_append_value(
+			     directory_entry_list,
+			     (intptr_t *) directory_entry,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+				 "%s: unable to append directory entry.",
+				 function );
+
+				goto on_error;
+			}
+			directory_entry = NULL;
+
+			directory_entry_index++;
+
 			directory_entry_data += sizeof( olecf_directory_entry_t );
 		}
 #if defined( HAVE_DEBUG_OUTPUT )
