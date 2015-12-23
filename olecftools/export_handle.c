@@ -1500,10 +1500,12 @@ int export_handle_export_file(
 	 "Created directory: %" PRIs_LIBCSTRING_SYSTEM ".\n",
 	 export_handle->items_export_path );
 
-	if( libolecf_file_get_root_item(
-	     export_handle->input_file,
-	     &root_item,
-	     error ) != 1 )
+	result = libolecf_file_get_root_item(
+	          export_handle->input_file,
+	          &root_item,
+	          error );
+
+	if( result == -1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -1513,6 +1515,10 @@ int export_handle_export_file(
 		 function );
 
 		goto on_error;
+	}
+	else if( result == 0 )
+	{
+		return( 1 );
 	}
 	if( export_handle_export_sub_items(
 	     export_handle,
