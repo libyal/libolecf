@@ -202,14 +202,7 @@ int libolecf_directory_tree_create(
 #endif
 	if( directory_entry->sub_directory_identifier == LIBOLECF_SECTOR_IDENTIFIER_UNUSED )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid root storage directory entry - missing sub directory identifier.",
-		 function );
-
-		goto on_error;
+		return( 0 );
 	}
 	if( libcdata_tree_node_initialize(
 	     directory_tree_root_node,

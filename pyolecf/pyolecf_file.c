@@ -1200,7 +1200,7 @@ PyObject *pyolecf_file_get_root_item(
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -1212,6 +1212,15 @@ PyObject *pyolecf_file_get_root_item(
 		 &error );
 
 		goto on_error;
+	}
+	/* Check if the item is present
+	 */
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
 	}
 	Py_BEGIN_ALLOW_THREADS
 

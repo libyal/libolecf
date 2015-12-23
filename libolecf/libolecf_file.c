@@ -1548,7 +1548,7 @@ int libolecf_file_get_unallocated_block(
 }
 
 /* Retrieves the root item from the file
- * Returns 1 if successful or -1 on error
+ * Returns 1 if successful, 0 if no such item or -1 on error
  */
 int libolecf_file_get_root_item(
      libolecf_file_t *file,
@@ -1571,17 +1571,6 @@ int libolecf_file_get_root_item(
 	}
 	internal_file = (libolecf_internal_file_t *) file;
 
-	if( internal_file->directory_tree_root_node == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid file - missing directory tree root node.",
-		 function );
-
-		return( -1 );
-	}
 	if( root_item == NULL )
 	{
 		libcerror_error_set(
@@ -1603,6 +1592,10 @@ int libolecf_file_get_root_item(
 		 function );
 
 		return( -1 );
+	}
+	if( internal_file->directory_tree_root_node == NULL )
+	{
+		return( 0 );
 	}
 	if( libolecf_item_initialize(
 	     root_item,

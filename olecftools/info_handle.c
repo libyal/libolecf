@@ -476,6 +476,7 @@ int info_handle_items_fprint(
      libcerror_error_t **error )
 {
 	static char *function = "info_handle_items_fprint";
+	int result            = 0;
 
 	if( info_handle == NULL )
 	{
@@ -490,10 +491,12 @@ int info_handle_items_fprint(
 	}
 	if( info_handle->root_item == NULL )
 	{
-		if( libolecf_file_get_root_item(
-		     info_handle->input_file,
-		     &( info_handle->root_item ),
-		     error ) != 1 )
+		result = libolecf_file_get_root_item(
+		          info_handle->input_file,
+		          &( info_handle->root_item ),
+		          error );
+
+		if( result == -1 )
 		{
 			libcerror_error_set(
 			 error,
@@ -505,24 +508,33 @@ int info_handle_items_fprint(
 			return( -1 );
 		}
 	}
-	fprintf(
-	 info_handle->notify_stream,
-	 "Storage and stream items:\n" );
-
-	if( info_handle_item_fprint(
-	     info_handle,
-	     info_handle->root_item,
-	     0,
-	     error ) != 1 )
+	if( info_handle->root_item == NULL )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
-		 "%s: unable to print root item.",
-		 function );
+		fprintf(
+		 info_handle->notify_stream,
+		 "No storage and stream items\n" );
+	}
+	else
+	{
+		fprintf(
+		 info_handle->notify_stream,
+		 "Storage and stream items:\n" );
 
-		return( -1 );
+		if( info_handle_item_fprint(
+		     info_handle,
+		     info_handle->root_item,
+		     0,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+			 "%s: unable to print root item.",
+			 function );
+
+			return( -1 );
+		}
 	}
 	fprintf(
 	 info_handle->notify_stream,
@@ -944,10 +956,12 @@ int info_handle_document_summary_information_fprint(
 	}
 	if( info_handle->root_item == NULL )
 	{
-		if( libolecf_file_get_root_item(
-		     info_handle->input_file,
-		     &( info_handle->root_item ),
-		     error ) != 1 )
+		result = libolecf_file_get_root_item(
+		          info_handle->input_file,
+		          &( info_handle->root_item ),
+		          error );
+
+		if( result == -1 )
 		{
 			libcerror_error_set(
 			 error,
@@ -957,6 +971,10 @@ int info_handle_document_summary_information_fprint(
 			 function );
 
 			return( -1 );
+		}
+		else if( result == 0 )
+		{
+			return( 1 );
 		}
 	}
 	/* Using \005 because \x05 also absorbes the D
@@ -1573,10 +1591,12 @@ int info_handle_summary_information_fprint(
 	}
 	if( info_handle->root_item == NULL )
 	{
-		if( libolecf_file_get_root_item(
-		     info_handle->input_file,
-		     &( info_handle->root_item ),
-		     error ) != 1 )
+		result = libolecf_file_get_root_item(
+		          info_handle->input_file,
+		          &( info_handle->root_item ),
+		          error );
+
+		if( result == -1 )
 		{
 			libcerror_error_set(
 			 error,
@@ -1586,6 +1606,10 @@ int info_handle_summary_information_fprint(
 			 function );
 
 			return( -1 );
+		}
+		else if( result == 0 )
+		{
+			return( 1 );
 		}
 	}
 	result = libolecf_item_get_sub_item_by_utf8_name(

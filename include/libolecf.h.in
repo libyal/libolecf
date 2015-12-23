@@ -328,7 +328,7 @@ int libolecf_file_get_unallocated_block(
      libolecf_error_t **error );
 
 /* Retrieves the root item from the file
- * Returns 1 if successful or -1 on error
+ * Returns 1 if successful, 0 if no such item or -1 on error
  */
 LIBOLECF_EXTERN \
 int libolecf_file_get_root_item(
