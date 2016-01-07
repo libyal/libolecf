@@ -113,6 +113,7 @@ stamp-h[1-9]
 /include/libolecf/types.h
 /libolecf/libolecf.rc
 /libolecf/libolecf_definitions.h
+/pyolecf[23]/*.[ch]
 /olecftools/olecfexport
 /olecftools/olecfinfo
 /olecftools/olecfmount

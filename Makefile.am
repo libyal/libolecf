@@ -23,6 +23,8 @@ SUBDIRS = \
 	libcsystem \
 	olecftools \
 	pyolecf \
+	pyolecf2 \
+	pyolecf3 \
 	po \
 	manuals \
 	tests \
@@ -36,8 +38,10 @@ DPKG_FILES = \
 	dpkg/copyright \
 	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libolecf-dev.docs \
 	dpkg/libolecf.docs \
+	dpkg/libolecf-dev.docs \
+	dpkg/libolecf-python.docs \
+	dpkg/libolecf-python3.docs \
 	dpkg/libolecf-tools.docs \
 	dpkg/source/format
 
