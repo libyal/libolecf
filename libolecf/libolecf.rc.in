@@ -24,7 +24,7 @@ BEGIN
       VALUE "FileDescription",		"Library to access the Object Linking and Embedding (OLE) Compound File (CF) format\0"
       VALUE "FileVersion",		"@VERSION@" "\0"
       VALUE "InternalName",		"libolecf.dll\0"
-      VALUE "LegalCopyright",		"(C) 2008-2015, Joachim Metz <joachim.metz@gmail.com>\0"
+      VALUE "LegalCopyright",		"(C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>\0"
       VALUE "OriginalFilename",		"libolecf.dll\0"
       VALUE "ProductName",		"libolecf\0"
       VALUE "ProductVersion",		"@VERSION@" "\0"
