@@ -70,15 +70,15 @@ pyolecf_la_CPPFLAGS = $(PYTHON2_CPPFLAGS)
 pyolecf_la_LDFLAGS  = -module -avoid-version $(PYTHON2_LDFLAGS)
 
 $(BUILT_SOURCES):
-	/bin/cp -f $(top_srcdir)/pyolecf/pyolecf*.[ch] .
-
-clean-local:
-	/bin/rm -f pyolecf*.[ch]
+	/bin/cp -f $(top_srcdir)/pyolecf/$@ $@
 
 endif
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
+
+clean-local:
+	/bin/rm -f pyolecf*.[ch]
 
 distclean: clean
 	/bin/rm -f Makefile
