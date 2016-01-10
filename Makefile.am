@@ -23,8 +23,8 @@ SUBDIRS = \
 	libcsystem \
 	olecftools \
 	pyolecf \
-	pyolecf2 \
-	pyolecf3 \
+	pyolecf-python2 \
+	pyolecf-python3 \
 	po \
 	manuals \
 	tests \
