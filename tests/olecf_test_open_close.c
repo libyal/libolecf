@@ -20,12 +20,11 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
-
-#include <stdio.h>
 
 #include "olecf_test_libcerror.h"
 #include "olecf_test_libcstring.h"
@@ -40,7 +39,7 @@ int olecf_test_single_open_close_file(
      int expected_result )
 {
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
+	libolecf_file_t *file    = NULL;
 	static char *function    = "olecf_test_single_open_close_file";
 	int result               = 0;
 
@@ -99,7 +98,9 @@ int olecf_test_single_open_close_file(
 
 		result = -1;
 	}
-	if( result == expected_result )
+	result = ( expected_result == result );
+
+	if( result == 1 )
 	{
 		fprintf(
 		 stdout,
@@ -115,20 +116,18 @@ int olecf_test_single_open_close_file(
 	 stdout,
 	 "\n" );
 
-	if( result == -1 )
+	if( error != NULL )
 	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
+		if( result != 1 )
+		{
+			libcerror_error_backtrace_fprint(
+			 error,
+			 stderr );
+		}
 		libcerror_error_free(
 		 &error );
 	}
-	if( result != expected_result )
-	{
-		return( -1 );
-	}
-	return( 1 );
+	return( result );
 }
 
 /* Tests multiple open and close of a file
@@ -140,7 +139,7 @@ int olecf_test_multi_open_close_file(
      int expected_result )
 {
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
+	libolecf_file_t *file    = NULL;
 	static char *function    = "olecf_test_multi_open_close_file";
 	int result               = 0;
 
@@ -228,7 +227,9 @@ int olecf_test_multi_open_close_file(
 
 		result = -1;
 	}
-	if( result == expected_result )
+	result = ( expected_result == result );
+
+	if( result == 1 )
 	{
 		fprintf(
 		 stdout,
@@ -244,20 +245,18 @@ int olecf_test_multi_open_close_file(
 	 stdout,
 	 "\n" );
 
-	if( result == -1 )
+	if( error != NULL )
 	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
+		if( result != 1 )
+		{
+			libcerror_error_backtrace_fprint(
+			 error,
+			 stderr );
+		}
 		libcerror_error_free(
 		 &error );
 	}
-	if( result != expected_result )
-	{
-		return( -1 );
-	}
-	return( 1 );
+	return( result );
 }
 
 /* The main program

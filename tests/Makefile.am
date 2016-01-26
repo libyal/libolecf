@@ -13,7 +13,7 @@ AM_CPPFLAGS = \
 	@LIBBFIO_CPPFLAGS@ \
 	@LIBOLECF_DLL_IMPORT@
 
-if HAVE_PYTHON
+if HAVE_PYTHON_TESTS
 TESTS_PYOLECF  = \
 	test_pyolecf_set_ascii_codepage.sh \
 	test_pyolecf_open_close.sh
