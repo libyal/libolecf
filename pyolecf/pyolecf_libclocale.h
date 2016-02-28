@@ -44,7 +44,7 @@
 
 #include <libclocale.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBCLOCALE ) */
 
-#endif
+#endif /* !defined( _PYOLECF_LIBCLOCALE_H ) */
 

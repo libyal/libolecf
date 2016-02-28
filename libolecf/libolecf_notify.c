@@ -20,13 +20,12 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
-
-#include <stdio.h>
 
 #include "libolecf_libcerror.h"
 #include "libolecf_libcnotify.h"
@@ -34,7 +33,7 @@
 
 #if !defined( HAVE_LOCAL_LIBOLECF )
 
-/* Set the verbose notification
+/* Sets the verbose notification
  */
 void libolecf_notify_set_verbose(
       int verbose )
@@ -43,7 +42,7 @@ void libolecf_notify_set_verbose(
 	 verbose );
 }
 
-/* Set the notification stream
+/* Sets the notification stream
  * Returns 1 if successful or -1 on error
  */
 int libolecf_notify_set_stream(
@@ -117,5 +116,5 @@ int libolecf_notify_stream_close(
 	return( 0 );
 }
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 

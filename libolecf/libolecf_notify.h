@@ -23,9 +23,8 @@
 #define _LIBOLECF_NOTIFY_H
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #include "libolecf_extern.h"
 #include "libolecf_libcerror.h"
@@ -54,11 +53,11 @@ LIBOLECF_EXTERN \
 int libolecf_notify_stream_close(
      libcerror_error_t **error );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_NOTIFY_H ) */
 

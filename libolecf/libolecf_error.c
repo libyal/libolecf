@@ -20,9 +20,8 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #include "libolecf_error.h"
 #include "libolecf_libcerror.h"
@@ -92,5 +91,5 @@ int libolecf_error_backtrace_sprint(
 	         size ) );
 }
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 

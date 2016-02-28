@@ -28,7 +28,7 @@
 #include "pyolecf_libcerror.h"
 #include "pyolecf_python.h"
 
-#define PYOLECF_ERROR_STRING_SIZE		2048
+#define PYOLECF_ERROR_STRING_SIZE	2048
 
 #if defined( __cplusplus )
 extern "C" {
@@ -56,5 +56,5 @@ void pyolecf_error_raise(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_ERROR_H ) */
 

@@ -47,9 +47,9 @@ typedef intptr_t libolecf_property_section_t;
 typedef intptr_t libolecf_property_set_t;
 typedef intptr_t libolecf_property_value_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBOLECF ) */
 
-#endif
+#endif /* !defined( _LIBOLECF_INTERNAL_TYPES_H ) */
 

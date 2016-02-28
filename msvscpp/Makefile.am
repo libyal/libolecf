@@ -18,6 +18,8 @@ MSVSCPP_FILES = \
 	libfwps/libfwps.vcproj \
 	libolecf/libolecf.vcproj \
 	libuna/libuna.vcproj \
+	olecf_test_open_close/olecf_test_open_close.vcproj \
+	olecf_test_set_ascii_codepage/olecf_test_set_ascii_codepage.vcproj \
 	olecfexport/olecfexport.vcproj \
 	olecfinfo/olecfinfo.vcproj \
 	olecfmount/olecfmount.vcproj \
