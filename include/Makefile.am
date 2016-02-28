@@ -1,14 +1,14 @@
 include_HEADERS = \
-        libolecf.h
+	libolecf.h
 
 pkginclude_HEADERS = \
-        libolecf/codepage.h \
-        libolecf/definitions.h \
-        libolecf/error.h \
-        libolecf/extern.h \
-        libolecf/features.h \
-        libolecf/ole.h \
-        libolecf/types.h
+	libolecf/codepage.h \
+	libolecf/definitions.h \
+	libolecf/error.h \
+	libolecf/extern.h \
+	libolecf/features.h \
+	libolecf/ole.h \
+	libolecf/types.h
 
 EXTRA_DIST = \
 	libolecf.h.in \

@@ -14,7 +14,7 @@ AM_CPPFLAGS = \
 	@LIBOLECF_DLL_IMPORT@
 
 if HAVE_PYTHON_TESTS
-TESTS_PYOLECF  = \
+TESTS_PYOLECF = \
 	test_pyolecf_set_ascii_codepage.sh \
 	test_pyolecf_open_close.sh
 endif
@@ -40,7 +40,7 @@ check_SCRIPTS = \
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
-check_PROGRAMS =  \
+check_PROGRAMS = \
 	olecf_test_open_close \
 	olecf_test_set_ascii_codepage
 
