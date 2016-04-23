@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBOLECFTOOLS_LIBCFILE_H )
-#define _LIBOLECFTOOLS_LIBCFILE_H
+#if !defined( _OLECFTOOLS_LIBCFILE_H )
+#define _OLECFTOOLS_LIBCFILE_H
 
 #include <common.h>
 
@@ -44,7 +44,7 @@
 
 #include <libcfile.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBCFILE ) */
 
-#endif
+#endif /* !defined( _OLECFTOOLS_LIBCFILE_H ) */
 

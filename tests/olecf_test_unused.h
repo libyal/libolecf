@@ -1,5 +1,5 @@
 /*
- * The internal libclocale header
+ * The unused definition
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _OLECF_TEST_LIBCLOCALE_H )
-#define _OLECF_TEST_LIBCLOCALE_H
+#if !defined( _OLECF_TEST_UNUSED_H )
+#define _OLECF_TEST_UNUSED_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCLOCALE for local use of libclocale
- */
-#if defined( HAVE_LOCAL_LIBCLOCALE )
+#if !defined( OLECF_TEST_ATTRIBUTE_UNUSED )
 
-#include <libclocale_codepage.h>
-#include <libclocale_definitions.h>
-#include <libclocale_locale.h>
-#include <libclocale_support.h>
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define OLECF_TEST_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 
 #else
+#define OLECF_TEST_ATTRIBUTE_UNUSED
 
-/* If libtool DLL support is enabled set LIBCLOCALE_DLL_IMPORT
- * before including libclocale.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCLOCALE_DLL_IMPORT
-#endif
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
 
-#include <libclocale.h>
+#endif /* !defined( OLECF_TEST_ATTRIBUTE_UNUSED ) */
 
-#endif /* defined( HAVE_LOCAL_LIBCLOCALE ) */
+#if defined( _MSC_VER )
+#define OLECF_TEST_UNREFERENCED_PARAMETER( parameter ) \
+	UNREFERENCED_PARAMETER( parameter );
 
-#endif /* !defined( _OLECF_TEST_LIBCLOCALE_H ) */
+#else
+#define OLECF_TEST_UNREFERENCED_PARAMETER( parameter ) \
+	/* parameter */
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* !defined( _OLECF_TEST_UNUSED_H ) */
 
