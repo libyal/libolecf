@@ -38,7 +38,12 @@ test_callback()
 
 	local TEST_LOG="${TEST_OUTPUT}.log";
 
-	(cd ${TMPDIR} && find "${INPUT_NAME}.export" -type f -exec md5sum {} \; | sort -k 2 > "${TEST_LOG}");
+	if test "${PLATFORM}" = "Darwin";
+	then
+		(cd ${TMPDIR} && find "${INPUT_NAME}.export" -type f -exec md5 {} \; | sort -k 2 > "${TEST_LOG}");
+	else
+		(cd ${TMPDIR} && find "${INPUT_NAME}.export" -type f -exec md5sum {} \; | sort -k 2 > "${TEST_LOG}");
+	fi
 
 	local TEST_RESULTS="${TMPDIR}/${TEST_LOG}";
 	local STORED_TEST_RESULTS="${TEST_SET_DIRECTORY}/${TEST_LOG}.gz";
@@ -90,10 +95,18 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
+PLATFORM=`uname -s`;
+
 source ${TEST_RUNNER};
 
 assert_availability_binary find;
-assert_availability_binary md5sum;
+
+if test "${PLATFORM}" = "Darwin";
+then
+	assert_availability_binary md5;
+else
+	assert_availability_binary md5sum;
+fi
 
 run_test_on_input_directory "${TEST_PROFILE}" "${TEST_DESCRIPTION}" "with_callback" "${OPTION_SETS}" "${TEST_EXECUTABLE}" "${INPUT_DIRECTORY}" "${INPUT_GLOB}";
 RESULT=$?;
