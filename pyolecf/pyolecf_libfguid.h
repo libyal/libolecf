@@ -1,5 +1,5 @@
 /*
- * The libfguid header wrapper
+ * The internal libfguid header
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -45,5 +45,5 @@
 
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_LIBFGUID_H ) */
 

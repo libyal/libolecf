@@ -1,14 +1,14 @@
 #!/bin/bash
 # Export tool testing script
 #
-# Version: 20160411
+# Version: 20160507
 
 EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
 TEST_PREFIX=`dirname ${PWD}`;
-TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\)/\1/'`;
+TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\).*$/\1/'`;
 TEST_SUFFIX="export";
 
 TEST_PROFILE="${TEST_PREFIX}${TEST_SUFFIX}";
@@ -18,7 +18,7 @@ OPTION_SETS="";
 TEST_TOOL_DIRECTORY="../${TEST_PREFIX}tools";
 TEST_TOOL="${TEST_PREFIX}${TEST_SUFFIX}";
 INPUT_DIRECTORY="input";
-INPUT_GLOB="*.[Ees]*01";
+INPUT_GLOB="*";
 
 test_callback()
 {
