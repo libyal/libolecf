@@ -929,7 +929,7 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
 		}
 		result = libuna_utf8_string_compare_with_utf16_stream(
 		          utf8_string,
-		          utf8_string_length + 1,
+		          utf8_string_length,
 		          sub_directory_entry->name,
 		          sub_directory_entry->name_size,
 		          byte_order,
@@ -1058,7 +1058,7 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 		}
 		result = libuna_utf16_string_compare_with_utf16_stream(
 		          utf16_string,
-		          utf16_string_length + 1,
+		          utf16_string_length,
 		          sub_directory_entry->name,
 		          sub_directory_entry->name_size,
 		          byte_order,

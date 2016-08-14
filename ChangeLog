@@ -81,6 +81,7 @@ olecfinfo
 * print compobj stream info
 
 20160817
+* Changes for get item by path
 * worked on Python bindings
 
 20160109
