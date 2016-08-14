@@ -14,11 +14,8 @@ TODO
 * pyolecf:
   - add format version function
   - property values allow to set ascii codepage
-  - add stream read random
   - pyolecf_property_value add functions
   - fix pyolecf_property_value get data function
-  - add data_as_integer (allow filetime)
-  - add data_as_string 
   - add more definitions types
 * olecfexport
   - add stream name to export failed error, if possible
@@ -82,6 +79,9 @@ olecfinfo
 * print stream/directory data (partial)
 * print summary information (partial)
 * print compobj stream info
+
+20160817
+* worked on Python bindings
 
 20160109
 * fixes for rpmbuild
