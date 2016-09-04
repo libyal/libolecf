@@ -45,14 +45,27 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	olecf_test_error \
 	olecf_test_get_version \
 	olecf_test_open_close \
 	olecf_test_set_ascii_codepage
+
+olecf_test_error_SOURCES = \
+	olecf_test_error.c \
+	olecf_test_libcstring.h \
+	olecf_test_libolecf.h \
+	olecf_test_macros.h \
+	olecf_test_unused.h
+
+olecf_test_error_LDADD = \
+	../libolecf/libolecf.la \
+	@LIBCSTRING_LIBADD@
 
 olecf_test_get_version_SOURCES = \
 	olecf_test_get_version.c \
 	olecf_test_libcstring.h \
 	olecf_test_libolecf.h \
+	olecf_test_macros.h \
 	olecf_test_unused.h
 
 olecf_test_get_version_LDADD = \

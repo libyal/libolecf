@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="olecf_test_get_version"
-	ProjectGUID="{71CBAB60-CAB7-48E0-BBDE-2EF66FE09AFC}"
-	RootNamespace="olecf_test_get_version"
+	Name="olecf_test_error"
+	ProjectGUID="{75003279-0D5C-4D23-8299-9D0BF74E8929}"
+	RootNamespace="olecf_test_error"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\olecf_test_get_version.c"
+				RelativePath="..\..\tests\olecf_test_error.c"
 				>
 			</File>
 		</Filter>

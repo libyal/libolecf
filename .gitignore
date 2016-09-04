@@ -124,6 +124,7 @@ stamp-h[1-9]
 /olecftools/olecfinfo
 /olecftools/olecfmount
 /tests/input
+/tests/olecf_test_error
 /tests/olecf_test_get_version
 /tests/olecf_test_open_close
 /tests/olecf_test_set_ascii_codepage

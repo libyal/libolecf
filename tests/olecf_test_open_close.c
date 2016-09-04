@@ -40,7 +40,7 @@ int olecf_test_single_open_close_file(
      int expected_result )
 {
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file    = NULL;
+	libolecf_file_t *file      = NULL;
 	static char *function    = "olecf_test_single_open_close_file";
 	char *access_string      = NULL;
 	int result               = 0;
@@ -189,7 +189,7 @@ int olecf_test_multi_open_close_file(
      int expected_result )
 {
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file    = NULL;
+	libolecf_file_t *file      = NULL;
 	static char *function    = "olecf_test_multi_open_close_file";
 	char *access_string      = NULL;
 	int result               = 0;
