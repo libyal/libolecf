@@ -7,7 +7,6 @@ pkginclude_HEADERS = \
 	libolecf/error.h \
 	libolecf/extern.h \
 	libolecf/features.h \
-	libolecf/ole.h \
 	libolecf/types.h
 
 EXTRA_DIST = \

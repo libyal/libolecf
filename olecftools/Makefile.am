@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -53,7 +52,6 @@ olecfexport_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 olecfinfo_SOURCES = \
@@ -81,7 +79,6 @@ olecfinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 olecfmount_SOURCES = \
@@ -91,7 +88,6 @@ olecfmount_SOURCES = \
 	olecftools_libcerror.h \
 	olecftools_libclocale.h \
 	olecftools_libcnotify.h \
-	olecftools_libcstring.h \
 	olecftools_libcsystem.h \
 	olecftools_libfdatetime.h \
 	olecftools_libolecf.h
@@ -103,7 +99,6 @@ olecfmount_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 MAINTAINERCLEANFILES = \

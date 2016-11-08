@@ -8,7 +8,6 @@ MSVSCPP_FILES = \
 	libcnotify/libcnotify.vcproj \
 	libcpath/libcpath.vcproj \
 	libcsplit/libcsplit.vcproj \
-	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libfdatetime/libfdatetime.vcproj \
@@ -19,9 +18,13 @@ MSVSCPP_FILES = \
 	libolecf/libolecf.vcproj \
 	libuna/libuna.vcproj \
 	olecf_test_error/olecf_test_error.vcproj \
-	olecf_test_get_version/olecf_test_get_version.vcproj \
+	olecf_test_file/olecf_test_file.vcproj \
+	olecf_test_item/olecf_test_item.vcproj \
 	olecf_test_open_close/olecf_test_open_close.vcproj \
-	olecf_test_set_ascii_codepage/olecf_test_set_ascii_codepage.vcproj \
+	olecf_test_property_section/olecf_test_property_section.vcproj \
+	olecf_test_property_set/olecf_test_property_set.vcproj \
+	olecf_test_property_value/olecf_test_property_value.vcproj \
+	olecf_test_support/olecf_test_support.vcproj \
 	olecfexport/olecfexport.vcproj \
 	olecfinfo/olecfinfo.vcproj \
 	olecfmount/olecfmount.vcproj \

@@ -21,7 +21,9 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libolecf_codepage.h"
 #include "libolecf_debug.h"
@@ -35,7 +37,6 @@
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
 #include "libolecf_libcnotify.h"
-#include "libolecf_libcstring.h"
 #include "libolecf_libuna.h"
 #include "libolecf_types.h"
 
@@ -243,6 +244,7 @@ int libolecf_file_open(
 	libbfio_handle_t *file_io_handle        = NULL;
 	libolecf_internal_file_t *internal_file = NULL;
 	static char *function                   = "libolecf_file_open";
+	size_t filename_length                  = 0;
 
 	if( file == NULL )
 	{
@@ -297,11 +299,13 @@ int libolecf_file_open(
 		goto on_error;
 	}
 #endif
+	filename_length = narrow_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name(
 	     file_io_handle,
 	     filename,
-	     libcstring_narrow_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(
@@ -357,6 +361,7 @@ int libolecf_file_open_wide(
 	libbfio_handle_t *file_io_handle        = NULL;
 	libolecf_internal_file_t *internal_file = NULL;
 	static char *function                   = "libolecf_file_open_wide";
+	size_t filename_length                  = 0;
 
 	if( file == NULL )
 	{
@@ -411,11 +416,13 @@ int libolecf_file_open_wide(
 		goto on_error;
 	}
 #endif
+	filename_length = wide_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     libcstring_wide_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(

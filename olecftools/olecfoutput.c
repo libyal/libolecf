@@ -31,7 +31,6 @@
 #include "olecftools_libclocale.h"
 #include "olecftools_libcnotify.h"
 #include "olecftools_libcpath.h"
-#include "olecftools_libcstring.h"
 #include "olecftools_libcsystem.h"
 #include "olecftools_libolecf.h"
 #include "olecftools_libuna.h"
@@ -109,11 +108,6 @@ void olecfoutput_detailed_version_fprint(
          program,
 	 LIBOLECF_VERSION_STRING,
 	 LIBOLECF_VERSION_STRING );
-
-	fprintf(
-	 stream,
-	 ", libcstring %s",
-	 LIBCSTRING_VERSION_STRING );
 
 	fprintf(
 	 stream,

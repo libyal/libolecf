@@ -1,5 +1,5 @@
 /*
- * Library get version test program
+ * Library property_value type testing program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -20,46 +20,60 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include "olecf_test_libcstring.h"
+#include "olecf_test_libcerror.h"
 #include "olecf_test_libolecf.h"
 #include "olecf_test_macros.h"
+#include "olecf_test_memory.h"
 #include "olecf_test_unused.h"
 
-/* Tests retrieving the library version
+/* Tests the libolecf_property_value_free function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_get_version(
+int olecf_test_property_value_free(
      void )
 {
-	const char *version_string = NULL;
-	int result                 = 0;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
 
-	version_string = libolecf_get_version();
-
-	result = libcstring_narrow_string_compare(
-	          version_string,
-	          LIBOLECF_VERSION_STRING,
-	          9 );
+	/* Test error cases
+	 */
+	result = libolecf_property_value_free(
+	          NULL,
+	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	return( 1 );
 
 on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
 	return( 0 );
 }
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc OLECF_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] OLECF_TEST_ATTRIBUTE_UNUSED )
@@ -73,8 +87,8 @@ int main(
 	OLECF_TEST_UNREFERENCED_PARAMETER( argv )
 
 	OLECF_TEST_RUN(
-	 "libolecf_get_version",
-	 olecf_test_get_version() )
+	 "libolecf_property_value_free",
+	 olecf_test_property_value_free );
 
 	return( EXIT_SUCCESS );
 

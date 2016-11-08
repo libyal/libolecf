@@ -27,7 +27,6 @@
 #include <types.h>
 
 #include "olecftools_libcerror.h"
-#include "olecftools_libcstring.h"
 #include "olecftools_libolecf.h"
 
 #if defined( __cplusplus )
@@ -65,12 +64,12 @@ int mount_handle_signal_abort(
 
 int mount_handle_set_ascii_codepage(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *string,
+     const system_character_t *string,
      libcerror_error_t **error );
 
 int mount_handle_open_input(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error );
 
 int mount_handle_close(
@@ -79,28 +78,28 @@ int mount_handle_close(
 
 int mount_handle_get_item_by_path(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *path,
+     const system_character_t *path,
      size_t path_length,
-     libcstring_system_character_t path_separator,
+     system_character_t path_separator,
      libolecf_item_t **item,
      libcerror_error_t **error );
 
 int mount_handle_get_filename(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *sanitized_name,
+     const system_character_t *sanitized_name,
      size_t sanitized_name_size,
-     libcstring_system_character_t path_separator,
-     libcstring_system_character_t **name,
+     system_character_t path_separator,
+     system_character_t **name,
      size_t *name_size,
      size_t *last_path_seperator_index,
      libcerror_error_t **error );
 
 int mount_handle_get_sanitized_filename(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *name,
+     const system_character_t *name,
      size_t name_size,
-     libcstring_system_character_t path_separator,
-     libcstring_system_character_t **sanitized_name,
+     system_character_t path_separator,
+     system_character_t **sanitized_name,
      size_t *sanitized_name_size,
      libcerror_error_t **error );
 

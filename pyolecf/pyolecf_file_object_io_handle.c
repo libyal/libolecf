@@ -28,7 +28,6 @@
 #include "pyolecf_integer.h"
 #include "pyolecf_libbfio.h"
 #include "pyolecf_libcerror.h"
-#include "pyolecf_libcstring.h"
 #include "pyolecf_python.h"
 
 /* Creates a file object IO handle
@@ -76,7 +75,7 @@ int pyolecf_file_object_io_handle_initialize(
 		return( -1 );
 	}
 	*file_object_io_handle = (pyolecf_file_object_io_handle_t *) PyMem_Malloc(
-	                                                            sizeof( pyolecf_file_object_io_handle_t ) );
+	                                                              sizeof( pyolecf_file_object_io_handle_t ) );
 
 	if( *file_object_io_handle == NULL )
 	{
@@ -130,7 +129,7 @@ int pyolecf_file_object_initialize(
      libcerror_error_t **error )
 {
 	pyolecf_file_object_io_handle_t *file_object_io_handle = NULL;
-	static char *function                                = "pyolecf_file_object_initialize";
+	static char *function                                  = "pyolecf_file_object_initialize";
 
 	if( handle == NULL )
 	{

@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -40,7 +39,6 @@ libolecf_la_SOURCES = \
 	libolecf_libcerror.h \
 	libolecf_libclocale.h \
 	libolecf_libcnotify.h \
-	libolecf_libcstring.h \
 	libolecf_libfdatetime.h \
 	libolecf_libfguid.h \
 	libolecf_libfole.h \
@@ -63,7 +61,6 @@ libolecf_la_SOURCES = \
 	olecf_property_set.h
 
 libolecf_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCDATA_LIBADD@ \

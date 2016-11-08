@@ -2,7 +2,6 @@ if HAVE_PYTHON
 AM_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -29,7 +28,6 @@ pyolecf_la_SOURCES = \
 	pyolecf_libbfio.h \
 	pyolecf_libcerror.h \
 	pyolecf_libclocale.h \
-	pyolecf_libcstring.h \
 	pyolecf_libfguid.h \
 	pyolecf_libolecf.h \
 	pyolecf_property_section.c pyolecf_property_section.h \
@@ -44,7 +42,6 @@ pyolecf_la_SOURCES = \
 	pyolecf_value_types.c pyolecf_value_types.h
 
 pyolecf_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	../libolecf/libolecf.la \
 	@LIBCDATA_LIBADD@ \

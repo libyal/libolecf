@@ -118,5 +118,5 @@ enum LIBOLECF_CODEPAGES
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_CODEPAGE_H ) */
 

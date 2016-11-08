@@ -22,7 +22,10 @@
 #include <common.h>
 #include <byte_stream.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libolecf_allocation_table.h"
 #include "libolecf_codepage.h"
@@ -34,7 +37,6 @@
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
 #include "libolecf_libcnotify.h"
-#include "libolecf_libcstring.h"
 #include "libolecf_libfdatetime.h"
 #include "libolecf_libfguid.h"
 #include "libolecf_libuna.h"
@@ -221,7 +223,7 @@ int libolecf_io_handle_read_file_header(
 	uint16_t short_sector_size  = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t guid_string[ 48 ];
 
 	libfguid_identifier_t *guid = NULL;
 	int result                  = 0;
@@ -560,7 +562,7 @@ int libolecf_io_handle_read_file_header(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfguid_identifier_copy_to_utf16_string(
 			  guid,
 			  (uint16_t *) guid_string,
@@ -587,7 +589,7 @@ int libolecf_io_handle_read_file_header(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: class identifier\t\t\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "%s: class identifier\t\t\t: %" PRIs_SYSTEM "\n",
 		 function,
 		 guid_string );
 
@@ -1639,12 +1641,12 @@ int libolecf_io_handle_read_directory_entries(
 	int result                                        = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	libcstring_system_character_t filetime_string[ 32 ];
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t filetime_string[ 32 ];
+	system_character_t guid_string[ 48 ];
 
 	libfdatetime_filetime_t *filetime                 = NULL;
 	libfguid_identifier_t *guid                       = NULL;
-	libcstring_system_character_t *name_string        = NULL;
+	system_character_t *name_string                   = NULL;
 	size_t name_string_size                           = 0;
 	uint32_t value_32bit                              = 0;
 #endif
@@ -1986,7 +1988,7 @@ int libolecf_io_handle_read_directory_entries(
 
 					if( directory_entry->name != NULL )
 					{
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 						result = libuna_utf16_string_size_from_utf16_stream(
 						          directory_entry->name,
 						          directory_entry->name_size,
@@ -2012,7 +2014,7 @@ int libolecf_io_handle_read_directory_entries(
 
 							goto on_error;
 						}
-						name_string = libcstring_system_string_allocate(
+						name_string = system_string_allocate(
 						               name_string_size );
 
 						if( name_string == NULL )
@@ -2026,7 +2028,7 @@ int libolecf_io_handle_read_directory_entries(
 
 							goto on_error;
 						}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 						result = libuna_utf16_string_copy_from_utf16_stream(
 							  (uint16_t *) name_string,
 							  name_string_size,
@@ -2055,7 +2057,7 @@ int libolecf_io_handle_read_directory_entries(
 							goto on_error;
 						}
 						libcnotify_printf(
-						 "%" PRIs_LIBCSTRING_SYSTEM "",
+						 "%" PRIs_SYSTEM "",
 						 name_string );
 
 						memory_free(
@@ -2129,7 +2131,7 @@ int libolecf_io_handle_read_directory_entries(
 
 						goto on_error;
 					}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 					result = libfguid_identifier_copy_to_utf16_string(
 						  guid,
 						  (uint16_t *) guid_string,
@@ -2156,7 +2158,7 @@ int libolecf_io_handle_read_directory_entries(
 						goto on_error;
 					}
 					libcnotify_printf(
-					 "%s: directory entry: %03d class identifier\t\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+					 "%s: directory entry: %03d class identifier\t\t: %" PRIs_SYSTEM "\n",
 					 function,
 					 directory_entry_index,
 					 guid_string );
@@ -2221,7 +2223,7 @@ int libolecf_io_handle_read_directory_entries(
 
 						goto on_error;
 					}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 					result = libfdatetime_filetime_copy_to_utf16_string(
 					          filetime,
 					          (uint16_t *) filetime_string,
@@ -2248,7 +2250,7 @@ int libolecf_io_handle_read_directory_entries(
 						goto on_error;
 					}
 					libcnotify_printf(
-					 "%s: directory entry: %03d creation time\t\t\t: %" PRIs_LIBCSTRING_SYSTEM " UTC\n",
+					 "%s: directory entry: %03d creation time\t\t\t: %" PRIs_SYSTEM " UTC\n",
 					 function,
 					 directory_entry_index,
 					 filetime_string );
@@ -2269,7 +2271,7 @@ int libolecf_io_handle_read_directory_entries(
 
 						goto on_error;
 					}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 					result = libfdatetime_filetime_copy_to_utf16_string(
 					          filetime,
 					          (uint16_t *) filetime_string,
@@ -2296,7 +2298,7 @@ int libolecf_io_handle_read_directory_entries(
 						goto on_error;
 					}
 					libcnotify_printf(
-					 "%s: directory entry: %03d modification time\t\t: %" PRIs_LIBCSTRING_SYSTEM " UTC\n",
+					 "%s: directory entry: %03d modification time\t\t: %" PRIs_SYSTEM " UTC\n",
 					 function,
 					 directory_entry_index,
 					 filetime_string );

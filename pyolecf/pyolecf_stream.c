@@ -30,7 +30,6 @@
 #include "pyolecf_integer.h"
 #include "pyolecf_item.h"
 #include "pyolecf_libcerror.h"
-#include "pyolecf_libcstring.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_python.h"
 #include "pyolecf_stream.h"

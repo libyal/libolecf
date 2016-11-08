@@ -30,7 +30,6 @@
 #include "pyolecf_guid.h"
 #include "pyolecf_item.h"
 #include "pyolecf_libcerror.h"
-#include "pyolecf_libcstring.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_property_section.h"
 #include "pyolecf_property_sections.h"

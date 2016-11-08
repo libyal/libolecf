@@ -21,7 +21,10 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "info_handle.h"
 #include "olecftools_libcerror.h"
@@ -29,7 +32,6 @@
 #include "olecftools_libfdatetime.h"
 #include "olecftools_libfguid.h"
 #include "olecftools_libfole.h"
-#include "olecftools_libcstring.h"
 #include "olecftools_libcsystem.h"
 #include "olecftools_libolecf.h"
 
@@ -220,7 +222,7 @@ int info_handle_signal_abort(
  */
 int info_handle_set_ascii_codepage(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *string,
+     const system_character_t *string,
      libcerror_error_t **error )
 {
 	static char *function  = "info_handle_set_ascii_codepage";
@@ -242,10 +244,10 @@ int info_handle_set_ascii_codepage(
 	feature_flags = LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_KOI8
 	              | LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_WINDOWS;
 
-	string_length = libcstring_system_string_length(
+	string_length = system_string_length(
 	                 string );
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libclocale_codepage_copy_from_string_wide(
 	          &( info_handle->ascii_codepage ),
 	          string,
@@ -279,7 +281,7 @@ int info_handle_set_ascii_codepage(
  */
 int info_handle_open_input(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error )
 {
 	static char *function = "info_handle_open_input";
@@ -295,7 +297,7 @@ int info_handle_open_input(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libolecf_file_open_wide(
 	     info_handle->input_file,
 	     filename,
@@ -552,16 +554,16 @@ int info_handle_item_fprint(
      int indentation_level,
      libcerror_error_t **error )
 {
-	libcstring_system_character_t *name = NULL;
-	libolecf_item_t *sub_item           = NULL;
-	static char *function               = "info_handle_item_fprint";
-	size_t name_index                   = 0;
-	size_t name_size                    = 0;
-	uint32_t size                       = 0;
-	int number_of_sub_items             = 0;
-	int indentation_iterator            = 0;
-	int result                          = 0;
-	int sub_item_index                  = 0;
+	libolecf_item_t *sub_item = NULL;
+	system_character_t *name  = NULL;
+	static char *function     = "info_handle_item_fprint";
+	size_t name_index         = 0;
+	size_t name_size          = 0;
+	uint32_t size             = 0;
+	int indentation_iterator  = 0;
+	int number_of_sub_items   = 0;
+	int result                = 0;
+	int sub_item_index        = 0;
 
 	if( info_handle == NULL )
 	{
@@ -585,7 +587,7 @@ int info_handle_item_fprint(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_item_get_utf16_name_size(
 	          item,
 	          &name_size,
@@ -607,7 +609,7 @@ int info_handle_item_fprint(
 
 		goto on_error;
 	}
-	name = libcstring_system_string_allocate(
+	name = system_string_allocate(
 	        name_size );
 
 	if( name == NULL )
@@ -621,7 +623,7 @@ int info_handle_item_fprint(
 
 		goto on_error;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_item_get_utf16_name(
 	          item,
 	          (uint16_t *) name,
@@ -685,7 +687,7 @@ int info_handle_item_fprint(
 		{
 			fprintf(
 			 info_handle->notify_stream,
-			 "%" PRIc_LIBCSTRING_SYSTEM "",
+			 "%" PRIc_SYSTEM "",
 			 name[ name_index ] );
 		}
 	}
@@ -926,7 +928,7 @@ int info_handle_document_summary_information_fprint(
 {
 	uint8_t guid_data[ 16 ];
 
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t guid_string[ 48 ];
 
 	libfguid_identifier_t *guid                   = NULL;
 	libolecf_item_t *property_set_stream          = NULL;
@@ -1061,7 +1063,7 @@ int info_handle_document_summary_information_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfguid_identifier_copy_to_utf16_string(
 			  guid,
 			  (uint16_t *) guid_string,
@@ -1089,7 +1091,7 @@ int info_handle_document_summary_information_fprint(
 		}
 		fprintf(
 		 info_handle->notify_stream,
-		 "\tClass identifier\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "\tClass identifier\t: %" PRIs_SYSTEM "\n",
 		 guid_string );
 
 		if( libolecf_property_set_get_number_of_sections(
@@ -1171,7 +1173,7 @@ int info_handle_document_summary_information_fprint(
 
 				goto on_error;
 			}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 			result = libfguid_identifier_copy_to_utf16_string(
 				  guid,
 				  (uint16_t *) guid_string,
@@ -1199,7 +1201,7 @@ int info_handle_document_summary_information_fprint(
 			}
 			fprintf(
 			 info_handle->notify_stream,
-			 "\tClass identifier\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+			 "\tClass identifier\t: %" PRIs_SYSTEM "\n",
 			 guid_string );
 
 			if( libolecf_property_section_get_number_of_properties(
@@ -1561,7 +1563,7 @@ int info_handle_summary_information_fprint(
 {
 	uint8_t guid_data[ 16 ];
 
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t guid_string[ 48 ];
 
 	libfguid_identifier_t *guid                   = NULL;
 	libolecf_item_t *property_set_stream          = NULL;
@@ -1694,7 +1696,7 @@ int info_handle_summary_information_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfguid_identifier_copy_to_utf16_string(
 			  guid,
 			  (uint16_t *) guid_string,
@@ -1722,7 +1724,7 @@ int info_handle_summary_information_fprint(
 		}
 		fprintf(
 		 info_handle->notify_stream,
-		 "\tClass identifier\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "\tClass identifier\t: %" PRIs_SYSTEM "\n",
 		 guid_string );
 
 		if( libolecf_property_set_get_number_of_sections(
@@ -1804,7 +1806,7 @@ int info_handle_summary_information_fprint(
 
 				goto on_error;
 			}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 			result = libfguid_identifier_copy_to_utf16_string(
 				  guid,
 				  (uint16_t *) guid_string,
@@ -1832,7 +1834,7 @@ int info_handle_summary_information_fprint(
 			}
 			fprintf(
 			 info_handle->notify_stream,
-			 "\tClass identifier\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+			 "\tClass identifier\t: %" PRIs_SYSTEM "\n",
 			 guid_string );
 
 			if( libolecf_property_section_get_number_of_properties(

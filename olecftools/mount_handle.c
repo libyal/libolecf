@@ -21,12 +21,14 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "mount_handle.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libclocale.h"
-#include "olecftools_libcstring.h"
 #include "olecftools_libolecf.h"
 
 /* Creates a mount handle
@@ -205,7 +207,7 @@ int mount_handle_signal_abort(
  */
 int mount_handle_set_ascii_codepage(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *string,
+     const system_character_t *string,
      libcerror_error_t **error )
 {
 	static char *function  = "mount_handle_set_ascii_codepage";
@@ -227,10 +229,10 @@ int mount_handle_set_ascii_codepage(
 	feature_flags = LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_KOI8
 	              | LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_WINDOWS;
 
-	string_length = libcstring_system_string_length(
+	string_length = system_string_length(
 	                 string );
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libclocale_codepage_copy_from_string_wide(
 	          &( mount_handle->ascii_codepage ),
 	          string,
@@ -264,7 +266,7 @@ int mount_handle_set_ascii_codepage(
  */
 int mount_handle_open_input(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error )
 {
 	static char *function = "mount_handle_open_input";
@@ -280,7 +282,7 @@ int mount_handle_open_input(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libolecf_file_open_wide(
 	     mount_handle->input_file,
 	     filename,
@@ -347,18 +349,18 @@ int mount_handle_close(
  */
 int mount_handle_get_item_by_path(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *path,
+     const system_character_t *path,
      size_t path_length,
-     libcstring_system_character_t path_separator,
+     system_character_t path_separator,
      libolecf_item_t **item,
      libcerror_error_t **error )
 {
-	libcstring_system_character_t *olecf_path = NULL;
-	static char *function                     = "mount_handle_get_item_by_path";
-	size_t last_path_seperator_index          = 0;
-	size_t olecf_path_length                  = 0;
-	size_t olecf_path_size                    = 0;
-	int result                                = 0;
+	system_character_t *olecf_path   = NULL;
+	static char *function            = "mount_handle_get_item_by_path";
+	size_t last_path_seperator_index = 0;
+	size_t olecf_path_length         = 0;
+	size_t olecf_path_size           = 0;
+	int result                       = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -445,10 +447,10 @@ int mount_handle_get_item_by_path(
 
 		goto on_error;
 	}
-	olecf_path_length = libcstring_system_string_length(
+	olecf_path_length = system_string_length(
 	                     olecf_path );
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_file_get_item_by_utf16_path(
 		  mount_handle->input_file,
 		  (uint16_t *) olecf_path,
@@ -493,18 +495,18 @@ on_error:
  */
 int mount_handle_get_filename(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *sanitized_name,
+     const system_character_t *sanitized_name,
      size_t sanitized_name_size,
-     libcstring_system_character_t path_separator,
-     libcstring_system_character_t **name,
+     system_character_t path_separator,
+     system_character_t **name,
      size_t *name_size,
      size_t *last_path_seperator_index,
      libcerror_error_t **error )
 {
-	static char *function                         = "mount_handle_get_filename";
-	size_t name_index                             = 0;
-	size_t sanitized_name_index                   = 0;
-	libcstring_system_character_t character_value = 0;
+	static char *function              = "mount_handle_get_filename";
+	system_character_t character_value = 0;
+	size_t name_index                  = 0;
+	size_t sanitized_name_index        = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -574,7 +576,7 @@ int mount_handle_get_filename(
 	}
 	*name_size = sanitized_name_size;
 
-	if( *name_size > (size_t) ( SSIZE_MAX / sizeof( libcstring_system_character_t ) ) )
+	if( *name_size > (size_t) ( SSIZE_MAX / sizeof( system_character_t ) ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -585,7 +587,7 @@ int mount_handle_get_filename(
 
 		goto on_error;
 	}
-	*name = libcstring_system_string_allocate(
+	*name = system_string_allocate(
 	         *name_size );
 
 	if( *name == NULL )
@@ -622,7 +624,7 @@ int mount_handle_get_filename(
 
 			goto on_error;
 		}
-		if( path_separator == (libcstring_system_character_t) '/' )
+		if( path_separator == (system_character_t) '/' )
 		{
 			/* Replace:
 			 *   / by \
@@ -630,33 +632,33 @@ int mount_handle_get_filename(
 			 *   \x2f by /
 			 *   \x## by values <= 0x1f and 0x7f
 			 */
-			if( character_value == (libcstring_system_character_t) '/' )
+			if( character_value == (system_character_t) '/' )
 			{
 				*last_path_seperator_index = name_index;
 
-				( *name )[ name_index++ ] = (libcstring_system_character_t) '\\';
+				( *name )[ name_index++ ] = (system_character_t) '\\';
 			}
-			else if( character_value == (libcstring_system_character_t) '\\' )
+			else if( character_value == (system_character_t) '\\' )
 			{
 				if( ( ( sanitized_name_index + 1 ) <= sanitized_name_size )
-				 && ( sanitized_name[ sanitized_name_index + 1 ] == (libcstring_system_character_t) '\\' ) )
+				 && ( sanitized_name[ sanitized_name_index + 1 ] == (system_character_t) '\\' ) )
 				{
-					( *name )[ name_index++ ] = (libcstring_system_character_t) '\\';
+					( *name )[ name_index++ ] = (system_character_t) '\\';
 
 					sanitized_name_index += 1;
 				}
 				else if( ( ( sanitized_name_index + 3 ) <= sanitized_name_size )
-				      && ( sanitized_name[ sanitized_name_index + 1 ] == (libcstring_system_character_t) 'x' ) )
+				      && ( sanitized_name[ sanitized_name_index + 1 ] == (system_character_t) 'x' ) )
 				{
-					if( ( sanitized_name[ sanitized_name_index + 2 ] >= (libcstring_system_character_t) '0' )
-					 && ( sanitized_name[ sanitized_name_index + 2 ] <= (libcstring_system_character_t) '9' ) )
+					if( ( sanitized_name[ sanitized_name_index + 2 ] >= (system_character_t) '0' )
+					 && ( sanitized_name[ sanitized_name_index + 2 ] <= (system_character_t) '9' ) )
 					{
-						character_value = sanitized_name[ sanitized_name_index + 2 ] - (libcstring_system_character_t) '0';
+						character_value = sanitized_name[ sanitized_name_index + 2 ] - (system_character_t) '0';
 					}
-					else if( ( sanitized_name[ sanitized_name_index + 2 ] >= (libcstring_system_character_t) 'a' )
-					      && ( sanitized_name[ sanitized_name_index + 2 ] <= (libcstring_system_character_t) 'f' ) )
+					else if( ( sanitized_name[ sanitized_name_index + 2 ] >= (system_character_t) 'a' )
+					      && ( sanitized_name[ sanitized_name_index + 2 ] <= (system_character_t) 'f' ) )
 					{
-						character_value = sanitized_name[ sanitized_name_index + 2 ] - (libcstring_system_character_t) 'a' + 10;
+						character_value = sanitized_name[ sanitized_name_index + 2 ] - (system_character_t) 'a' + 10;
 					}
 					else
 					{
@@ -671,15 +673,15 @@ int mount_handle_get_filename(
 					}
 					character_value <<= 4;
 
-					if( ( sanitized_name[ sanitized_name_index + 3 ] >= (libcstring_system_character_t) '0' )
-					 && ( sanitized_name[ sanitized_name_index + 3 ] <= (libcstring_system_character_t) '9' ) )
+					if( ( sanitized_name[ sanitized_name_index + 3 ] >= (system_character_t) '0' )
+					 && ( sanitized_name[ sanitized_name_index + 3 ] <= (system_character_t) '9' ) )
 					{
-						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (libcstring_system_character_t) '0';
+						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (system_character_t) '0';
 					}
-					else if( ( sanitized_name[ sanitized_name_index + 3 ] >= (libcstring_system_character_t) 'a' )
-					      && ( sanitized_name[ sanitized_name_index + 3 ] <= (libcstring_system_character_t) 'f' ) )
+					else if( ( sanitized_name[ sanitized_name_index + 3 ] >= (system_character_t) 'a' )
+					      && ( sanitized_name[ sanitized_name_index + 3 ] <= (system_character_t) 'f' ) )
 					{
-						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (libcstring_system_character_t) 'a' + 10;
+						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (system_character_t) 'a' + 10;
 					}
 					else
 					{
@@ -727,40 +729,40 @@ int mount_handle_get_filename(
 				( *name )[ name_index++ ] = character_value;
 			}
 		}
-		else if( path_separator == (libcstring_system_character_t) '\\' )
+		else if( path_separator == (system_character_t) '\\' )
 		{
 			/* Replace:
 			 *   ^^ by ^
 			 *   ^x5c by \
 			 *   ^x## by values <= 0x1f and 0x7f
 			 */
-			if( character_value == (libcstring_system_character_t) '\\' )
+			if( character_value == (system_character_t) '\\' )
 			{
 				*last_path_seperator_index = name_index;
 
-				( *name )[ name_index++ ] = (libcstring_system_character_t) '\\';
+				( *name )[ name_index++ ] = (system_character_t) '\\';
 			}
-			else if( character_value == (libcstring_system_character_t) '^' )
+			else if( character_value == (system_character_t) '^' )
 			{
 				if( ( ( sanitized_name_index + 1 ) <= sanitized_name_size )
-				 && ( sanitized_name[ sanitized_name_index + 1 ] == (libcstring_system_character_t) '^' ) )
+				 && ( sanitized_name[ sanitized_name_index + 1 ] == (system_character_t) '^' ) )
 				{
-					( *name )[ name_index++ ] = (libcstring_system_character_t) '^';
+					( *name )[ name_index++ ] = (system_character_t) '^';
 
 					sanitized_name_index += 1;
 				}
 				else if( ( ( sanitized_name_index + 3 ) <= sanitized_name_size )
-				      && ( sanitized_name[ sanitized_name_index + 1 ] == (libcstring_system_character_t) 'x' ) )
+				      && ( sanitized_name[ sanitized_name_index + 1 ] == (system_character_t) 'x' ) )
 				{
-					if( ( sanitized_name[ sanitized_name_index + 2 ] >= (libcstring_system_character_t) '0' )
-					 && ( sanitized_name[ sanitized_name_index + 2 ] <= (libcstring_system_character_t) '9' ) )
+					if( ( sanitized_name[ sanitized_name_index + 2 ] >= (system_character_t) '0' )
+					 && ( sanitized_name[ sanitized_name_index + 2 ] <= (system_character_t) '9' ) )
 					{
-						character_value = sanitized_name[ sanitized_name_index + 2 ] - (libcstring_system_character_t) '0';
+						character_value = sanitized_name[ sanitized_name_index + 2 ] - (system_character_t) '0';
 					}
-					else if( ( sanitized_name[ sanitized_name_index + 2 ] >= (libcstring_system_character_t) 'a' )
-					      && ( sanitized_name[ sanitized_name_index + 2 ] <= (libcstring_system_character_t) 'f' ) )
+					else if( ( sanitized_name[ sanitized_name_index + 2 ] >= (system_character_t) 'a' )
+					      && ( sanitized_name[ sanitized_name_index + 2 ] <= (system_character_t) 'f' ) )
 					{
-						character_value = sanitized_name[ sanitized_name_index + 2 ] - (libcstring_system_character_t) 'a' + 10;
+						character_value = sanitized_name[ sanitized_name_index + 2 ] - (system_character_t) 'a' + 10;
 					}
 					else
 					{
@@ -775,15 +777,15 @@ int mount_handle_get_filename(
 					}
 					character_value <<= 4;
 
-					if( ( sanitized_name[ sanitized_name_index + 3 ] >= (libcstring_system_character_t) '0' )
-					 && ( sanitized_name[ sanitized_name_index + 3 ] <= (libcstring_system_character_t) '9' ) )
+					if( ( sanitized_name[ sanitized_name_index + 3 ] >= (system_character_t) '0' )
+					 && ( sanitized_name[ sanitized_name_index + 3 ] <= (system_character_t) '9' ) )
 					{
-						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (libcstring_system_character_t) '0';
+						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (system_character_t) '0';
 					}
-					else if( ( sanitized_name[ sanitized_name_index + 3 ] >= (libcstring_system_character_t) 'a' )
-					      && ( sanitized_name[ sanitized_name_index + 3 ] <= (libcstring_system_character_t) 'f' ) )
+					else if( ( sanitized_name[ sanitized_name_index + 3 ] >= (system_character_t) 'a' )
+					      && ( sanitized_name[ sanitized_name_index + 3 ] <= (system_character_t) 'f' ) )
 					{
-						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (libcstring_system_character_t) 'a' + 10;
+						character_value |= sanitized_name[ sanitized_name_index + 3 ] - (system_character_t) 'a' + 10;
 					}
 					else
 					{
@@ -866,18 +868,18 @@ on_error:
  */
 int mount_handle_get_sanitized_filename(
      mount_handle_t *mount_handle,
-     const libcstring_system_character_t *name,
+     const system_character_t *name,
      size_t name_size,
-     libcstring_system_character_t path_separator,
-     libcstring_system_character_t **sanitized_name,
+     system_character_t path_separator,
+     system_character_t **sanitized_name,
      size_t *sanitized_name_size,
      libcerror_error_t **error )
 {
-	static char *function                         = "mount_handle_get_sanitized_filename";
-	size_t name_index                             = 0;
-	size_t sanitized_name_index                   = 0;
-	libcstring_system_character_t character_value = 0;
-	libcstring_system_character_t hex_digit       = 0;
+	static char *function              = "mount_handle_get_sanitized_filename";
+	system_character_t character_value = 0;
+	system_character_t hex_digit       = 0;
+	size_t name_index                  = 0;
+	size_t sanitized_name_index        = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -938,7 +940,7 @@ int mount_handle_get_sanitized_filename(
 
 	*sanitized_name_size = ( name_size * 4 ) + 1;
 
-	if( *sanitized_name_size > (size_t) ( SSIZE_MAX / sizeof( libcstring_system_character_t ) ) )
+	if( *sanitized_name_size > (size_t) ( SSIZE_MAX / sizeof( system_character_t ) ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -949,7 +951,7 @@ int mount_handle_get_sanitized_filename(
 
 		goto on_error;
 	}
-	*sanitized_name = libcstring_system_string_allocate(
+	*sanitized_name = system_string_allocate(
 	                   *sanitized_name_size );
 
 	if( *sanitized_name == NULL )
@@ -975,7 +977,7 @@ int mount_handle_get_sanitized_filename(
 		{
 			break;
 		}
-		if( path_separator == (libcstring_system_character_t) '/' )
+		if( path_separator == (system_character_t) '/' )
 		{
 			/* Replace:
 			 *   values <= 0x1f and 0x7f by \x##
@@ -983,7 +985,7 @@ int mount_handle_get_sanitized_filename(
 			 *   \ by \\
 			 */
 			if( ( character_value <= 0x1f )
-			 || ( character_value == (libcstring_system_character_t) '/' )
+			 || ( character_value == (system_character_t) '/' )
 			 || ( character_value == 0x7f ) )
 			{
 				if( ( sanitized_name_index + 4 ) > *sanitized_name_size )
@@ -997,31 +999,31 @@ int mount_handle_get_sanitized_filename(
 
 					goto on_error;
 				}
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '\\';
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'x';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '\\';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'x';
 
 				hex_digit = character_value >> 4;
 
 				if( hex_digit <= 0x09 )
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '0' + hex_digit;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '0' + hex_digit;
 				}
 				else
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'a' + hex_digit - 10;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'a' + hex_digit - 10;
 				}
 				hex_digit = character_value & 0x0f;
 
 				if( hex_digit <= 0x09 )
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '0' + hex_digit;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '0' + hex_digit;
 				}
 				else
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'a' + hex_digit - 10;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'a' + hex_digit - 10;
 				}
 			}
-			else if( character_value == (libcstring_system_character_t) '\\' )
+			else if( character_value == (system_character_t) '\\' )
 			{
 				if( ( sanitized_name_index + 2 ) > *sanitized_name_size )
 				{
@@ -1034,8 +1036,8 @@ int mount_handle_get_sanitized_filename(
 
 					goto on_error;
 				}
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '\\';
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '\\';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '\\';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '\\';
 			}
 			else
 			{
@@ -1053,7 +1055,7 @@ int mount_handle_get_sanitized_filename(
 				( *sanitized_name )[ sanitized_name_index++ ] = character_value;
 			}
 		}
-		else if( path_separator == (libcstring_system_character_t) '\\' )
+		else if( path_separator == (system_character_t) '\\' )
 		{
 			/* Replace:
 			 *   values <= 0x1f and 0x7f by ^x##
@@ -1061,7 +1063,7 @@ int mount_handle_get_sanitized_filename(
 			 *   ^ by ^^
 			 */
 			if( ( character_value <= 0x1f )
-			 || ( character_value == (libcstring_system_character_t) '\\' )
+			 || ( character_value == (system_character_t) '\\' )
 			 || ( character_value == 0x7f ) )
 			{
 				if( ( sanitized_name_index + 4 ) > *sanitized_name_size )
@@ -1075,31 +1077,31 @@ int mount_handle_get_sanitized_filename(
 
 					goto on_error;
 				}
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '^';
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'x';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '^';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'x';
 
 				hex_digit = character_value >> 4;
 
 				if( hex_digit <= 0x09 )
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '0' + hex_digit;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '0' + hex_digit;
 				}
 				else
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'a' + hex_digit - 10;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'a' + hex_digit - 10;
 				}
 				hex_digit = character_value & 0x0f;
 
 				if( hex_digit <= 0x09 )
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '0' + hex_digit;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '0' + hex_digit;
 				}
 				else
 				{
-					( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) 'a' + hex_digit - 10;
+					( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) 'a' + hex_digit - 10;
 				}
 			}
-			else if( character_value == (libcstring_system_character_t) '^' )
+			else if( character_value == (system_character_t) '^' )
 			{
 				if( ( sanitized_name_index + 2 ) > *sanitized_name_size )
 				{
@@ -1112,8 +1114,8 @@ int mount_handle_get_sanitized_filename(
 
 					goto on_error;
 				}
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '^';
-				( *sanitized_name )[ sanitized_name_index++ ] = (libcstring_system_character_t) '^';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '^';
+				( *sanitized_name )[ sanitized_name_index++ ] = (system_character_t) '^';
 			}
 			else
 			{

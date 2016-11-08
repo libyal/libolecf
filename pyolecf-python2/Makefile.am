@@ -8,7 +8,6 @@ if HAVE_PYTHON2
 AM_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -35,7 +34,6 @@ BUILT_SOURCES = \
 	pyolecf_libbfio.h \
 	pyolecf_libcerror.h \
 	pyolecf_libclocale.h \
-	pyolecf_libcstring.h \
 	pyolecf_libfguid.h \
 	pyolecf_libolecf.h \
 	pyolecf_property_section.c pyolecf_property_section.h \
@@ -54,7 +52,6 @@ pyexec_LTLIBRARIES = pyolecf.la
 nodist_pyolecf_la_SOURCES = $(BUILT_SOURCES)
 
 pyolecf_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	../libolecf/libolecf.la \
 	@LIBCDATA_LIBADD@ \

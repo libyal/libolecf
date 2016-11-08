@@ -27,7 +27,6 @@
 
 #include "pyolecf_libbfio.h"
 #include "pyolecf_libcerror.h"
-#include "pyolecf_libcstring.h"
 #include "pyolecf_python.h"
 
 #if defined( __cplusplus )

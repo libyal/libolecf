@@ -21,6 +21,7 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( HAVE_WINAPI )
@@ -34,7 +35,6 @@
 #include "pyolecf_item.h"
 #include "pyolecf_items.h"
 #include "pyolecf_libcerror.h"
-#include "pyolecf_libcstring.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_property_set_stream.h"
 #include "pyolecf_python.h"
@@ -1178,7 +1178,7 @@ PyObject *pyolecf_item_get_sub_item_by_name(
 	{
 		goto on_error;
 	}
-	sub_item_name_length = libcstring_narrow_string_length(
+	sub_item_name_length = narrow_string_length(
 	                        sub_item_name );
 
 	Py_BEGIN_ALLOW_THREADS
@@ -1380,7 +1380,7 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 	{
 		goto on_error;
 	}
-	sub_item_path_length = libcstring_narrow_string_length(
+	sub_item_path_length = narrow_string_length(
 	                        sub_item_path );
 
 	Py_BEGIN_ALLOW_THREADS

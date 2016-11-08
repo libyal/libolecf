@@ -20,6 +20,8 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
@@ -108,7 +110,7 @@ int olecf_test_error_backtrace_sprint(
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc OLECF_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] OLECF_TEST_ATTRIBUTE_UNUSED )
@@ -123,23 +125,23 @@ int main(
 
 	OLECF_TEST_RUN(
 	 "libolecf_error_free",
-	 olecf_test_error_free() )
+	 olecf_test_error_free );
 
 	OLECF_TEST_RUN(
 	 "libolecf_error_fprint",
-	 olecf_test_error_fprint() )
+	 olecf_test_error_fprint );
 
 	OLECF_TEST_RUN(
 	 "libolecf_error_sprint",
-	 olecf_test_error_sprint() )
+	 olecf_test_error_sprint );
 
 	OLECF_TEST_RUN(
 	 "libolecf_error_backtrace_fprint",
-	 olecf_test_error_backtrace_fprint() )
+	 olecf_test_error_backtrace_fprint );
 
 	OLECF_TEST_RUN(
 	 "libolecf_error_backtrace_sprint",
-	 olecf_test_error_backtrace_sprint() )
+	 olecf_test_error_backtrace_sprint );
 
 	return( EXIT_SUCCESS );
 

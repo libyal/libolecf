@@ -22,6 +22,7 @@
 #include <common.h>
 #include <byte_stream.h>
 #include <memory.h>
+#include <system_string.h>
 #include <types.h>
 
 #include "libolecf_definitions.h"
@@ -217,7 +218,7 @@ int libolecf_property_section_read_list_entry(
 	ssize_t read_count          = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t guid_string[ 48 ];
 
 	libfguid_identifier_t *guid = NULL;
 	int result                  = 0;
@@ -347,7 +348,7 @@ int libolecf_property_section_read_list_entry(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfguid_identifier_copy_to_utf16_string(
 			  guid,
 			  (uint16_t *) guid_string,
@@ -374,7 +375,7 @@ int libolecf_property_section_read_list_entry(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: class identifier\t\t: %" PRIs_LIBCSTRING_SYSTEM " (%s : %s)\n",
+		 "%s: class identifier\t\t: %" PRIs_SYSTEM " (%s : %s)\n",
 		 function,
 		 guid_string,
                  libfwps_format_class_identifier_get_identifier(
