@@ -143,13 +143,23 @@ olecf_test_property_value_LDADD = \
 	@LIBCERROR_LIBADD@
 
 olecf_test_support_SOURCES = \
-	olecf_test_support.c \
+	olecf_test_libcerror.h \
+	olecf_test_libclocale.h \
+	olecf_test_libcsystem.h \
 	olecf_test_libolecf.h \
+	olecf_test_libuna.h \
 	olecf_test_macros.h \
+	olecf_test_support.c \
 	olecf_test_unused.h
 
 olecf_test_support_LDADD = \
-	../libolecf/libolecf.la
+	@LIBCSYSTEM_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCNOTIFY_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

@@ -11,6 +11,7 @@ configuration:
 
 install:
   - cmd: git clone https://github.com/libyal/libyal.git && move libyal ..\
+  - cmd: git clone https://github.com/joachimmetz/dokan.git && move dokan ..\
 
 before_build:
   - ps: .\synclibs.ps1
@@ -19,7 +20,4 @@ before_build:
 
 build:
   project: vs2010\libolecf.sln
-
-test_script:
-  - ps: .\runtests.ps1
 

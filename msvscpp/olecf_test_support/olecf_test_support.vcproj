@@ -186,7 +186,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\tests\olecf_test_libcerror.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\olecf_test_libclocale.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\olecf_test_libcsystem.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\tests\olecf_test_libolecf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\olecf_test_libuna.h"
 				>
 			</File>
 			<File
