@@ -93,5 +93,5 @@ PyObject *pyolecf_property_values_iternext(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_PROPERTY_VALUES_H ) */
 

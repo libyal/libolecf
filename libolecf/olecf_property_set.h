@@ -110,5 +110,5 @@ struct olecf_property_set_property_list_entry
 }
 #endif
 
-#endif
+#endif /* !defined( _OLECF_PROPERTY_SET_H ) */
 

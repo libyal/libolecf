@@ -72,5 +72,5 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_DIRECTORY_TREE_H ) */
 

@@ -1,5 +1,5 @@
 /*
- * Library property_section type testing program
+ * Library io_handle type testing program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -33,30 +33,30 @@
 #include "olecf_test_memory.h"
 #include "olecf_test_unused.h"
 
-#include "../libolecf/libolecf_property_section.h"
+#include "../libolecf/libolecf_io_handle.h"
 
 #if defined( __GNUC__ )
 
-/* Tests the libolecf_property_section_initialize function
+/* Tests the libolecf_io_handle_initialize function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_property_section_initialize(
+int olecf_test_io_handle_initialize(
      void )
 {
-	libcerror_error_t *error                      = NULL;
-	libolecf_property_section_t *property_section = NULL;
-	int result                                    = 0;
+	libcerror_error_t *error        = NULL;
+	libolecf_io_handle_t *io_handle = NULL;
+	int result                      = 0;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
-	int number_of_malloc_fail_tests               = 1;
-	int number_of_memset_fail_tests               = 1;
-	int test_number                               = 0;
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
 #endif
 
 	/* Test regular cases
 	 */
-	result = libolecf_property_section_initialize(
-	          &property_section,
+	result = libolecf_io_handle_initialize(
+	          &io_handle,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -65,15 +65,15 @@ int olecf_test_property_section_initialize(
 	 1 );
 
         OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "property_section",
-         property_section );
+         "io_handle",
+         io_handle );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",
          error );
 
-	result = libolecf_property_section_free(
-	          &property_section,
+	result = libolecf_io_handle_free(
+	          &io_handle,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -82,8 +82,8 @@ int olecf_test_property_section_initialize(
 	 1 );
 
         OLECF_TEST_ASSERT_IS_NULL(
-         "property_section",
-         property_section );
+         "io_handle",
+         io_handle );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",
@@ -91,7 +91,7 @@ int olecf_test_property_section_initialize(
 
 	/* Test error cases
 	 */
-	result = libolecf_property_section_initialize(
+	result = libolecf_io_handle_initialize(
 	          NULL,
 	          &error );
 
@@ -107,10 +107,10 @@ int olecf_test_property_section_initialize(
 	libcerror_error_free(
 	 &error );
 
-	property_section = (libolecf_property_section_t *) 0x12345678UL;
+	io_handle = (libolecf_io_handle_t *) 0x12345678UL;
 
-	result = libolecf_property_section_initialize(
-	          &property_section,
+	result = libolecf_io_handle_initialize(
+	          &io_handle,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -125,7 +125,7 @@ int olecf_test_property_section_initialize(
 	libcerror_error_free(
 	 &error );
 
-	property_section = NULL;
+	io_handle = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -133,22 +133,22 @@ int olecf_test_property_section_initialize(
 	     test_number < number_of_malloc_fail_tests;
 	     test_number++ )
 	{
-		/* Test libolecf_property_section_initialize with malloc failing
+		/* Test libolecf_io_handle_initialize with malloc failing
 		 */
 		olecf_test_malloc_attempts_before_fail = test_number;
 
-		result = libolecf_property_section_initialize(
-		          &property_section,
+		result = libolecf_io_handle_initialize(
+		          &io_handle,
 		          &error );
 
 		if( olecf_test_malloc_attempts_before_fail != -1 )
 		{
 			olecf_test_malloc_attempts_before_fail = -1;
 
-			if( property_section != NULL )
+			if( io_handle != NULL )
 			{
-				libolecf_property_section_free(
-				 &property_section,
+				libolecf_io_handle_free(
+				 &io_handle,
 				 NULL );
 			}
 		}
@@ -160,8 +160,8 @@ int olecf_test_property_section_initialize(
 			 -1 );
 
 			OLECF_TEST_ASSERT_IS_NULL(
-			 "property_section",
-			 property_section );
+			 "io_handle",
+			 io_handle );
 
 			OLECF_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -175,22 +175,22 @@ int olecf_test_property_section_initialize(
 	     test_number < number_of_memset_fail_tests;
 	     test_number++ )
 	{
-		/* Test libolecf_property_section_initialize with memset failing
+		/* Test libolecf_io_handle_initialize with memset failing
 		 */
 		olecf_test_memset_attempts_before_fail = test_number;
 
-		result = libolecf_property_section_initialize(
-		          &property_section,
+		result = libolecf_io_handle_initialize(
+		          &io_handle,
 		          &error );
 
 		if( olecf_test_memset_attempts_before_fail != -1 )
 		{
 			olecf_test_memset_attempts_before_fail = -1;
 
-			if( property_section != NULL )
+			if( io_handle != NULL )
 			{
-				libolecf_property_section_free(
-				 &property_section,
+				libolecf_io_handle_free(
+				 &io_handle,
 				 NULL );
 			}
 		}
@@ -202,8 +202,8 @@ int olecf_test_property_section_initialize(
 			 -1 );
 
 			OLECF_TEST_ASSERT_IS_NULL(
-			 "property_section",
-			 property_section );
+			 "io_handle",
+			 io_handle );
 
 			OLECF_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -223,21 +223,19 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( property_section != NULL )
+	if( io_handle != NULL )
 	{
-		libolecf_property_section_free(
-		 &property_section,
+		libolecf_io_handle_free(
+		 &io_handle,
 		 NULL );
 	}
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
-
-/* Tests the libolecf_property_section_free function
+/* Tests the libolecf_io_handle_free function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_property_section_free(
+int olecf_test_io_handle_free(
      void )
 {
 	libcerror_error_t *error = NULL;
@@ -245,7 +243,7 @@ int olecf_test_property_section_free(
 
 	/* Test error cases
 	 */
-	result = libolecf_property_section_free(
+	result = libolecf_io_handle_free(
 	          NULL,
 	          &error );
 
@@ -272,6 +270,8 @@ on_error:
 	return( 0 );
 }
 
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -290,28 +290,28 @@ int main(
 #if defined( __GNUC__ )
 
 	OLECF_TEST_RUN(
-	 "libolecf_property_section_initialize",
-	 olecf_test_property_section_initialize );
-
-#endif /* defined( __GNUC__ ) */
+	 "libolecf_io_handle_initialize",
+	 olecf_test_io_handle_initialize );
 
 	OLECF_TEST_RUN(
-	 "libolecf_property_section_free",
-	 olecf_test_property_section_free );
+	 "libolecf_io_handle_free",
+	 olecf_test_io_handle_free );
 
-#if defined( __GNUC__ )
+	/* TODO: add tests for libolecf_io_handle_clear */
 
-	/* TODO: add tests for libolecf_property_section_read_list_entry */
+	/* TODO: add tests for libolecf_io_handle_read_file_header */
 
-	/* TODO: add tests for libolecf_property_section_read */
+	/* TODO: add tests for libolecf_io_handle_read_msat */
+
+	/* TODO: add tests for libolecf_io_handle_read_sat */
+
+	/* TODO: add tests for libolecf_io_handle_read_ssat */
+
+	/* TODO: add tests for libolecf_io_handle_read_directory_entries */
+
+	/* TODO: add tests for libolecf_io_handle_read_stream */
 
 #endif /* defined( __GNUC__ ) */
-
-	/* TODO: add tests for libolecf_property_section_get_class_identifier */
-
-	/* TODO: add tests for libolecf_property_section_get_number_of_properties */
-
-	/* TODO: add tests for libolecf_property_section_get_property_by_index */
 
 	return( EXIT_SUCCESS );
 

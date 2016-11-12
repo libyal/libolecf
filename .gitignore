@@ -125,13 +125,16 @@ stamp-h[1-9]
 /olecftools/olecfinfo
 /olecftools/olecfmount
 /tests/input
+/tests/olecf_test_allocation_table
+/tests/olecf_test_directory_entry
 /tests/olecf_test_error
 /tests/olecf_test_file
+/tests/olecf_test_io_handle
 /tests/olecf_test_item
+/tests/olecf_test_notify
 /tests/olecf_test_property_section
 /tests/olecf_test_property_set
 /tests/olecf_test_property_value
-/tests/olecf_test_open_close
 /tests/olecf_test_support
 /tests/tmp*
 

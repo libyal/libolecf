@@ -38,7 +38,7 @@
 #include "olecf_test_macros.h"
 #include "olecf_test_memory.h"
 
-#if SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
 #endif
 
@@ -256,8 +256,8 @@ int olecf_test_file_get_wide_source(
      libcerror_error_t **error )
 {
 	static char *function   = "olecf_test_file_get_wide_source";
-	size_t wide_source_size = 0;
 	size_t source_length    = 0;
+	size_t wide_source_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result              = 0;
@@ -584,11 +584,17 @@ int olecf_test_file_close_source(
 int olecf_test_file_initialize(
      void )
 {
-	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	libolecf_file_t *file           = NULL;
+	int result                      = 0;
 
-	/* Test libolecf_file_initialize
+#if defined( HAVE_OLECF_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libolecf_file_initialize(
 	          &file,
@@ -664,79 +670,89 @@ int olecf_test_file_initialize(
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
-	/* Test libolecf_file_initialize with malloc failing
-	 */
-	olecf_test_malloc_attempts_before_fail = 0;
-
-	result = libolecf_file_initialize(
-	          &file,
-	          &error );
-
-	if( olecf_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		olecf_test_malloc_attempts_before_fail = -1;
+		/* Test libolecf_file_initialize with malloc failing
+		 */
+		olecf_test_malloc_attempts_before_fail = test_number;
 
-		if( file != NULL )
+		result = libolecf_file_initialize(
+		          &file,
+		          &error );
+
+		if( olecf_test_malloc_attempts_before_fail != -1 )
 		{
-			libolecf_file_free(
-			 &file,
-			 NULL );
+			olecf_test_malloc_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libolecf_file_free(
+				 &file,
+				 NULL );
+			}
+		}
+		else
+		{
+			OLECF_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			OLECF_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
+
+			OLECF_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		OLECF_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libolecf_file_initialize with memset failing
+		 */
+		olecf_test_memset_attempts_before_fail = test_number;
 
-		OLECF_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+		result = libolecf_file_initialize(
+		          &file,
+		          &error );
 
-		OLECF_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libolecf_file_initialize with memset failing
-	 */
-	olecf_test_memset_attempts_before_fail = 0;
-
-	result = libolecf_file_initialize(
-	          &file,
-	          &error );
-
-	if( olecf_test_memset_attempts_before_fail != -1 )
-	{
-		olecf_test_memset_attempts_before_fail = -1;
-
-		if( file != NULL )
+		if( olecf_test_memset_attempts_before_fail != -1 )
 		{
-			libolecf_file_free(
-			 &file,
-			 NULL );
+			olecf_test_memset_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libolecf_file_free(
+				 &file,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		OLECF_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			OLECF_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		OLECF_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+			OLECF_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
 
-		OLECF_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			OLECF_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_OLECF_TEST_MEMORY ) */
 
@@ -795,7 +811,7 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libolecf_file_open functions
+/* Tests the libolecf_file_open function
  * Returns 1 if successful or 0 if not
  */
 int olecf_test_file_open(
@@ -804,7 +820,7 @@ int olecf_test_file_open(
 	char narrow_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
+	libolecf_file_t *file    = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -858,21 +874,28 @@ int olecf_test_file_open(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libolecf_file_close(
+	result = libolecf_file_open(
 	          file,
+	          narrow_source,
+	          LIBOLECF_OPEN_READ,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libolecf_file_free(
 	          &file,
 	          &error );
@@ -909,7 +932,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libolecf_file_open_wide functions
+/* Tests the libolecf_file_open_wide function
  * Returns 1 if successful or 0 if not
  */
 int olecf_test_file_open_wide(
@@ -918,7 +941,7 @@ int olecf_test_file_open_wide(
 	wchar_t wide_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
+	libolecf_file_t *file    = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -972,21 +995,28 @@ int olecf_test_file_open_wide(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libolecf_file_close(
+	result = libolecf_file_open_wide(
 	          file,
+	          wide_source,
+	          LIBOLECF_OPEN_READ,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libolecf_file_free(
 	          &file,
 	          &error );
@@ -1022,6 +1052,185 @@ on_error:
 }
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
+/* Tests the libolecf_file_close function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_close(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libolecf_file_close(
+	          NULL,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_file_open and libolecf_file_close functions
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_open_close(
+     const system_character_t *source )
+{
+	libcerror_error_t *error = NULL;
+	libolecf_file_t *file    = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_file_initialize(
+	          &file,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "file",
+         file );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libolecf_file_open_wide(
+	          file,
+	          source,
+	          LIBOLECF_OPEN_READ,
+	          &error );
+#else
+	result = libolecf_file_open(
+	          file,
+	          source,
+	          LIBOLECF_OPEN_READ,
+	          &error );
+#endif
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libolecf_file_close(
+	          file,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close a second time to validate clean up on close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libolecf_file_open_wide(
+	          file,
+	          source,
+	          LIBOLECF_OPEN_READ,
+	          &error );
+#else
+	result = libolecf_file_open(
+	          file,
+	          source,
+	          LIBOLECF_OPEN_READ,
+	          &error );
+#endif
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libolecf_file_close(
+	          file,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Clean up
+	 */
+	result = libolecf_file_free(
+	          &file,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "file",
+         file );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( file != NULL )
+	{
+		libolecf_file_free(
+		 &file,
+		 NULL );
+	}
+	return( 0 );
+}
 
 /* Tests the libolecf_file_get_ascii_codepage functions
  * Returns 1 if successful or 0 if not
@@ -1137,7 +1346,7 @@ int olecf_test_file_set_ascii_codepage(
 		LIBOLECF_CODEPAGE_KOI8_U };
 
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file      = NULL;
+	libolecf_file_t *file    = NULL;
 	int codepage             = 0;
 	int index                = 0;
 	int result               = 0;
@@ -1261,77 +1470,6 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libolecf_file_get_number_of_unallocated_blocks functions
- * Returns 1 if successful or 0 if not
- */
-int olecf_test_file_get_number_of_unallocated_blocks(
-     libolecf_file_t *file )
-{
-	libcerror_error_t *error = NULL;
-	int number_of_unallocated_blocks    = 0;
-	int result               = 0;
-
-	result = libolecf_file_get_number_of_unallocated_blocks(
-	          file,
-	          &number_of_unallocated_blocks,
-	          &error );
-
-	OLECF_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
-
-	/* Test error cases
-	 */
-	result = libolecf_file_get_number_of_unallocated_blocks(
-	          NULL,
-	          &number_of_unallocated_blocks,
-	          &error );
-
-	OLECF_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libolecf_file_get_number_of_unallocated_blocks(
-	          file,
-	          NULL,
-	          &error );
-
-	OLECF_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	return( 0 );
-}
-
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -1345,8 +1483,8 @@ int main(
 #endif
 {
 	libcerror_error_t *error   = NULL;
+	libolecf_file_t *file      = NULL;
 	system_character_t *source = NULL;
-	libolecf_file_t *file        = NULL;
 	system_integer_t option    = 0;
 	int result                 = 0;
 
@@ -1414,7 +1552,14 @@ int main(
 
 #endif /* defined( LIBOLECF_HAVE_BFIO ) */
 
-		/* TODO add test for libolecf_file_close */
+		OLECF_TEST_RUN(
+		 "libolecf_file_close",
+		 olecf_test_file_close );
+
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_open_close",
+		 olecf_test_file_open_close,
+		 source );
 
 		/* Initialize test
 		 */
@@ -1437,19 +1582,33 @@ int main(
 	         error );
 
 		OLECF_TEST_RUN_WITH_ARGS(
-		 "libolecf_file_open",
-		 olecf_test_file_open,
-		 file );
-
-		OLECF_TEST_RUN_WITH_ARGS(
 		 "libolecf_file_get_ascii_codepage",
 		 olecf_test_file_get_ascii_codepage,
 		 file );
 
-		OLECF_TEST_RUN_WITH_ARGS(
-		 "libolecf_file_get_number_of_unallocated_blocks",
-		 olecf_test_file_get_number_of_unallocated_blocks,
-		 file );
+		/* TODO: add tests for libolecf_file_signal_abort */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libolecf_file_open_read */
+
+#endif /* defined( __GNUC__ ) */
+
+		/* TODO: add tests for libolecf_file_get_sector_size */
+
+		/* TODO: add tests for libolecf_file_get_short_sector_size */
+
+		/* TODO: add tests for libolecf_file_get_format_version */
+
+		/* TODO: add tests for libolecf_file_get_number_of_unallocated_blocks */
+
+		/* TODO: add tests for libolecf_file_get_unallocated_block */
+
+		/* TODO: add tests for libolecf_file_get_root_item */
+
+		/* TODO: add tests for libolecf_file_get_item_by_utf8_path */
+
+		/* TODO: add tests for libolecf_file_get_item_by_utf16_path */
 
 		/* Clean up
 		 */

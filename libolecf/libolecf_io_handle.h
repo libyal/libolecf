@@ -151,5 +151,5 @@ ssize_t libolecf_io_handle_read_stream(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_IO_HANDLE_H ) */
 

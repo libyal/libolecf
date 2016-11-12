@@ -57,5 +57,5 @@ PyMODINIT_FUNC initpyolecf(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_H ) */
 

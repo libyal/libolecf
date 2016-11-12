@@ -39,5 +39,5 @@ PyObject *pyolecf_string_new_from_guid(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_GUID_H ) */
 

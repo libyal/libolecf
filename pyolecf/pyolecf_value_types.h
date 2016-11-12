@@ -59,5 +59,5 @@ void pyolecf_value_types_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_VALUE_TYPES_H ) */
 

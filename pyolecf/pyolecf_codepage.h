@@ -38,5 +38,5 @@ const char *pyolecf_codepage_to_string(
 }
 #endif
 
-#endif /* !defined( _PYOLECF_CODEPAGE_H */
+#endif /* !defined( _PYOLECF_CODEPAGE_H ) */
 

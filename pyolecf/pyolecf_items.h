@@ -92,5 +92,5 @@ PyObject *pyolecf_items_iternext(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_ITEMS_H ) */
 

@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBOLECF_INTERNAL_PROPERTY_SET_H )
-#define _LIBOLECF_INTERNAL_PROPERTY_SET_H
+#if !defined( _LIBOLECF_PROPERTY_SET_H )
+#define _LIBOLECF_PROPERTY_SET_H
 
 #include <common.h>
 #include <types.h>
@@ -102,5 +102,5 @@ int libolecf_property_set_get_section_by_index(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_SET_H ) */
 

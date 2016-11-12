@@ -121,5 +121,5 @@ PyObject *pyolecf_file_get_item_by_path(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_FILE_H ) */
 

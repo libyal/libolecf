@@ -19,13 +19,14 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBOLECF_INTERNAL_PROPERTY_SECTION_H )
-#define _LIBOLECF_INTERNAL_PROPERTY_SECTION_H
+#if !defined( _LIBOLECF_PROPERTY_SECTION_H )
+#define _LIBOLECF_PROPERTY_SECTION_H
 
 #include <common.h>
 #include <types.h>
 
 #include "libolecf_extern.h"
+#include "libolecf_io_handle.h"
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
 #include "libolecf_types.h"
@@ -99,5 +100,5 @@ int libolecf_property_section_get_property_by_index(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_PROPERTY_SECTION_H ) */
 

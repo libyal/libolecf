@@ -45,5 +45,5 @@ void olecfoutput_detailed_version_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _OLECFOUTPUT_H ) */
 

@@ -58,5 +58,5 @@ PyObject *pyolecf_stream_get_offset(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_STREAM_H ) */
 

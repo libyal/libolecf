@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBOLECF_INTERNAL_PROPERTY_VALUE_H )
-#define _LIBOLECF_INTERNAL_PROPERTY_VALUE_H
+#if !defined( _LIBOLECF_PROPERTY_VALUE_H )
+#define _LIBOLECF_PROPERTY_VALUE_H
 
 #include <common.h>
 #include <types.h>
@@ -165,5 +165,5 @@ int libolecf_property_value_get_value_utf16_string(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_PROPERTY_VALUE_H ) */
 

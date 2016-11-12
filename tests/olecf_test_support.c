@@ -808,7 +808,7 @@ int main(
 
 #if defined( LIBOLECF_HAVE_BFIO )
 
-		/* TODO add test for libolecf_file_open_file_io_handle */
+		/* TODO add test for libolecf_check_file_file_io_handle */
 
 #endif /* defined( LIBOLECF_HAVE_BFIO ) */
 	}

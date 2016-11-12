@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="olecf_test_support"
-	ProjectGUID="{7D1809E6-697E-4EF4-BA0E-29958DB51092}"
-	RootNamespace="olecf_test_support"
+	Name="olecf_test_notify"
+	ProjectGUID="{A66A16CC-32E3-421D-8544-EDC7DB192D6A}"
+	RootNamespace="olecf_test_notify"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\olecf_test_support.c"
+				RelativePath="..\..\tests\olecf_test_notify.c"
 				>
 			</File>
 		</Filter>
@@ -186,27 +186,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\tests\olecf_test_libcerror.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\olecf_test_libclocale.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\olecf_test_libcsystem.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\olecf_test_libolecf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\olecf_test_libuna.h"
+				RelativePath="..\..\tests\olecf_test_macros.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\olecf_test_macros.h"
+				RelativePath="..\..\tests\olecf_test_unused.h"
 				>
 			</File>
 		</Filter>

@@ -33,6 +33,8 @@
 #include "olecf_test_memory.h"
 #include "olecf_test_unused.h"
 
+#include "../libolecf/libolecf_item.h"
+
 /* Tests the libolecf_item_free function
  * Returns 1 if successful or 0 if not
  */
@@ -86,9 +88,43 @@ int main(
 	OLECF_TEST_UNREFERENCED_PARAMETER( argc )
 	OLECF_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libolecf_item_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	OLECF_TEST_RUN(
 	 "libolecf_item_free",
 	 olecf_test_item_free );
+
+	/* TODO: add tests for libolecf_item_get_type */
+
+	/* TODO: add tests for libolecf_item_get_utf8_name_size */
+
+	/* TODO: add tests for libolecf_item_get_utf8_name */
+
+	/* TODO: add tests for libolecf_item_get_utf16_name_size */
+
+	/* TODO: add tests for libolecf_item_get_utf16_name */
+
+	/* TODO: add tests for libolecf_item_get_size */
+
+	/* TODO: add tests for libolecf_item_get_creation_time */
+
+	/* TODO: add tests for libolecf_item_get_modification_time */
+
+	/* TODO: add tests for libolecf_item_get_number_of_sub_items */
+
+	/* TODO: add tests for libolecf_item_get_sub_item */
+
+	/* TODO: add tests for libolecf_item_get_sub_item_by_utf8_name */
+
+	/* TODO: add tests for libolecf_item_get_sub_item_by_utf16_name */
+
+	/* TODO: add tests for libolecf_item_get_sub_item_by_utf8_path */
+
+	/* TODO: add tests for libolecf_item_get_sub_item_by_utf16_path */
 
 	return( EXIT_SUCCESS );
 

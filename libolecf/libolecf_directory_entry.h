@@ -101,5 +101,5 @@ int libolecf_directory_entry_compare(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_DIRECTORY_ENTRY_H ) */
 

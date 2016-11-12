@@ -43,5 +43,5 @@ PyObject *pyolecf_property_set_stream_get_set(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_PROPERTY_SET_STREAM_H ) */
 

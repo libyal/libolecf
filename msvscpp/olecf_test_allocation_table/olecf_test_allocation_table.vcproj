@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="olecf_test_support"
-	ProjectGUID="{7D1809E6-697E-4EF4-BA0E-29958DB51092}"
-	RootNamespace="olecf_test_support"
+	Name="olecf_test_allocation_table"
+	ProjectGUID="{F8B5B88C-448A-4922-9F25-2B0242F26FD7}"
+	RootNamespace="olecf_test_allocation_table"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\olecf_test_support.c"
+				RelativePath="..\..\tests\olecf_test_allocation_table.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\olecf_test_memory.c"
 				>
 			</File>
 		</Filter>
@@ -190,23 +194,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\olecf_test_libclocale.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\olecf_test_libcsystem.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\olecf_test_libolecf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\olecf_test_libuna.h"
+				RelativePath="..\..\tests\olecf_test_macros.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\olecf_test_macros.h"
+				RelativePath="..\..\tests\olecf_test_memory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\olecf_test_unused.h"
 				>
 			</File>
 		</Filter>

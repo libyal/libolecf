@@ -53,5 +53,5 @@ struct olecf_compound_object_header
 }
 #endif
 
-#endif
+#endif /* !defined( _OLECF_COMPOUND_OBJECT_H ) */
 

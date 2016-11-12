@@ -62,5 +62,5 @@ int libolecf_allocation_table_resize(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_ALLOCATION_TABLE_H ) */
 

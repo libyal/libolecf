@@ -33,6 +33,207 @@
 #include "olecf_test_memory.h"
 #include "olecf_test_unused.h"
 
+#include "../libolecf/libolecf_property_value.h"
+
+#if defined( __GNUC__ )
+
+/* Tests the libolecf_property_value_initialize function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_initialize(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	int result                                = 0;
+
+#if defined( HAVE_OLECF_TEST_MEMORY )
+	int number_of_malloc_fail_tests           = 1;
+	int number_of_memset_fail_tests           = 1;
+	int test_number                           = 0;
+#endif
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "property_value",
+         property_value );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "property_value",
+         property_value );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_initialize(
+	          NULL,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	property_value = (libolecf_property_value_t *) 0x12345678UL;
+
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	property_value = NULL;
+
+#if defined( HAVE_OLECF_TEST_MEMORY )
+
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
+	{
+		/* Test libolecf_property_value_initialize with malloc failing
+		 */
+		olecf_test_malloc_attempts_before_fail = test_number;
+
+		result = libolecf_property_value_initialize(
+		          &property_value,
+		          &error );
+
+		if( olecf_test_malloc_attempts_before_fail != -1 )
+		{
+			olecf_test_malloc_attempts_before_fail = -1;
+
+			if( property_value != NULL )
+			{
+				libolecf_property_value_free(
+				 &property_value,
+				 NULL );
+			}
+		}
+		else
+		{
+			OLECF_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			OLECF_TEST_ASSERT_IS_NULL(
+			 "property_value",
+			 property_value );
+
+			OLECF_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
+	}
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
+	{
+		/* Test libolecf_property_value_initialize with memset failing
+		 */
+		olecf_test_memset_attempts_before_fail = test_number;
+
+		result = libolecf_property_value_initialize(
+		          &property_value,
+		          &error );
+
+		if( olecf_test_memset_attempts_before_fail != -1 )
+		{
+			olecf_test_memset_attempts_before_fail = -1;
+
+			if( property_value != NULL )
+			{
+				libolecf_property_value_free(
+				 &property_value,
+				 NULL );
+			}
+		}
+		else
+		{
+			OLECF_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			OLECF_TEST_ASSERT_IS_NULL(
+			 "property_value",
+			 property_value );
+
+			OLECF_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
+	}
+#endif /* defined( HAVE_OLECF_TEST_MEMORY ) */
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) */
+
 /* Tests the libolecf_property_value_free function
  * Returns 1 if successful or 0 if not
  */
@@ -86,9 +287,51 @@ int main(
 	OLECF_TEST_UNREFERENCED_PARAMETER( argc )
 	OLECF_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_initialize",
+	 olecf_test_property_value_initialize );
+
+#endif /* defined( __GNUC__ ) */
+
 	OLECF_TEST_RUN(
 	 "libolecf_property_value_free",
 	 olecf_test_property_value_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libolecf_property_value_read_data */
+
+	/* TODO: add tests for libolecf_property_value_read_list_entry */
+
+#endif /* defined( __GNUC__ ) */
+
+	/* TODO: add tests for libolecf_property_value_get_identifier */
+
+	/* TODO: add tests for libolecf_property_value_get_value_type */
+
+	/* TODO: add tests for libolecf_property_value_get_value_data_size */
+
+	/* TODO: add tests for libolecf_property_value_get_value_data */
+
+	/* TODO: add tests for libolecf_property_value_get_value_boolean */
+
+	/* TODO: add tests for libolecf_property_value_get_value_16bit */
+
+	/* TODO: add tests for libolecf_property_value_get_value_32bit */
+
+	/* TODO: add tests for libolecf_property_value_get_value_64bit */
+
+	/* TODO: add tests for libolecf_property_value_get_value_filetime */
+
+	/* TODO: add tests for libolecf_property_value_get_value_utf8_string_size */
+
+	/* TODO: add tests for libolecf_property_value_get_value_utf8_string */
+
+	/* TODO: add tests for libolecf_property_value_get_value_utf16_string_size */
+
+	/* TODO: add tests for libolecf_property_value_get_value_utf16_string */
 
 	return( EXIT_SUCCESS );
 

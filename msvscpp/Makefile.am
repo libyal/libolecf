@@ -17,10 +17,13 @@ MSVSCPP_FILES = \
 	libfwps/libfwps.vcproj \
 	libolecf/libolecf.vcproj \
 	libuna/libuna.vcproj \
+	olecf_test_allocation_table/olecf_test_allocation_table.vcproj \
+	olecf_test_directory_entry/olecf_test_directory_entry.vcproj \
 	olecf_test_error/olecf_test_error.vcproj \
 	olecf_test_file/olecf_test_file.vcproj \
+	olecf_test_io_handle/olecf_test_io_handle.vcproj \
 	olecf_test_item/olecf_test_item.vcproj \
-	olecf_test_open_close/olecf_test_open_close.vcproj \
+	olecf_test_notify/olecf_test_notify.vcproj \
 	olecf_test_property_section/olecf_test_property_section.vcproj \
 	olecf_test_property_set/olecf_test_property_set.vcproj \
 	olecf_test_property_value/olecf_test_property_value.vcproj \

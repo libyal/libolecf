@@ -91,5 +91,5 @@ PyObject *pyolecf_property_value_get_data_as_string(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_PROPERTY_VALUE_H ) */
 

@@ -1,5 +1,5 @@
 /*
- * Library property_section type testing program
+ * Library directory_entry type testing program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -33,30 +33,30 @@
 #include "olecf_test_memory.h"
 #include "olecf_test_unused.h"
 
-#include "../libolecf/libolecf_property_section.h"
+#include "../libolecf/libolecf_directory_entry.h"
 
 #if defined( __GNUC__ )
 
-/* Tests the libolecf_property_section_initialize function
+/* Tests the libolecf_directory_entry_initialize function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_property_section_initialize(
+int olecf_test_directory_entry_initialize(
      void )
 {
-	libcerror_error_t *error                      = NULL;
-	libolecf_property_section_t *property_section = NULL;
-	int result                                    = 0;
+	libcerror_error_t *error                    = NULL;
+	libolecf_directory_entry_t *directory_entry = NULL;
+	int result                                  = 0;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
-	int number_of_malloc_fail_tests               = 1;
-	int number_of_memset_fail_tests               = 1;
-	int test_number                               = 0;
+	int number_of_malloc_fail_tests             = 1;
+	int number_of_memset_fail_tests             = 1;
+	int test_number                             = 0;
 #endif
 
 	/* Test regular cases
 	 */
-	result = libolecf_property_section_initialize(
-	          &property_section,
+	result = libolecf_directory_entry_initialize(
+	          &directory_entry,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -65,15 +65,15 @@ int olecf_test_property_section_initialize(
 	 1 );
 
         OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "property_section",
-         property_section );
+         "directory_entry",
+         directory_entry );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",
          error );
 
-	result = libolecf_property_section_free(
-	          &property_section,
+	result = libolecf_directory_entry_free(
+	          &directory_entry,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -82,8 +82,8 @@ int olecf_test_property_section_initialize(
 	 1 );
 
         OLECF_TEST_ASSERT_IS_NULL(
-         "property_section",
-         property_section );
+         "directory_entry",
+         directory_entry );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",
@@ -91,7 +91,7 @@ int olecf_test_property_section_initialize(
 
 	/* Test error cases
 	 */
-	result = libolecf_property_section_initialize(
+	result = libolecf_directory_entry_initialize(
 	          NULL,
 	          &error );
 
@@ -107,10 +107,10 @@ int olecf_test_property_section_initialize(
 	libcerror_error_free(
 	 &error );
 
-	property_section = (libolecf_property_section_t *) 0x12345678UL;
+	directory_entry = (libolecf_directory_entry_t *) 0x12345678UL;
 
-	result = libolecf_property_section_initialize(
-	          &property_section,
+	result = libolecf_directory_entry_initialize(
+	          &directory_entry,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -125,7 +125,7 @@ int olecf_test_property_section_initialize(
 	libcerror_error_free(
 	 &error );
 
-	property_section = NULL;
+	directory_entry = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -133,22 +133,22 @@ int olecf_test_property_section_initialize(
 	     test_number < number_of_malloc_fail_tests;
 	     test_number++ )
 	{
-		/* Test libolecf_property_section_initialize with malloc failing
+		/* Test libolecf_directory_entry_initialize with malloc failing
 		 */
 		olecf_test_malloc_attempts_before_fail = test_number;
 
-		result = libolecf_property_section_initialize(
-		          &property_section,
+		result = libolecf_directory_entry_initialize(
+		          &directory_entry,
 		          &error );
 
 		if( olecf_test_malloc_attempts_before_fail != -1 )
 		{
 			olecf_test_malloc_attempts_before_fail = -1;
 
-			if( property_section != NULL )
+			if( directory_entry != NULL )
 			{
-				libolecf_property_section_free(
-				 &property_section,
+				libolecf_directory_entry_free(
+				 &directory_entry,
 				 NULL );
 			}
 		}
@@ -160,8 +160,8 @@ int olecf_test_property_section_initialize(
 			 -1 );
 
 			OLECF_TEST_ASSERT_IS_NULL(
-			 "property_section",
-			 property_section );
+			 "directory_entry",
+			 directory_entry );
 
 			OLECF_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -175,22 +175,22 @@ int olecf_test_property_section_initialize(
 	     test_number < number_of_memset_fail_tests;
 	     test_number++ )
 	{
-		/* Test libolecf_property_section_initialize with memset failing
+		/* Test libolecf_directory_entry_initialize with memset failing
 		 */
 		olecf_test_memset_attempts_before_fail = test_number;
 
-		result = libolecf_property_section_initialize(
-		          &property_section,
+		result = libolecf_directory_entry_initialize(
+		          &directory_entry,
 		          &error );
 
 		if( olecf_test_memset_attempts_before_fail != -1 )
 		{
 			olecf_test_memset_attempts_before_fail = -1;
 
-			if( property_section != NULL )
+			if( directory_entry != NULL )
 			{
-				libolecf_property_section_free(
-				 &property_section,
+				libolecf_directory_entry_free(
+				 &directory_entry,
 				 NULL );
 			}
 		}
@@ -202,8 +202,8 @@ int olecf_test_property_section_initialize(
 			 -1 );
 
 			OLECF_TEST_ASSERT_IS_NULL(
-			 "property_section",
-			 property_section );
+			 "directory_entry",
+			 directory_entry );
 
 			OLECF_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -223,21 +223,19 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( property_section != NULL )
+	if( directory_entry != NULL )
 	{
-		libolecf_property_section_free(
-		 &property_section,
+		libolecf_directory_entry_free(
+		 &directory_entry,
 		 NULL );
 	}
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
-
-/* Tests the libolecf_property_section_free function
+/* Tests the libolecf_directory_entry_free function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_property_section_free(
+int olecf_test_directory_entry_free(
      void )
 {
 	libcerror_error_t *error = NULL;
@@ -245,7 +243,7 @@ int olecf_test_property_section_free(
 
 	/* Test error cases
 	 */
-	result = libolecf_property_section_free(
+	result = libolecf_directory_entry_free(
 	          NULL,
 	          &error );
 
@@ -272,6 +270,8 @@ on_error:
 	return( 0 );
 }
 
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -290,28 +290,16 @@ int main(
 #if defined( __GNUC__ )
 
 	OLECF_TEST_RUN(
-	 "libolecf_property_section_initialize",
-	 olecf_test_property_section_initialize );
-
-#endif /* defined( __GNUC__ ) */
+	 "libolecf_directory_entry_initialize",
+	 olecf_test_directory_entry_initialize );
 
 	OLECF_TEST_RUN(
-	 "libolecf_property_section_free",
-	 olecf_test_property_section_free );
+	 "libolecf_directory_entry_free",
+	 olecf_test_directory_entry_free );
 
-#if defined( __GNUC__ )
-
-	/* TODO: add tests for libolecf_property_section_read_list_entry */
-
-	/* TODO: add tests for libolecf_property_section_read */
+	/* TODO: add tests for libolecf_directory_entry_compare */
 
 #endif /* defined( __GNUC__ ) */
-
-	/* TODO: add tests for libolecf_property_section_get_class_identifier */
-
-	/* TODO: add tests for libolecf_property_section_get_number_of_properties */
-
-	/* TODO: add tests for libolecf_property_section_get_property_by_index */
 
 	return( EXIT_SUCCESS );
 

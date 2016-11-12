@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBOLECF_INTERNAL_FILE_H )
-#define _LIBOLECF_INTERNAL_FILE_H
+#if !defined( _LIBOLECF_FILE_H )
+#define _LIBOLECF_FILE_H
 
 #include <common.h>
 #include <types.h>
@@ -208,5 +208,5 @@ int libolecf_file_get_item_by_utf16_path(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_FILE_H ) */
 

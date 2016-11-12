@@ -146,5 +146,5 @@ struct olecf_file_header
 }
 #endif
 
-#endif
+#endif /* !defined( _OLECF_FILE_HEADER_H ) */
 

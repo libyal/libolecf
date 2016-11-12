@@ -43,5 +43,5 @@ int libolecf_compound_object_stream_read(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_COMPOUND_OBJECT_STREAM_H ) */
 

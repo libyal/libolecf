@@ -65,5 +65,5 @@ int libolecf_stream_get_offset(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_STREAM_H ) */
 

@@ -119,5 +119,5 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_ITEM_H ) */
 

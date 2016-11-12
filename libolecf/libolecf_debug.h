@@ -47,5 +47,5 @@ int libolecf_debug_print_read_offsets(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_DEBUG_H ) */
 

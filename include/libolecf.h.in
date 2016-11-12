@@ -488,7 +488,7 @@ int libolecf_item_get_sub_item_by_utf8_name(
 LIBOLECF_EXTERN \
 int libolecf_item_get_sub_item_by_utf16_name(
      libolecf_item_t *item,
-     const uint8_t *utf16_string,
+     const uint16_t *utf16_string,
      size_t utf16_string_length,
      libolecf_item_t **sub_item,
      libolecf_error_t **error );

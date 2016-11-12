@@ -88,5 +88,5 @@ PyObject *pyolecf_property_set_get_sections(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYOLECF_PROPERTY_SET_H ) */
 

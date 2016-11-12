@@ -109,5 +109,5 @@ struct olecf_directory_entry
 }
 #endif
 
-#endif
+#endif /* !defined( _OLECF_DIRECTORY_H ) */
 
