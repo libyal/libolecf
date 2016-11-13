@@ -103,6 +103,19 @@ int libolecf_io_handle_read_file_header(
      uint32_t *root_directory_sector_identifier,
      libcerror_error_t **error );
 
+int libolecf_io_handle_read_file_header_data(
+     libolecf_io_handle_t *io_handle,
+     const uint8_t *data,
+     size_t data_size,
+     libolecf_allocation_table_t *msat,
+     uint32_t *msat_sector_identifier,
+     uint32_t *number_of_msat_sectors,
+     uint32_t *number_of_sat_sectors,
+     uint32_t *ssat_sector_identifier,
+     uint32_t *number_of_ssat_sectors,
+     uint32_t *root_directory_sector_identifier,
+     libcerror_error_t **error );
+
 int libolecf_io_handle_read_msat(
      libolecf_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,

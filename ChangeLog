@@ -80,87 +80,8 @@ olecfinfo
 * print summary information (partial)
 * print compobj stream info
 
-20160817
-* Changes for get item by path
-* worked on Python bindings
-
-20160109
-* fixes for rpmbuild
-
-20160107
-* worked on Python 3 support
-* 2016 update
-
-20151223
-* worked on format support
-
-20151222
-* applied updates
-
-20151205
-* worked on Python bindings
-
-20150823
-* changed version for pypi repacking
-
-20150822
-* worked on setup.py
-
-20150630
-* changed version
-
-20150629
-* bug fixes after fuzzing with AFL
-
-20150608
-* worked on format support
-
-20150413
-* improved support file without directory entries
-
-20150328
-* added more bounds checks
-
-20150106
-* 2015 update
-
-20141222
-* worked on Python 3 support
-
-20141221
-* worked on Python 3 support
-
-20141220
-* worked on Python 3 support
-* worked on tests
-
-20141219
-* worked on Python 3 support
-
-20141216
-* worked on Python 3 support
-
-20141130
-* code clean up
-
-20141119
-* code clean up
-
-20141026
-* changes for deployment
-
-20141024
-* changes for deployment
-* changes for project site move
-
-20141019
-* changes for deployment
-
-20141004
-* bug fix in Python-bindings
-* update Python-bindings tests
-
 20140930
+* see `git log' for more recent change log
 * removed README.macosx
 * changes for project site move
 

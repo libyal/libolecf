@@ -75,6 +75,7 @@ olecf_test_allocation_table_LDADD = \
 
 olecf_test_directory_entry_SOURCES = \
 	olecf_test_directory_entry.c \
+	olecf_test_libcdata.h \
 	olecf_test_libcerror.h \
 	olecf_test_libolecf.h \
 	olecf_test_macros.h \

@@ -97,6 +97,13 @@ int libolecf_directory_entry_compare(
      libolecf_directory_entry_t *second_directory_entry,
      libcerror_error_t **error );
 
+int libolecf_directory_entry_read_data(
+     libolecf_directory_entry_t *directory_entry,
+     const uint8_t *data,
+     size_t data_size,
+     uint8_t byte_order,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

@@ -22,10 +22,7 @@
 #include <common.h>
 #include <byte_stream.h>
 #include <memory.h>
-#include <narrow_string.h>
-#include <system_string.h>
 #include <types.h>
-#include <wide_string.h>
 
 #include "libolecf_allocation_table.h"
 #include "libolecf_codepage.h"
@@ -37,7 +34,6 @@
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
 #include "libolecf_libcnotify.h"
-#include "libolecf_libfdatetime.h"
 #include "libolecf_libfguid.h"
 #include "libolecf_libuna.h"
 #include "libolecf_notify.h"
@@ -215,19 +211,8 @@ int libolecf_io_handle_read_file_header(
 {
 	olecf_file_header_t file_header;
 
-	uint8_t *msat_entry         = NULL;
-	static char *function       = "libolecf_io_handle_read_file_header";
-	ssize_t read_count          = 0;
-	int msat_index              = 0;
-	uint16_t sector_size        = 0;
-	uint16_t short_sector_size  = 0;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	system_character_t guid_string[ 48 ];
-
-	libfguid_identifier_t *guid = NULL;
-	int result                  = 0;
-#endif
+	static char *function = "libolecf_io_handle_read_file_header";
+	ssize_t read_count    = 0;
 
 	if( io_handle == NULL )
 	{
@@ -236,6 +221,137 @@ int libolecf_io_handle_read_file_header(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: reading file header at offset: 0 (0x00000000)\n",
+		 function );
+	}
+#endif
+	if( libbfio_handle_seek_offset(
+	     file_io_handle,
+	     0,
+	     SEEK_SET,
+	     error ) == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek file header offset: 0.",
+		 function );
+
+		return( -1 );
+	}
+	read_count = libbfio_handle_read_buffer(
+	              file_io_handle,
+	              (uint8_t *) &file_header,
+	              sizeof( olecf_file_header_t ),
+	              error );
+
+	if( read_count != (ssize_t) sizeof( olecf_file_header_t ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read file header.",
+		 function );
+
+		return( -1 );
+	}
+	if( libolecf_io_handle_read_file_header_data(
+	     io_handle,
+	     (uint8_t *) &file_header,
+	     sizeof( olecf_file_header_t ),
+	     msat,
+	     msat_sector_identifier,
+	     number_of_msat_sectors,
+	     number_of_sat_sectors,
+	     ssat_sector_identifier,
+	     number_of_ssat_sectors,
+	     root_directory_sector_identifier,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read file header.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Reads a file header
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_io_handle_read_file_header_data(
+     libolecf_io_handle_t *io_handle,
+     const uint8_t *data,
+     size_t data_size,
+     libolecf_allocation_table_t *msat,
+     uint32_t *msat_sector_identifier,
+     uint32_t *number_of_msat_sectors,
+     uint32_t *number_of_sat_sectors,
+     uint32_t *ssat_sector_identifier,
+     uint32_t *number_of_ssat_sectors,
+     uint32_t *root_directory_sector_identifier,
+     libcerror_error_t **error )
+{
+	uint8_t *msat_entry        = NULL;
+	static char *function      = "libolecf_io_handle_read_file_header_data";
+	uint16_t sector_size       = 0;
+	uint16_t short_sector_size = 0;
+	int msat_index             = 0;
+
+	if( io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid data.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size < sizeof( olecf_file_header_t ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid data size value too small.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size > (size_t) SSIZE_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid data size value exceeds maximum.",
 		 function );
 
 		return( -1 );
@@ -317,63 +433,6 @@ int libolecf_io_handle_read_file_header(
 
 		return( -1 );
 	}
-	if( msat->number_of_sector_identifiers < 109 )
-	{
-		if( libolecf_allocation_table_resize(
-		     msat,
-		     109,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
-			 "%s: unable to resize MSAT.",
-			 function );
-
-			goto on_error;
-		}
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading file header at offset: 0 (0x00000000)\n",
-		 function );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     0,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek file header offset: 0.",
-		 function );
-
-		goto on_error;
-	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              (uint8_t *) &file_header,
-	              sizeof( olecf_file_header_t ),
-	              error );
-
-	if( read_count != (ssize_t) sizeof( olecf_file_header_t ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read file header.",
-		 function );
-
-		goto on_error;
-	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -381,17 +440,17 @@ int libolecf_io_handle_read_file_header(
 		 "%s: file header:\n",
 		 function );
 		libcnotify_print_data(
-		 (uint8_t *) &file_header,
+		 (uint8_t *) data,
 		 sizeof( olecf_file_header_t ),
 		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
 #endif
 	if( ( memory_compare(
-	       file_header.signature,
+	       ( (olecf_file_header_t *) data )->signature,
 	       olecf_file_signature,
 	       8 ) != 0 )
 	 && ( memory_compare(
-	       file_header.signature,
+	       ( (olecf_file_header_t *) data )->signature,
 	       olecf_beta_file_signature,
 	       8 ) != 0 ) )
 	{
@@ -402,15 +461,15 @@ int libolecf_io_handle_read_file_header(
 		 "%s: invalid file signature.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
-	if( ( file_header.byte_order[ 0 ] == 0xfe )
-	 && ( file_header.byte_order[ 1 ] == 0xff ) )
+	if( ( ( (olecf_file_header_t *) data )->byte_order[ 0 ] == 0xfe )
+	 && ( ( (olecf_file_header_t *) data )->byte_order[ 1 ] == 0xff ) )
 	{
 		io_handle->byte_order = LIBOLECF_ENDIAN_LITTLE;
 	}
-	else if( ( file_header.byte_order[ 0 ] == 0xff )
-	      && ( file_header.byte_order[ 1 ] == 0xfe ) )
+	else if( ( ( (olecf_file_header_t *) data )->byte_order[ 0 ] == 0xff )
+	      && ( ( (olecf_file_header_t *) data )->byte_order[ 1 ] == 0xfe ) )
 	{
 		io_handle->byte_order = LIBOLECF_ENDIAN_BIG;
 	}
@@ -422,101 +481,101 @@ int libolecf_io_handle_read_file_header(
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported byte order: 0x%02" PRIx8 " 0x%02" PRIx8 ".",
 		 function,
-		 file_header.byte_order[ 0 ],
-		 file_header.byte_order[ 1 ] );
+		 ( (olecf_file_header_t *) data )->byte_order[ 0 ],
+		 ( (olecf_file_header_t *) data )->byte_order[ 1 ] );
 
-		goto on_error;
+		return( -1 );
 	}
 	if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
 	{
 		byte_stream_copy_to_uint16_little_endian(
-		 file_header.minor_version,
+		 ( (olecf_file_header_t *) data )->minor_version,
 		 io_handle->minor_version );
 
 		byte_stream_copy_to_uint16_little_endian(
-		 file_header.major_version,
+		 ( (olecf_file_header_t *) data )->major_version,
 		 io_handle->major_version );
 
 		byte_stream_copy_to_uint16_little_endian(
-		 file_header.sector_size,
+		 ( (olecf_file_header_t *) data )->sector_size,
 		 sector_size );
 
 		byte_stream_copy_to_uint16_little_endian(
-		 file_header.short_sector_size,
+		 ( (olecf_file_header_t *) data )->short_sector_size,
 		 short_sector_size );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.number_of_sat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_sat_sectors,
 		 *number_of_sat_sectors );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.root_directory_sector_identifier,
+		 ( (olecf_file_header_t *) data )->root_directory_sector_identifier,
 		 *root_directory_sector_identifier );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.sector_stream_minimum_data_size,
+		 ( (olecf_file_header_t *) data )->sector_stream_minimum_data_size,
 		 io_handle->sector_stream_minimum_data_size );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.ssat_sector_identifier,
+		 ( (olecf_file_header_t *) data )->ssat_sector_identifier,
 		 *ssat_sector_identifier );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.number_of_ssat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_ssat_sectors,
 		 *number_of_ssat_sectors );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.msat_sector_identifier,
+		 ( (olecf_file_header_t *) data )->msat_sector_identifier,
 		 *msat_sector_identifier );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 file_header.number_of_msat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_msat_sectors,
 		 *number_of_msat_sectors );
 	}
 	else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
 	{
 		byte_stream_copy_to_uint16_big_endian(
-		 file_header.minor_version,
+		 ( (olecf_file_header_t *) data )->minor_version,
 		 io_handle->minor_version );
 
 		byte_stream_copy_to_uint16_big_endian(
-		 file_header.major_version,
+		 ( (olecf_file_header_t *) data )->major_version,
 		 io_handle->major_version );
 
 		byte_stream_copy_to_uint16_big_endian(
-		 file_header.sector_size,
+		 ( (olecf_file_header_t *) data )->sector_size,
 		 sector_size );
 
 		byte_stream_copy_to_uint16_big_endian(
-		 file_header.short_sector_size,
+		 ( (olecf_file_header_t *) data )->short_sector_size,
 		 short_sector_size );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.number_of_sat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_sat_sectors,
 		 *number_of_sat_sectors );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.root_directory_sector_identifier,
+		 ( (olecf_file_header_t *) data )->root_directory_sector_identifier,
 		 *root_directory_sector_identifier );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.sector_stream_minimum_data_size,
+		 ( (olecf_file_header_t *) data )->sector_stream_minimum_data_size,
 		 io_handle->sector_stream_minimum_data_size );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.ssat_sector_identifier,
+		 ( (olecf_file_header_t *) data )->ssat_sector_identifier,
 		 *ssat_sector_identifier );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.number_of_ssat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_ssat_sectors,
 		 *number_of_ssat_sectors );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.msat_sector_identifier,
+		 ( (olecf_file_header_t *) data )->msat_sector_identifier,
 		 *msat_sector_identifier );
 
 		byte_stream_copy_to_uint32_big_endian(
-		 file_header.number_of_msat_sectors,
+		 ( (olecf_file_header_t *) data )->number_of_msat_sectors,
 		 *number_of_msat_sectors );
 	}
 	io_handle->sector_size       = 1 << sector_size;
@@ -529,101 +588,46 @@ int libolecf_io_handle_read_file_header(
 		 "%s: signature:\n",
 		 function );
 		libcnotify_print_data(
-		 file_header.signature,
+		 ( (olecf_file_header_t *) data )->signature,
 		 8,
 		 0 );
 
-		if( libfguid_identifier_initialize(
-		     &guid,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create GUID.",
-			 function );
-
-			goto on_error;
-		}
-		if( libfguid_identifier_copy_from_byte_stream(
-		     guid,
-		     file_header.class_identifier,
+		if( libolecf_debug_print_guid_value(
+		     function,
+		     "class identifier\t\t\t",
+		     ( (olecf_file_header_t *) data )->class_identifier,
 		     16,
 		     io_handle->byte_order,
+		     LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy byte stream to GUID.",
+			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+			 "%s: unable to print GUID value.",
 			 function );
 
-			goto on_error;
-		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfguid_identifier_copy_to_utf16_string(
-			  guid,
-			  (uint16_t *) guid_string,
-			  48,
-			  LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
-			  error );
-#else
-		result = libfguid_identifier_copy_to_utf8_string(
-			  guid,
-			  (uint8_t *) guid_string,
-			  48,
-			  LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
-			  error );
-#endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy GUID to string.",
-			 function );
-
-			goto on_error;
+			return( -1 );
 		}
 		libcnotify_printf(
-		 "%s: class identifier\t\t\t: %" PRIs_SYSTEM "\n",
-		 function,
-		 guid_string );
-
-		if( libfguid_identifier_free(
-		     &guid,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free GUID.",
-			 function );
-
-			goto on_error;
-		}
-		libcnotify_printf(
-		 "%s: minor version\t\t\t: %" PRIu16 "\n",
+		 "%s: minor version\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 io_handle->minor_version );
 
 		libcnotify_printf(
-		 "%s: major version\t\t\t: %" PRIu16 "\n",
+		 "%s: major version\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 io_handle->major_version );
 
 		libcnotify_printf(
 		 "%s: byte order\t\t\t\t: 0x%02" PRIx8 " 0x%02" PRIx8 "\n",
 		 function,
-		 file_header.byte_order[ 0 ],
-		 file_header.byte_order[ 1 ] );
+		 ( (olecf_file_header_t *) data )->byte_order[ 0 ],
+		 ( (olecf_file_header_t *) data )->byte_order[ 1 ] );
 
 		libcnotify_printf(
-		 "%s: sector size\t\t\t: 0x%04" PRIx16 " (%" PRIzd ")\n",
+		 "%s: sector size\t\t\t\t: 0x%04" PRIx16 " (%" PRIzd ")\n",
 		 function,
 		 sector_size,
 		 io_handle->sector_size );
@@ -638,12 +642,12 @@ int libolecf_io_handle_read_file_header(
 		 "%s: reserved:\n",
 		 function );
 		libcnotify_print_data(
-		 file_header.reserved1,
+		 ( (olecf_file_header_t *) data )->reserved1,
 		 10,
 		 0 );
 
 		libcnotify_printf(
-		 "%s: number of SAT sectors\t\t: %" PRIu32 "\n",
+		 "%s: number of SAT sectors\t\t\t: %" PRIu32 "\n",
 		 function,
 		 *number_of_sat_sectors );
 
@@ -656,7 +660,7 @@ int libolecf_io_handle_read_file_header(
 		 "%s: transactioning signature:\n",
 		 function );
 		libcnotify_print_data(
-		 file_header.transactioning_signature,
+		 ( (olecf_file_header_t *) data )->transactioning_signature,
 		 4,
 		 0 );
 
@@ -696,7 +700,7 @@ int libolecf_io_handle_read_file_header(
 		 "%s: invalid sector size value exceeds maximum.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 	if( io_handle->short_sector_size > (ssize_t) SSIZE_MAX )
 	{
@@ -707,7 +711,7 @@ int libolecf_io_handle_read_file_header(
 		 "%s: invalid short sector size value exceeds maximum.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #if SIZEOF_SIZE_T <= 4
 	if( io_handle->sector_stream_minimum_data_size > (uint32_t) SSIZE_MAX )
@@ -719,10 +723,27 @@ int libolecf_io_handle_read_file_header(
 		 "%s: invalid sector stream minimum size value exceeds maximum.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #endif
-	msat_entry = file_header.msat;
+	if( msat->number_of_sector_identifiers < 109 )
+	{
+		if( libolecf_allocation_table_resize(
+		     msat,
+		     109,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
+			 "%s: unable to resize MSAT.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	msat_entry = ( (olecf_file_header_t *) data )->msat;
 
 	for( msat_index = 0;
 	     msat_index < 109;
@@ -760,17 +781,6 @@ int libolecf_io_handle_read_file_header(
 	}
 #endif
 	return( 1 );
-
-on_error:
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( guid != NULL )
-	{
-		libfguid_identifier_free(
-		 &guid,
-		 NULL );
-	}
-#endif
-	return( -1 );
 }
 
 /* Reads the MSAT
@@ -1635,21 +1645,9 @@ int libolecf_io_handle_read_directory_entries(
 	size_t number_of_directory_sector_entries         = 0;
 	ssize_t read_count                                = 0;
 	uint32_t directory_sector_identifier              = 0;
-	uint16_t name_byte_size                           = 0;
 	int directory_entry_index                         = 0;
 	int directory_sector_index                        = 0;
 	int result                                        = 0;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	system_character_t filetime_string[ 32 ];
-	system_character_t guid_string[ 48 ];
-
-	libfdatetime_filetime_t *filetime                 = NULL;
-	libfguid_identifier_t *guid                       = NULL;
-	system_character_t *name_string                   = NULL;
-	size_t name_string_size                           = 0;
-	uint32_t value_32bit                              = 0;
-#endif
 
 	if( io_handle == NULL )
 	{
@@ -1851,521 +1849,79 @@ int libolecf_io_handle_read_directory_entries(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-				 "%s: unable to create directory entry.",
-				 function );
+				 "%s: unable to create directory entry: %d.",
+				 function,
+				 directory_sector_index );
 
 				goto on_error;
 			}
-			directory_entry->type = ( (olecf_directory_entry_t *) directory_entry_data )->type;
+			result = libolecf_directory_entry_read_data(
+			          directory_entry,
+			          directory_entry_data,
+			          sizeof( olecf_directory_entry_t ),
+			          io_handle->byte_order,
+			          error );
 
-			if( directory_entry->type != LIBOLECF_ITEM_TYPE_EMPTY )
+			if( result == -1 )
 			{
-				if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
-				{
-					byte_stream_copy_to_uint16_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->name_byte_size,
-					 name_byte_size );
-				}
-				else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
-				{
-					byte_stream_copy_to_uint16_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->name_byte_size,
-					 name_byte_size );
-				}
-				if( name_byte_size > 0 )
-				{
-					if( (size_t) name_byte_size > sizeof( olecf_directory_entry_t ) )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-						 "%s: name byte size value out of bounds.",
-						 function );
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read directory entry: %d.",
+				 function,
+				 directory_sector_index );
 
-						goto on_error;
-					}
-					directory_entry->name = (uint8_t *) memory_allocate(
-					                                     sizeof( uint8_t ) * name_byte_size );
-
-					if( directory_entry->name == NULL )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_MEMORY,
-						 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-						 "%s: unable to create name.",
-						 function );
-
-						goto on_error;
-					}
-					if( memory_copy(
-					     directory_entry->name,
-					     ( (olecf_directory_entry_t *) directory_entry_data )->name,
-					     name_byte_size ) == NULL )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_MEMORY,
-						 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
-						 "%s: unable to copy name.",
-						 function );
-
-						goto on_error;
-					}
-				}
-				directory_entry->name_size = (size_t) name_byte_size;
-
-				if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
-				{
-					byte_stream_copy_to_uint32_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->previous_directory_identifier,
-					 directory_entry->previous_directory_identifier );
-
-					byte_stream_copy_to_uint32_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->next_directory_identifier,
-					 directory_entry->next_directory_identifier );
-
-					byte_stream_copy_to_uint32_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->sub_directory_identifier,
-					 directory_entry->sub_directory_identifier );
-
-					byte_stream_copy_to_uint64_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->creation_time,
-					 directory_entry->creation_time );
-
-					byte_stream_copy_to_uint64_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->modification_time,
-					 directory_entry->modification_time );
-
-					byte_stream_copy_to_uint32_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->sector_identifier,
-					 directory_entry->sector_identifier );
-
-					byte_stream_copy_to_uint32_little_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->size,
-					 directory_entry->size );
-				}
-				else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
-				{
-					byte_stream_copy_to_uint32_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->previous_directory_identifier,
-					 directory_entry->previous_directory_identifier );
-
-					byte_stream_copy_to_uint32_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->next_directory_identifier,
-					 directory_entry->next_directory_identifier );
-
-					byte_stream_copy_to_uint32_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->sub_directory_identifier,
-					 directory_entry->sub_directory_identifier );
-
-					byte_stream_copy_to_uint64_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->creation_time,
-					 directory_entry->creation_time );
-
-					byte_stream_copy_to_uint64_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->modification_time,
-					 directory_entry->modification_time );
-
-					byte_stream_copy_to_uint32_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->sector_identifier,
-					 directory_entry->sector_identifier );
-
-					byte_stream_copy_to_uint32_big_endian(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->size,
-					 directory_entry->size );
-				}
-				directory_entry->directory_identifier = (uint32_t) directory_entry_index;
-
+				goto on_error;
+			}
+			if( directory_entry->type == LIBOLECF_ITEM_TYPE_EMPTY )
+			{
 #if defined( HAVE_DEBUG_OUTPUT )
 				if( libcnotify_verbose != 0 )
 				{
 					libcnotify_printf(
-					 "%s: directory entry: %03d name\t\t\t\t: ",
+					 "%s: directory sector entry: %d is empty (type is empty).\n",
 					 function,
-					 directory_entry_index );
-
-					if( directory_entry->name != NULL )
-					{
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-						result = libuna_utf16_string_size_from_utf16_stream(
-						          directory_entry->name,
-						          directory_entry->name_size,
-						          io_handle->byte_order,
-						          &( name_string_size ),
-						          error );
-#else
-						result = libuna_utf8_string_size_from_utf16_stream(
-						          directory_entry->name,
-						          directory_entry->name_size,
-						          io_handle->byte_order,
-						          &( name_string_size ),
-						          error );
-#endif
-						if( result != 1 )
-						{
-							libcerror_error_set(
-							 error,
-							 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-							 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-							 "%s: unable to determine name size.",
-							 function );
-
-							goto on_error;
-						}
-						name_string = system_string_allocate(
-						               name_string_size );
-
-						if( name_string == NULL )
-						{
-							libcerror_error_set(
-							 error,
-							 LIBCERROR_ERROR_DOMAIN_MEMORY,
-							 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-							 "%s: unable to create name string.",
-							 function );
-
-							goto on_error;
-						}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-						result = libuna_utf16_string_copy_from_utf16_stream(
-							  (uint16_t *) name_string,
-							  name_string_size,
-							  directory_entry->name,
-							  directory_entry->name_size,
-							  io_handle->byte_order,
-							  error );
-#else
-						result = libuna_utf8_string_copy_from_utf16_stream(
-							  (uint8_t *) name_string,
-							  name_string_size,
-							  directory_entry->name,
-							  directory_entry->name_size,
-							  io_handle->byte_order,
-							  error );
-#endif
-						if( result != 1 )
-						{
-							libcerror_error_set(
-							 error,
-							 LIBCERROR_ERROR_DOMAIN_CONVERSION,
-							 LIBCERROR_CONVERSION_ERROR_GENERIC,
-							 "%s: unable to set name string.",
-							 function );
-
-							goto on_error;
-						}
-						libcnotify_printf(
-						 "%" PRIs_SYSTEM "",
-						 name_string );
-
-						memory_free(
-						 name_string );
-
-						name_string = NULL;
-					}
-					libcnotify_printf(
-					 "\n" );
-
-					libcnotify_printf(
-					 "%s: directory entry: %03d name byte size\t\t\t: %" PRIu16 "\n",
-					 function,
-					 directory_entry_index,
-					 name_byte_size );
-					libcnotify_printf(
-					 "%s: directory entry: %03d type\t\t\t\t: 0x%02" PRIx8 " (%s)\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->type,
-					 libolecf_debug_print_item_type(
-					  directory_entry->type ) );
-					libcnotify_printf(
-					 "%s: directory entry: %03d node color\t\t\t: 0x%02" PRIx8 "\n",
-					 function,
-					 directory_entry_index,
-					 ( (olecf_directory_entry_t *) directory_entry_data )->node_color );
-
-					libcnotify_printf(
-					 "%s: directory entry: %03d previous directory identifier\t: 0x%08" PRIx32 "\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->previous_directory_identifier );
-					libcnotify_printf(
-					 "%s: directory entry: %03d next directory identifier\t: 0x%08" PRIx32 "\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->next_directory_identifier );
-					libcnotify_printf(
-					 "%s: directory entry: %03d sub directory identifier\t: 0x%08" PRIx32 "\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->sub_directory_identifier );
-
-					if( libfguid_identifier_initialize(
-					     &guid,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to create GUID.",
-						 function );
-
-						goto on_error;
-					}
-					if( libfguid_identifier_copy_from_byte_stream(
-					     guid,
-					     ( (olecf_directory_entry_t *) directory_entry_data )->class_identifier,
-					     16,
-					     io_handle->byte_order,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-						 "%s: unable to copy byte stream to GUID.",
-						 function );
-
-						goto on_error;
-					}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-					result = libfguid_identifier_copy_to_utf16_string(
-						  guid,
-						  (uint16_t *) guid_string,
-						  48,
-						  LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
-						  error );
-#else
-					result = libfguid_identifier_copy_to_utf8_string(
-						  guid,
-						  (uint8_t *) guid_string,
-						  48,
-						  LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
-						  error );
-#endif
-					if( result != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-						 "%s: unable to copy GUID to string.",
-						 function );
-
-						goto on_error;
-					}
-					libcnotify_printf(
-					 "%s: directory entry: %03d class identifier\t\t: %" PRIs_SYSTEM "\n",
-					 function,
-					 directory_entry_index,
-					 guid_string );
-
-					if( libfguid_identifier_free(
-					     &guid,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-						 "%s: unable to free GUID.",
-						 function );
-
-						goto on_error;
-					}
-					if( io_handle->byte_order == LIBOLECF_ENDIAN_LITTLE )
-					{
-						byte_stream_copy_to_uint32_little_endian(
-						 ( (olecf_directory_entry_t *) directory_entry_data )->user_flags,
-						 value_32bit );
-					}
-					else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
-					{
-						byte_stream_copy_to_uint32_big_endian(
-						 ( (olecf_directory_entry_t *) directory_entry_data )->user_flags,
-						 value_32bit );
-					}
-					libcnotify_printf(
-					 "%s: directory entry: %03d user flags\t\t\t: 0x%08" PRIx32 "\n",
-					 function,
-					 directory_entry_index,
-					 value_32bit );
-
-					if( libfdatetime_filetime_initialize(
-					     &filetime,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to create filetime.",
-						 function );
-
-						goto on_error;
-					}
-					if( libfdatetime_filetime_copy_from_byte_stream(
-					     filetime,
-					     ( (olecf_directory_entry_t *) directory_entry_data )->creation_time,
-					     8,
-					     io_handle->byte_order,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-						 "%s: unable to set creation filetime.",
-						 function );
-
-						goto on_error;
-					}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-					result = libfdatetime_filetime_copy_to_utf16_string(
-					          filetime,
-					          (uint16_t *) filetime_string,
-					          32,
-					          LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME_NANO_SECONDS,
-					          error );
-#else
-					result = libfdatetime_filetime_copy_to_utf8_string(
-					          filetime,
-					          (uint8_t *) filetime_string,
-					          32,
-					          LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME_NANO_SECONDS,
-					          error );
-#endif
-					if( result != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-						 "%s: unable to create set creation date time string.",
-						 function );
-
-						goto on_error;
-					}
-					libcnotify_printf(
-					 "%s: directory entry: %03d creation time\t\t\t: %" PRIs_SYSTEM " UTC\n",
-					 function,
-					 directory_entry_index,
-					 filetime_string );
-
-					if( libfdatetime_filetime_copy_from_byte_stream(
-					     filetime,
-					     ( (olecf_directory_entry_t *) directory_entry_data )->modification_time,
-					     8,
-					     io_handle->byte_order,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-						 "%s: unable to set modification filetime.",
-						 function );
-
-						goto on_error;
-					}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-					result = libfdatetime_filetime_copy_to_utf16_string(
-					          filetime,
-					          (uint16_t *) filetime_string,
-					          32,
-					          LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME_NANO_SECONDS,
-					          error );
-#else
-					result = libfdatetime_filetime_copy_to_utf8_string(
-					          filetime,
-					          (uint8_t *) filetime_string,
-					          32,
-					          LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME_NANO_SECONDS,
-					          error );
-#endif
-					if( result != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-						 "%s: unable to create set modification date time string.",
-						 function );
-
-						goto on_error;
-					}
-					libcnotify_printf(
-					 "%s: directory entry: %03d modification time\t\t: %" PRIs_SYSTEM " UTC\n",
-					 function,
-					 directory_entry_index,
-					 filetime_string );
-
-					if( libfdatetime_filetime_free(
-					     &filetime,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-						 "%s: unable to free filetime.",
-						 function );
-
-						goto on_error;
-					}
-					libcnotify_printf(
-					 "%s: directory entry: %03d sector identifier\t\t: 0x%08" PRIx32 "\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->sector_identifier );
-					libcnotify_printf(
-					 "%s: directory entry: %03d size\t\t\t\t: %" PRIu32 "\n",
-					 function,
-					 directory_entry_index,
-					 directory_entry->size );
-
-					libcnotify_printf(
-					 "%s: directory entry: %03d reserved1:\n",
-					 function,
-					 directory_entry_index );
-					libcnotify_print_data(
-					 ( (olecf_directory_entry_t *) directory_entry_data )->reserved1,
-					 4,
-					 0 );
+					 directory_sector_index );
 				}
 #endif
-			}
-#if defined( HAVE_DEBUG_OUTPUT )
-			else if( libcnotify_verbose != 0 )
-			{
-				libcnotify_printf(
-				 "%s: directory sector entry: %d is empty (type is empty).\n",
-				 function,
-				 directory_sector_index );
-			}
-#endif
-			/* Empty directory entries need to be included for the indentifier
-			 * to point to the correct directory entry in the list.
-			 */
-			if( libcdata_list_append_value(
-			     directory_entry_list,
-			     (intptr_t *) directory_entry,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-				 "%s: unable to append directory entry.",
-				 function );
+				if( libolecf_directory_entry_free(
+				     &directory_entry,
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+					 "%s: unable to free directory entry.",
+					 function );
 
-				goto on_error;
+					goto on_error;
+				}
 			}
-			directory_entry = NULL;
+			else
+			{
+				directory_entry->directory_identifier = (uint32_t) directory_entry_index;
 
+				/* Empty directory entries need to be included for the indentifier
+				 * to point to the correct directory entry in the list.
+				 */
+				if( libcdata_list_append_value(
+				     directory_entry_list,
+				     (intptr_t *) directory_entry,
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+					 "%s: unable to append directory entry.",
+					 function );
+
+					goto on_error;
+				}
+				directory_entry = NULL;
+			}
 			directory_entry_index++;
 
 			directory_entry_data += sizeof( olecf_directory_entry_t );
@@ -2435,25 +1991,6 @@ int libolecf_io_handle_read_directory_entries(
 	return( 1 );
 
 on_error:
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( name_string != NULL )
-	{
-		memory_free(
-		 name_string );
-	}
-	if( filetime != NULL )
-	{
-		libfdatetime_filetime_free(
-		 &filetime,
-		 NULL );
-	}
-	if( guid != NULL )
-	{
-		libfguid_identifier_free(
-		 &guid,
-		 NULL );
-	}
-#endif
 	if( directory_entry != NULL )
 	{
 		libolecf_directory_entry_free(

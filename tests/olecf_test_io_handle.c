@@ -301,6 +301,8 @@ int main(
 
 	/* TODO: add tests for libolecf_io_handle_read_file_header */
 
+	/* TODO: add tests for libolecf_io_handle_read_file_header_data */
+
 	/* TODO: add tests for libolecf_io_handle_read_msat */
 
 	/* TODO: add tests for libolecf_io_handle_read_sat */

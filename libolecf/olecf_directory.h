@@ -38,10 +38,10 @@ struct olecf_directory_entry
 	 */
  	uint8_t name[ 64 ];
 
-	/* The byte size of the directory name
+	/* The size of the directory name data
 	 * Consists of 2 bytes
 	 */
-	uint8_t name_byte_size[ 2 ];
+	uint8_t name_data_size[ 2 ];
 
 	/* The directory type
 	 * Consists of 1 byte

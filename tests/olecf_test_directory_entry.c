@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #endif
 
+#include "olecf_test_libcdata.h"
 #include "olecf_test_libcerror.h"
 #include "olecf_test_libolecf.h"
 #include "olecf_test_macros.h"
@@ -270,6 +271,164 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libolecf_directory_entry_compare function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_directory_entry_compare(
+     void )
+{
+	libcerror_error_t *error                               = NULL;
+	libolecf_directory_entry_t *first_directory_entry  = NULL;
+	libolecf_directory_entry_t *second_directory_entry = NULL;
+	int result                                             = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_directory_entry_initialize(
+	          &first_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "first_directory_entry",
+         first_directory_entry );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libolecf_directory_entry_initialize(
+	          &second_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 LIBCDATA_COMPARE_EQUAL );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "second_directory_entry",
+         second_directory_entry );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_directory_entry_compare(
+	          first_directory_entry,
+	          second_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libolecf_directory_entry_compare(
+	          NULL,
+	          second_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_directory_entry_compare(
+	          first_directory_entry,
+	          NULL,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libolecf_directory_entry_free(
+	          &second_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "second_directory_entry",
+         second_directory_entry );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libolecf_directory_entry_free(
+	          &first_directory_entry,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "first_directory_entry",
+         first_directory_entry );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( second_directory_entry != NULL )
+	{
+		libolecf_directory_entry_free(
+		 &second_directory_entry,
+		 NULL );
+	}
+	if( first_directory_entry != NULL )
+	{
+		libolecf_directory_entry_free(
+		 &first_directory_entry,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -297,7 +456,11 @@ int main(
 	 "libolecf_directory_entry_free",
 	 olecf_test_directory_entry_free );
 
-	/* TODO: add tests for libolecf_directory_entry_compare */
+	OLECF_TEST_RUN(
+	 "libolecf_directory_entry_compare",
+	 olecf_test_directory_entry_compare );
+
+	/* TODO: add tests for libolecf_directory_entry_read_data */
 
 #endif /* defined( __GNUC__ ) */
 
