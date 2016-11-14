@@ -102,5 +102,5 @@ int libolecf_property_set_get_section_by_index(
 }
 #endif
 
-#endif /* !defined( _LIBOLECF_SET_H ) */
+#endif /* !defined( _LIBOLECF_PROPERTY_SET_H ) */
 

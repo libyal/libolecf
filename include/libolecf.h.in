@@ -433,23 +433,23 @@ int libolecf_item_get_size(
      libolecf_error_t **error );
 
 /* Retrieves the creation date and time
- * The returned time is a 64-bit version of a filetime value
+ * The returned time is a 64-bit version of a FILETIME value
  * Returns 1 if successful or -1 on error
  */
 LIBOLECF_EXTERN \
 int libolecf_item_get_creation_time(
      libolecf_item_t *item,
-     uint64_t *creation_time,
+     uint64_t *filetime,
      libolecf_error_t **error );
 
 /* Retrieves the modification date and time
- * The returned time is a 64-bit version of a filetime value
+ * The returned time is a 64-bit version of a FILETIME value
  * Returns 1 if successful or -1 on error
  */
 LIBOLECF_EXTERN \
 int libolecf_item_get_modification_time(
      libolecf_item_t *item,
-     uint64_t *modification_time,
+     uint64_t *filetime,
      libolecf_error_t **error );
 
 /* Retrieves the number of sub items from a item
@@ -797,5 +797,5 @@ int libolecf_property_value_get_value_utf16_string(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_H ) */
 

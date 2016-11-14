@@ -589,12 +589,12 @@ int libolecf_item_get_size(
 }
 
 /* Retrieves the creation date and time
- * The returned time is a 64-bit version of a filetime value
+ * The returned time is a 64-bit version of a FILETIME value
  * Returns 1 if successful or -1 on error
  */
 int libolecf_item_get_creation_time(
      libolecf_item_t *item,
-     uint64_t *creation_time,
+     uint64_t *filetime,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -624,29 +624,29 @@ int libolecf_item_get_creation_time(
 
 		return( -1 );
 	}
-	if( creation_time == NULL )
+	if( filetime == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid creation time.",
+		 "%s: invalid filetime.",
 		 function );
 
 		return( -1 );
 	}
-	*creation_time = internal_item->directory_entry->creation_time;
+	*filetime = internal_item->directory_entry->creation_time;
 
 	return( 1 );
 }
 
 /* Retrieves the modification date and time
- * The returned time is a 64-bit version of a filetime value
+ * The returned time is a 64-bit version of a FILETIME value
  * Returns 1 if successful or -1 on error
  */
 int libolecf_item_get_modification_time(
      libolecf_item_t *item,
-     uint64_t *modification_time,
+     uint64_t *filetime,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -676,18 +676,18 @@ int libolecf_item_get_modification_time(
 
 		return( -1 );
 	}
-	if( modification_time == NULL )
+	if( filetime == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid modification time.",
+		 "%s: invalid filetime.",
 		 function );
 
 		return( -1 );
 	}
-	*modification_time = internal_item->directory_entry->modification_time;
+	*filetime = internal_item->directory_entry->modification_time;
 
 	return( 1 );
 }

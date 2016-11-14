@@ -1,4 +1,4 @@
-.Dd November 12, 2016
+.Dd November 14, 2016
 .Dt libolecf 3
 .Os libolecf
 .Sh NAME
@@ -107,9 +107,9 @@ Item functions
 .Ft int
 .Fn libolecf_item_get_size "libolecf_item_t *item, uint32_t *size, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_creation_time "libolecf_item_t *item, uint64_t *creation_time, libolecf_error_t **error"
+.Fn libolecf_item_get_creation_time "libolecf_item_t *item, uint64_t *filetime, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_modification_time "libolecf_item_t *item, uint64_t *modification_time, libolecf_error_t **error"
+.Fn libolecf_item_get_modification_time "libolecf_item_t *item, uint64_t *filetime, libolecf_error_t **error"
 .Ft int
 .Fn libolecf_item_get_number_of_sub_items "libolecf_item_t *item, int *number_of_sub_items, libolecf_error_t **error"
 .Ft int

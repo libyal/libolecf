@@ -24,6 +24,7 @@ pyolecf_la_SOURCES = \
 	pyolecf_guid.c pyolecf_guid.h \
 	pyolecf_integer.c pyolecf_integer.h \
 	pyolecf_item.c pyolecf_item.h \
+	pyolecf_item_types.c pyolecf_item_types.h \
 	pyolecf_items.c pyolecf_items.h \
 	pyolecf_libbfio.h \
 	pyolecf_libcerror.h \

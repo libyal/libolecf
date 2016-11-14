@@ -1,5 +1,5 @@
 /*
- * The libbfio header wrapper
+ * Python object definition of the libolecf item types
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,36 +19,45 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYOLECF_LIBBFIO_H )
-#define _PYOLECF_LIBBFIO_H
+#if !defined( _PYOLECF_ITEM_TYPES_H )
+#define _PYOLECF_ITEM_TYPES_H
 
 #include <common.h>
+#include <types.h>
 
-/* Define HAVE_LOCAL_LIBBFIO for local use of libbfio
- */
-#if defined( HAVE_LOCAL_LIBBFIO )
+#include "pyolecf_libolecf.h"
+#include "pyolecf_python.h"
 
-#include <libbfio_definitions.h>
-#include <libbfio_file.h>
-#include <libbfio_file_pool.h>
-#include <libbfio_file_range.h>
-#include <libbfio_handle.h>
-#include <libbfio_memory_range.h>
-#include <libbfio_pool.h>
-#include <libbfio_types.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBBFIO_DLL_IMPORT
- * before including libbfio.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBBFIO_DLL_IMPORT
+#if defined( __cplusplus )
+extern "C" {
 #endif
 
-#include <libbfio.h>
+typedef struct pyolecf_item_types pyolecf_item_types_t;
 
-#endif /* defined( HAVE_LOCAL_LIBBFIO ) */
+struct pyolecf_item_types
+{
+	/* Python object initialization
+	 */
+	PyObject_HEAD
+};
 
-#endif /* !defined( _PYOLECF_LIBBFIO_H ) */
+extern PyTypeObject pyolecf_item_types_type_object;
+
+int pyolecf_item_types_init_type(
+     PyTypeObject *type_object );
+
+PyObject *pyolecf_item_types_new(
+           void );
+
+int pyolecf_item_types_init(
+     pyolecf_item_types_t *pyolecf_item_types );
+
+void pyolecf_item_types_free(
+      pyolecf_item_types_t *pyolecf_item_types );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif /* !defined( _PYOLECF_ITEM_TYPES_H ) */
 

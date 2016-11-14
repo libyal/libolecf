@@ -121,13 +121,13 @@ int libolecf_item_get_size(
 LIBOLECF_EXTERN \
 int libolecf_item_get_creation_time(
      libolecf_item_t *item,
-     uint64_t *creation_time,
+     uint64_t *filetime,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
 int libolecf_item_get_modification_time(
      libolecf_item_t *item,
-     uint64_t *modification_time,
+     uint64_t *filetime,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
