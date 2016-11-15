@@ -679,8 +679,8 @@ on_error:
  */
 int libolecf_property_section_get_class_identifier(
      libolecf_property_section_t *property_section,
-     uint8_t *class_identifier,
-     size_t size,
+     uint8_t *guid_data,
+     size_t guid_data_size,
      libcerror_error_t **error )
 {
 	libolecf_internal_property_section_t *internal_property_section = NULL;
@@ -699,30 +699,30 @@ int libolecf_property_section_get_class_identifier(
 	}
 	internal_property_section = (libolecf_internal_property_section_t *) property_section;
 
-	if( class_identifier == NULL )
+	if( guid_data == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid class identifier.",
+		 "%s: invalid GUID data.",
 		 function );
 
 		return( -1 );
 	}
-	if( size < 16 )
+	if( guid_data_size < 16 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: class identifier too small.",
+		 "%s: GUID data size too small.",
 		 function );
 
 		return( -1 );
 	}
 	if( memory_copy(
-	     class_identifier,
+	     guid_data,
 	     internal_property_section->class_identifier,
 	     16 ) == NULL )
 	{

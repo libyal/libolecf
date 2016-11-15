@@ -272,6 +272,1240 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+/* Tests the libolecf_property_value_get_identifier function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_identifier(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint32_t identifier                       = 0;
+	int identifier_is_set                     = 0;
+	int result                                = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_identifier(
+	          property_value,
+	          &identifier,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	identifier_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_identifier(
+	          NULL,
+	          &identifier,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( identifier_is_set != 0 )
+	{
+		result = libolecf_property_value_get_identifier(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_type function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_type(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint32_t value_type                       = 0;
+	int result                                = 0;
+	int value_type_is_set                     = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_type(
+	          property_value,
+	          &value_type,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_type_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_type(
+	          NULL,
+	          &value_type,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_type_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_type(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_data_size function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_data_size(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	size_t value_data_size                    = 0;
+	int result                                = 0;
+	int value_data_size_is_set                = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_data_size(
+	          property_value,
+	          &value_data_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_data_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_data_size(
+	          NULL,
+	          &value_data_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_data_size_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_data_size(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_boolean function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_boolean(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint8_t value_boolean                     = 0;
+	int result                                = 0;
+	int value_boolean_is_set                  = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_boolean(
+	          property_value,
+	          &value_boolean,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_boolean_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_boolean(
+	          NULL,
+	          &value_boolean,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_boolean_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_boolean(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_16bit function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_16bit(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint16_t value_16bit                      = 0;
+	int result                                = 0;
+	int value_16bit_is_set                    = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_16bit(
+	          property_value,
+	          &value_16bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_16bit_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_16bit(
+	          NULL,
+	          &value_16bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_16bit_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_16bit(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_32bit function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_32bit(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint32_t value_32bit                      = 0;
+	int result                                = 0;
+	int value_32bit_is_set                    = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_32bit(
+	          property_value,
+	          &value_32bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_32bit_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_32bit(
+	          NULL,
+	          &value_32bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_32bit_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_32bit(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_64bit function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_64bit(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint64_t value_64bit                      = 0;
+	int result                                = 0;
+	int value_64bit_is_set                    = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_64bit(
+	          property_value,
+	          &value_64bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_64bit_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_64bit(
+	          NULL,
+	          &value_64bit,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_64bit_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_64bit(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_filetime function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_filetime(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	uint64_t value_filetime                   = 0;
+	int result                                = 0;
+	int value_filetime_is_set                 = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_filetime(
+	          property_value,
+	          &value_filetime,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_filetime_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_filetime(
+	          NULL,
+	          &value_filetime,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_filetime_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_filetime(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_utf8_string_size function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_utf8_string_size(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	size_t value_utf8_string_size             = 0;
+	int result                                = 0;
+	int value_utf8_string_size_is_set         = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_utf8_string_size(
+	          property_value,
+	          &value_utf8_string_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_utf8_string_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_utf8_string_size(
+	          NULL,
+	          &value_utf8_string_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_utf8_string_size_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_utf8_string_size(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_property_value_get_value_utf16_string_size function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_value_get_value_utf16_string_size(
+     void )
+{
+	libcerror_error_t *error                  = NULL;
+	libolecf_property_value_t *property_value = NULL;
+	size_t value_utf16_string_size            = 0;
+	int result                                = 0;
+	int value_utf16_string_size_is_set        = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_value_initialize(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_value_get_value_utf16_string_size(
+	          property_value,
+	          &value_utf16_string_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value_utf16_string_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_value_get_value_utf16_string_size(
+	          NULL,
+	          &value_utf16_string_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( value_utf16_string_size_is_set != 0 )
+	{
+		result = libolecf_property_value_get_value_utf16_string_size(
+		          property_value,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_value_free(
+	          &property_value,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_value",
+	 property_value );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_value != NULL )
+	{
+		libolecf_property_value_free(
+		 &property_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -299,39 +1533,59 @@ int main(
 	 "libolecf_property_value_free",
 	 olecf_test_property_value_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && defined( TODO )
 
 	/* TODO: add tests for libolecf_property_value_read_data */
 
 	/* TODO: add tests for libolecf_property_value_read_list_entry */
 
-#endif /* defined( __GNUC__ ) */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_identifier",
+	 olecf_test_property_value_get_identifier );
 
-	/* TODO: add tests for libolecf_property_value_get_identifier */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_type",
+	 olecf_test_property_value_get_value_type );
 
-	/* TODO: add tests for libolecf_property_value_get_value_type */
-
-	/* TODO: add tests for libolecf_property_value_get_value_data_size */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_data_size",
+	 olecf_test_property_value_get_value_data_size );
 
 	/* TODO: add tests for libolecf_property_value_get_value_data */
 
-	/* TODO: add tests for libolecf_property_value_get_value_boolean */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_boolean",
+	 olecf_test_property_value_get_value_boolean );
 
-	/* TODO: add tests for libolecf_property_value_get_value_16bit */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_16bit",
+	 olecf_test_property_value_get_value_16bit );
 
-	/* TODO: add tests for libolecf_property_value_get_value_32bit */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_32bit",
+	 olecf_test_property_value_get_value_32bit );
 
-	/* TODO: add tests for libolecf_property_value_get_value_64bit */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_64bit",
+	 olecf_test_property_value_get_value_64bit );
 
-	/* TODO: add tests for libolecf_property_value_get_value_filetime */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_filetime",
+	 olecf_test_property_value_get_value_filetime );
 
-	/* TODO: add tests for libolecf_property_value_get_value_utf8_string_size */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_utf8_string_size",
+	 olecf_test_property_value_get_value_utf8_string_size );
 
 	/* TODO: add tests for libolecf_property_value_get_value_utf8_string */
 
-	/* TODO: add tests for libolecf_property_value_get_value_utf16_string_size */
+	OLECF_TEST_RUN(
+	 "libolecf_property_value_get_value_utf16_string_size",
+	 olecf_test_property_value_get_value_utf16_string_size );
 
 	/* TODO: add tests for libolecf_property_value_get_value_utf16_string */
+
+#endif /* defined( __GNUC__ ) && defined( TODO ) */
 
 	return( EXIT_SUCCESS );
 

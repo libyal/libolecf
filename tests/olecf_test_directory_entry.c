@@ -277,10 +277,10 @@ on_error:
 int olecf_test_directory_entry_compare(
      void )
 {
-	libcerror_error_t *error                               = NULL;
+	libcerror_error_t *error                           = NULL;
 	libolecf_directory_entry_t *first_directory_entry  = NULL;
 	libolecf_directory_entry_t *second_directory_entry = NULL;
-	int result                                             = 0;
+	int result                                         = 0;
 
 	/* Initialize test
 	 */
@@ -308,7 +308,7 @@ int olecf_test_directory_entry_compare(
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 LIBCDATA_COMPARE_EQUAL );
+	 1 );
 
         OLECF_TEST_ASSERT_IS_NOT_NULL(
          "second_directory_entry",
@@ -328,7 +328,7 @@ int olecf_test_directory_entry_compare(
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 1 );
+	 LIBCDATA_COMPARE_EQUAL );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",

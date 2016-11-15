@@ -1857,6 +1857,7 @@ int libolecf_io_handle_read_directory_entries(
 			}
 			result = libolecf_directory_entry_read_data(
 			          directory_entry,
+			          directory_entry_index,
 			          directory_entry_data,
 			          sizeof( olecf_directory_entry_t ),
 			          io_handle->byte_order,
@@ -1901,11 +1902,6 @@ int libolecf_io_handle_read_directory_entries(
 			}
 			else
 			{
-				directory_entry->directory_identifier = (uint32_t) directory_entry_index;
-
-				/* Empty directory entries need to be included for the indentifier
-				 * to point to the correct directory entry in the list.
-				 */
 				if( libcdata_list_append_value(
 				     directory_entry_list,
 				     (intptr_t *) directory_entry,
@@ -2009,6 +2005,11 @@ on_error:
 		memory_free(
 		 directory_sector );
 	}
+	libcdata_list_empty(
+	 directory_entry_list,
+         (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
+	 NULL );
+
 	return( -1 );
 }
 

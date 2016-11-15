@@ -27,6 +27,7 @@ libolecf_la_SOURCES = \
 	libolecf_compound_object_stream.c libolecf_compound_object_stream.h \
 	libolecf_debug.c libolecf_debug.h \
 	libolecf_directory_entry.c libolecf_directory_entry.h \
+	libolecf_directory_list.c libolecf_directory_list.h \
 	libolecf_directory_tree.c libolecf_directory_tree.h \
 	libolecf_definitions.h \
 	libolecf_error.c libolecf_error.h \

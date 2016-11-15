@@ -79,8 +79,8 @@ int libolecf_property_section_read(
 LIBOLECF_EXTERN \
 int libolecf_property_section_get_class_identifier(
      libolecf_property_section_t *property_section,
-     uint8_t *class_identifier,
-     size_t size,
+     uint8_t *guid_data,
+     size_t guid_data_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \

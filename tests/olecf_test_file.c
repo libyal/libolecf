@@ -865,6 +865,8 @@ int olecf_test_file_open(
 	          LIBOLECF_OPEN_READ,
 	          &error );
 
+	OLECF_TEST_FPRINT_ERROR( error )
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -1232,19 +1234,19 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libolecf_file_get_ascii_codepage functions
+/* Tests the libolecf_file_signal_abort function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_file_get_ascii_codepage(
+int olecf_test_file_signal_abort(
      libolecf_file_t *file )
 {
 	libcerror_error_t *error = NULL;
-	int codepage             = 0;
 	int result               = 0;
 
-	result = libolecf_file_get_ascii_codepage(
+	/* Test regular cases
+	 */
+	result = libolecf_file_signal_abort(
 	          file,
-	          &codepage,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1258,25 +1260,7 @@ int olecf_test_file_get_ascii_codepage(
 
 	/* Test error cases
 	 */
-	result = libolecf_file_get_ascii_codepage(
-	          NULL,
-	          &codepage,
-	          &error );
-
-	OLECF_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libolecf_file_get_ascii_codepage(
-	          file,
+	result = libolecf_file_signal_abort(
 	          NULL,
 	          &error );
 
@@ -1303,11 +1287,245 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libolecf_file_set_ascii_codepage functions
+/* Tests the libolecf_file_get_sector_size function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_get_sector_size(
+     libolecf_file_t *file )
+{
+	libcerror_error_t *error = NULL;
+	size32_t sector_size     = 0;
+	int result               = 0;
+	int sector_size_is_set   = 0;
+
+	/* Test regular cases
+	 */
+	result = libolecf_file_get_sector_size(
+	          file,
+	          &sector_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	sector_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_file_get_sector_size(
+	          NULL,
+	          &sector_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( sector_size_is_set != 0 )
+	{
+		result = libolecf_file_get_sector_size(
+		          file,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_file_get_short_sector_size function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_get_short_sector_size(
+     libolecf_file_t *file )
+{
+	libcerror_error_t *error     = NULL;
+	size32_t short_sector_size   = 0;
+	int result                   = 0;
+	int short_sector_size_is_set = 0;
+
+	/* Test regular cases
+	 */
+	result = libolecf_file_get_short_sector_size(
+	          file,
+	          &short_sector_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	short_sector_size_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_file_get_short_sector_size(
+	          NULL,
+	          &short_sector_size,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( short_sector_size_is_set != 0 )
+	{
+		result = libolecf_file_get_short_sector_size(
+		          file,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_file_get_ascii_codepage function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_get_ascii_codepage(
+     libolecf_file_t *file )
+{
+	libcerror_error_t *error  = NULL;
+	int ascii_codepage        = 0;
+	int ascii_codepage_is_set = 0;
+	int result                = 0;
+
+	/* Test regular cases
+	 */
+	result = libolecf_file_get_ascii_codepage(
+	          file,
+	          &ascii_codepage,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	ascii_codepage_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_file_get_ascii_codepage(
+	          NULL,
+	          &ascii_codepage,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( ascii_codepage_is_set != 0 )
+	{
+		result = libolecf_file_get_ascii_codepage(
+		          file,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_file_set_ascii_codepage function
  * Returns 1 if successful or 0 if not
  */
 int olecf_test_file_set_ascii_codepage(
-     void )
+     libolecf_file_t *file )
 {
 	int supported_codepages[ 15 ] = {
 		LIBOLECF_CODEPAGE_ASCII,
@@ -1346,29 +1564,9 @@ int olecf_test_file_set_ascii_codepage(
 		LIBOLECF_CODEPAGE_KOI8_U };
 
 	libcerror_error_t *error = NULL;
-	libolecf_file_t *file    = NULL;
 	int codepage             = 0;
 	int index                = 0;
 	int result               = 0;
-
-	/* Initialize test
-	 */
-	result = libolecf_file_initialize(
-	          &file,
-	          &error );
-
-	OLECF_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "file",
-         file );
-
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test set ASCII codepage
 	 */
@@ -1436,18 +1634,15 @@ int olecf_test_file_set_ascii_codepage(
 	}
 	/* Clean up
 	 */
-	result = libolecf_file_free(
-	          &file,
+	result = libolecf_file_set_ascii_codepage(
+	          file,
+	          LIBOLECF_CODEPAGE_WINDOWS_1252,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
-
-        OLECF_TEST_ASSERT_IS_NULL(
-         "file",
-         file );
 
         OLECF_TEST_ASSERT_IS_NULL(
          "error",
@@ -1461,10 +1656,193 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( file != NULL )
+	return( 0 );
+}
+
+/* Tests the libolecf_file_get_number_of_unallocated_blocks function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_get_number_of_unallocated_blocks(
+     libolecf_file_t *file )
+{
+	libcerror_error_t *error                = NULL;
+	int number_of_unallocated_blocks        = 0;
+	int number_of_unallocated_blocks_is_set = 0;
+	int result                              = 0;
+
+	/* Test regular cases
+	 */
+	result = libolecf_file_get_number_of_unallocated_blocks(
+	          file,
+	          &number_of_unallocated_blocks,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_unallocated_blocks_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_file_get_number_of_unallocated_blocks(
+	          NULL,
+	          &number_of_unallocated_blocks,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( number_of_unallocated_blocks_is_set != 0 )
 	{
-		libolecf_file_free(
-		 &file,
+		result = libolecf_file_get_number_of_unallocated_blocks(
+		          file,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libolecf_file_get_root_item function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_file_get_root_item(
+     libolecf_file_t *file )
+{
+	libcerror_error_t *error   = NULL;
+	libolecf_item_t *root_item = 0;
+	int result                 = 0;
+	int root_item_is_set       = 0;
+
+	/* Test regular cases
+	 */
+	result = libolecf_file_get_root_item(
+	          file,
+	          &root_item,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	root_item_is_set = result;
+
+	if( root_item_is_set != 0 )
+	{
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "root_item",
+		 root_item );
+
+		result = libolecf_item_free(
+		          &root_item,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		OLECF_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	/* Test error cases
+	 */
+	result = libolecf_file_get_root_item(
+	          NULL,
+	          &root_item,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "root_item",
+	 root_item );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( root_item_is_set != 0 )
+	{
+		result = libolecf_file_get_root_item(
+		          file,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NULL(
+		 "root_item",
+		 root_item );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( root_item != NULL )
+	{
+		libolecf_item_free(
+		 &root_item,
 		 NULL );
 	}
 	return( 0 );
@@ -1525,10 +1903,6 @@ int main(
 	 "libolecf_file_free",
 	 olecf_test_file_free );
 
-	OLECF_TEST_RUN(
-	 "libolecf_file_set_ascii_codepage",
-	 olecf_test_file_set_ascii_codepage );
-
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 	if( source != NULL )
 	{
@@ -1582,11 +1956,9 @@ int main(
 	         error );
 
 		OLECF_TEST_RUN_WITH_ARGS(
-		 "libolecf_file_get_ascii_codepage",
-		 olecf_test_file_get_ascii_codepage,
+		 "libolecf_file_signal_abort",
+		 olecf_test_file_signal_abort,
 		 file );
-
-		/* TODO: add tests for libolecf_file_signal_abort */
 
 #if defined( __GNUC__ )
 
@@ -1594,17 +1966,39 @@ int main(
 
 #endif /* defined( __GNUC__ ) */
 
-		/* TODO: add tests for libolecf_file_get_sector_size */
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_get_sector_size",
+		 olecf_test_file_get_sector_size,
+		 file );
 
-		/* TODO: add tests for libolecf_file_get_short_sector_size */
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_get_short_sector_size",
+		 olecf_test_file_get_short_sector_size,
+		 file );
+
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_get_ascii_codepage",
+		 olecf_test_file_get_ascii_codepage,
+		 file );
+
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_set_ascii_codepage",
+		 olecf_test_file_set_ascii_codepage,
+		 file );
 
 		/* TODO: add tests for libolecf_file_get_format_version */
 
-		/* TODO: add tests for libolecf_file_get_number_of_unallocated_blocks */
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_get_number_of_unallocated_blocks",
+		 olecf_test_file_get_number_of_unallocated_blocks,
+		 file );
 
 		/* TODO: add tests for libolecf_file_get_unallocated_block */
 
-		/* TODO: add tests for libolecf_file_get_root_item */
+		OLECF_TEST_RUN_WITH_ARGS(
+		 "libolecf_file_get_root_item",
+		 olecf_test_file_get_root_item,
+		 file );
 
 		/* TODO: add tests for libolecf_file_get_item_by_utf8_path */
 

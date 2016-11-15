@@ -192,6 +192,7 @@ int libolecf_directory_entry_compare(
  */
 int libolecf_directory_entry_read_data(
      libolecf_directory_entry_t *directory_entry,
+     int directory_entry_index,
      const uint8_t *data,
      size_t data_size,
      uint8_t byte_order,
@@ -321,7 +322,8 @@ int libolecf_directory_entry_read_data(
 			goto on_error;
 		}
 	}
-	directory_entry->name_size = (size_t) name_data_size;
+	directory_entry->directory_identifier = (uint32_t) directory_entry_index;
+	directory_entry->name_size            = (size_t) name_data_size;
 
 	if( byte_order == LIBOLECF_ENDIAN_LITTLE )
 	{
@@ -386,6 +388,11 @@ int libolecf_directory_entry_read_data(
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
+		libcnotify_printf(
+		 "%s: identifier\t\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 directory_entry->directory_identifier );
+
 		if( libolecf_debug_print_utf16_string_value(
 		     function,
 		     "name\t\t\t\t",
@@ -410,12 +417,14 @@ int libolecf_directory_entry_read_data(
 		 "%s: name data size\t\t\t: %" PRIu16 "\n",
 		 function,
 		 name_data_size );
+
 		libcnotify_printf(
 		 "%s: type\t\t\t\t: 0x%02" PRIx8 " (%s)\n",
 		 function,
 		 directory_entry->type,
 		 libolecf_debug_print_item_type(
 		  directory_entry->type ) );
+
 		libcnotify_printf(
 		 "%s: node color\t\t\t\t: 0x%02" PRIx8 "\n",
 		 function,
@@ -425,10 +434,12 @@ int libolecf_directory_entry_read_data(
 		 "%s: previous directory identifier\t: 0x%08" PRIx32 "\n",
 		 function,
 		 directory_entry->previous_directory_identifier );
+
 		libcnotify_printf(
 		 "%s: next directory identifier\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 directory_entry->next_directory_identifier );
+
 		libcnotify_printf(
 		 "%s: sub directory identifier\t\t: 0x%08" PRIx32 "\n",
 		 function,

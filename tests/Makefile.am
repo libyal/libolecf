@@ -16,8 +16,8 @@ AM_CPPFLAGS = \
 	@LIBFOLE_CPPFLAGS@ \
 	@LIBFVALUE_CPPFLAGS@ \
 	@LIBFWPS_CPPFLAGS@ \
-	@PTHREAD_CPPFLAGS@ \
 	@LIBCSYSTEM_CPPFLAGS@ \
+	@PTHREAD_CPPFLAGS@ \
 	@LIBOLECF_DLL_IMPORT@
 
 if HAVE_PYTHON_TESTS
@@ -186,6 +186,7 @@ olecf_test_property_value_LDADD = \
 	@LIBCERROR_LIBADD@
 
 olecf_test_support_SOURCES = \
+	olecf_test_libbfio.h \
 	olecf_test_libcerror.h \
 	olecf_test_libclocale.h \
 	olecf_test_libcsystem.h \
@@ -196,6 +197,9 @@ olecf_test_support_SOURCES = \
 
 olecf_test_support_LDADD = \
 	@LIBCSYSTEM_LIBADD@ \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \

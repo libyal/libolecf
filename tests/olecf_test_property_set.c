@@ -272,6 +272,129 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libolecf_property_set_get_number_of_sections function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_set_get_number_of_sections(
+     void )
+{
+	libcerror_error_t *error              = NULL;
+	libolecf_property_set_t *property_set = NULL;
+	int number_of_sections                = 0;
+	int number_of_sections_is_set         = 0;
+	int result                            = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_set_initialize(
+	          &property_set,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_set",
+	 property_set );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_set_get_number_of_sections(
+	          property_set,
+	          &number_of_sections,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_sections_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libolecf_property_set_get_number_of_sections(
+	          NULL,
+	          &number_of_sections,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( number_of_sections_is_set != 0 )
+	{
+		result = libolecf_property_set_get_number_of_sections(
+		          property_set,
+		          NULL,
+		          &error );
+
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Clean up
+	 */
+	result = libolecf_property_set_free(
+	          &property_set,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_set",
+	 property_set );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_set != NULL )
+	{
+		libolecf_property_set_free(
+		 &property_set,
+		 NULL );
+	}
+	return( 0 );
+}
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -307,7 +430,9 @@ int main(
 
 	/* TODO: add tests for libolecf_property_set_get_class_identifier */
 
-	/* TODO: add tests for libolecf_property_set_get_number_of_sections */
+	OLECF_TEST_RUN(
+	 "libolecf_property_set_get_number_of_sections",
+	 olecf_test_property_set_get_number_of_sections );
 
 	/* TODO: add tests for libolecf_property_set_get_section_by_index */
 

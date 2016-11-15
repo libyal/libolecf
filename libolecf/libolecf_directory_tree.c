@@ -24,6 +24,7 @@
 
 #include "libolecf_definitions.h"
 #include "libolecf_directory_entry.h"
+#include "libolecf_directory_list.h"
 #include "libolecf_directory_tree.h"
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
@@ -48,7 +49,6 @@ int libolecf_directory_tree_create(
 	libolecf_directory_entry_t *directory_entry = NULL;
 	static char *function                       = "libolecf_directory_tree_create";
 	int element_index                           = 0;
-	int found_non_emtpy_element                 = 0;
 	int number_of_elements                      = 0;
 
 	if( directory_tree_root_node == NULL )
@@ -147,10 +147,6 @@ int libolecf_directory_tree_create(
 
 			goto on_error;
 		}
-		if( directory_entry->type != LIBOLECF_ITEM_TYPE_EMPTY )
-		{
-			found_non_emtpy_element = 1;
-		}
 		if( directory_entry->type == LIBOLECF_ITEM_TYPE_ROOT_STORAGE )
 		{
 			break;
@@ -173,10 +169,6 @@ int libolecf_directory_tree_create(
 	}
 	if( list_element == NULL )
 	{
-		if( found_non_emtpy_element == 0 )
-		{
-			return( 0 );
-		}
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
@@ -289,7 +281,6 @@ int libolecf_directory_tree_create_process_entry(
      uint8_t byte_order,
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *list_element             = NULL;
 	libcdata_tree_node_t *parent_node                 = NULL;
 	libolecf_directory_entry_t *directory_entry_value = NULL;
 	libcdata_tree_node_t *tree_node                   = NULL;
@@ -398,10 +389,10 @@ int libolecf_directory_tree_create_process_entry(
 	 && ( directory_entry->sub_directory_identifier != 0 )
 	 && ( root_directory_entry->directory_identifier == 0 ) )
 	{
-		result = libcdata_list_get_element_by_index(
+		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
-		          (int) directory_entry->sub_directory_identifier,
-		          &list_element,
+		          directory_entry->sub_directory_identifier,
+		          &directory_entry_value,
 		          error );
 
 		if( result == -1 )
@@ -418,20 +409,6 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( libcdata_list_element_get_value(
-			     list_element,
-			     (intptr_t **) &directory_entry_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve value from sub directory entry list element.",
-				 function );
-
-				goto on_error;
-			}
 			if( directory_entry_value == NULL )
 			{
 				libcerror_error_set(
@@ -528,10 +505,10 @@ int libolecf_directory_tree_create_process_entry(
 	 */
 	if( directory_entry->previous_directory_identifier != LIBOLECF_SECTOR_IDENTIFIER_UNUSED )
 	{
-		result = libcdata_list_get_element_by_index(
+		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
 		          (int) directory_entry->previous_directory_identifier,
-		          &list_element,
+		          &directory_entry_value,
 		          error );
 
 		if( result == -1 )
@@ -548,21 +525,6 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( libcdata_list_element_get_value(
-			     list_element,
-			     (intptr_t **) &directory_entry_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve previous directory entry: 0x%08" PRIx32 " value.",
-				 function,
-				 directory_entry->previous_directory_identifier );
-
-				goto on_error;
-			}
 			if( directory_entry_value == NULL )
 			{
 				libcerror_error_set(
@@ -673,10 +635,10 @@ int libolecf_directory_tree_create_process_entry(
 	 */
 	if( directory_entry->next_directory_identifier != LIBOLECF_SECTOR_IDENTIFIER_UNUSED )
 	{
-		result = libcdata_list_get_element_by_index(
+		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
 		          (int) directory_entry->next_directory_identifier,
-		          &list_element,
+		          &directory_entry_value,
 		          error );
 
 		if( result != 1 )
@@ -693,21 +655,6 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( libcdata_list_element_get_value(
-			     list_element,
-			     (intptr_t **) &directory_entry_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve next directory entry: 0x%08" PRIx32 " value.",
-				 function,
-				 directory_entry->next_directory_identifier );
-
-				goto on_error;
-			}
 			if( directory_entry_value == NULL )
 			{
 				libcerror_error_set(

@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libolecf\libolecf_directory_list.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libolecf\libolecf_directory_tree.c"
 				>
 			</File>
@@ -265,6 +269,10 @@
 			</File>
 			<File
 				RelativePath="..\..\libolecf\libolecf_directory_entry.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libolecf\libolecf_directory_list.h"
 				>
 			</File>
 			<File

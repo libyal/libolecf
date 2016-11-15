@@ -1489,19 +1489,37 @@ int libolecf_file_get_number_of_unallocated_blocks(
 	}
 	internal_file = (libolecf_internal_file_t *) file;
 
-	if( libcdata_range_list_get_number_of_elements(
-	     internal_file->unallocated_block_list,
-	     number_of_unallocated_blocks,
-	     error ) != 1 )
+	if( internal_file->unallocated_block_list == NULL )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of elements.",
-		 function );
+		if( number_of_unallocated_blocks == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid number of unallocated blocks.",
+			 function );
 
-		return( -1 );
+			return( -1 );
+		}
+		*number_of_unallocated_blocks = 0;
+	}
+	else
+	{
+		if( libcdata_range_list_get_number_of_elements(
+		     internal_file->unallocated_block_list,
+		     number_of_unallocated_blocks,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			return( -1 );
+		}
 	}
 	return( 1 );
 }

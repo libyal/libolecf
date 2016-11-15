@@ -81,8 +81,8 @@ int libolecf_property_set_read(
 LIBOLECF_EXTERN \
 int libolecf_property_set_get_class_identifier(
      libolecf_property_set_t *property_set,
-     uint8_t *class_identifier,
-     size_t size,
+     uint8_t *guid_data,
+     size_t guid_data_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \

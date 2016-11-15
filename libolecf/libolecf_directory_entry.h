@@ -99,6 +99,7 @@ int libolecf_directory_entry_compare(
 
 int libolecf_directory_entry_read_data(
      libolecf_directory_entry_t *directory_entry,
+     int directory_entry_index,
      const uint8_t *data,
      size_t data_size,
      uint8_t byte_order,

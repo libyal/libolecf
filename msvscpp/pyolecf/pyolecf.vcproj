@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyolecf\pyolecf_item_types.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyolecf\pyolecf_items.c"
 				>
 			</File>
@@ -281,6 +285,10 @@
 			</File>
 			<File
 				RelativePath="..\..\pyolecf\pyolecf_item.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyolecf\pyolecf_item_types.h"
 				>
 			</File>
 			<File
