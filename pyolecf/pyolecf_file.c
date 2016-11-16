@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf file
+ * Python object wrapper of libolecf_file_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -41,13 +41,15 @@
 #include "pyolecf_unused.h"
 
 #if !defined( LIBOLECF_HAVE_BFIO )
+
 LIBOLECF_EXTERN \
 int libolecf_file_open_file_io_handle(
      libolecf_file_t *file,
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libolecf_error_t **error );
-#endif
+
+#endif /* !defined( LIBOLECF_HAVE_BFIO ) */
 
 PyMethodDef pyolecf_file_object_methods[] = {
 
@@ -57,8 +59,6 @@ PyMethodDef pyolecf_file_object_methods[] = {
 	  "signal_abort() -> None\n"
 	  "\n"
 	  "Signals the file to abort the current activity." },
-
-	/* Functions to access the file */
 
 	{ "open",
 	  (PyCFunction) pyolecf_file_open,
@@ -81,42 +81,66 @@ PyMethodDef pyolecf_file_object_methods[] = {
 	  "\n"
 	  "Closes a file." },
 
+	{ "get_sector_size",
+	  (PyCFunction) pyolecf_file_get_sector_size,
+	  METH_NOARGS,
+	  "get_sector_size() -> Integer or None\n"
+	  "\n"
+	  "Retrieves the sector size." },
+
+	{ "get_short_sector_size",
+	  (PyCFunction) pyolecf_file_get_short_sector_size,
+	  METH_NOARGS,
+	  "get_short_sector_size() -> Integer or None\n"
+	  "\n"
+	  "Retrieves the short sector size." },
+
 	{ "get_ascii_codepage",
 	  (PyCFunction) pyolecf_file_get_ascii_codepage,
 	  METH_NOARGS,
 	  "get_ascii_codepage() -> String\n"
 	  "\n"
-	  "Returns the codepage used for ASCII strings in the file." },
+	  "Retrieves the codepage for ASCII strings used in the file." },
 
 	{ "set_ascii_codepage",
 	  (PyCFunction) pyolecf_file_set_ascii_codepage,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "set_ascii_codepage(codepage) -> None\n"
 	  "\n"
-	  "Set the codepage used for ASCII strings in the file.\n"
-	  "Expects the codepage to be a String containing a Python codec definition." },
-
-	/* Functions to access the items */
+	  "Sets the codepage for ASCII strings used in the file.\n"
+	  "Expects the codepage to be a string containing a Python codec definition." },
 
 	{ "get_root_item",
 	  (PyCFunction) pyolecf_file_get_root_item,
 	  METH_NOARGS,
-	  "get_root_item -> Object or None\n"
+	  "get_root_item() -> Object or None\n"
 	  "\n"
-	  "Retrieves the root item" },
+	  "Retrieves the root item." },
 
 	{ "get_item_by_path",
 	  (PyCFunction) pyolecf_file_get_item_by_path,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "get_item_by_path(path) -> Object or None\n"
 	  "\n"
-	  "Retrieves a item specified by the item path" },
+	  "Retrieves the item specified by the path." },
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
 };
 
 PyGetSetDef pyolecf_file_object_get_set_definitions[] = {
+
+	{ "sector_size",
+	  (getter) pyolecf_file_get_sector_size,
+	  (setter) 0,
+	  "The sector size.",
+	  NULL },
+
+	{ "short_sector_size",
+	  (getter) pyolecf_file_get_short_sector_size,
+	  (setter) 0,
+	  "The short sector size.",
+	  NULL },
 
 	{ "ascii_codepage",
 	  (getter) pyolecf_file_get_ascii_codepage,
@@ -127,7 +151,7 @@ PyGetSetDef pyolecf_file_object_get_set_definitions[] = {
 	{ "root_item",
 	  (getter) pyolecf_file_get_root_item,
 	  (setter) 0,
-	  "The root item",
+	  "The root item.",
 	  NULL },
 
 	/* Sentinel */
@@ -294,7 +318,7 @@ PyObject *pyolecf_file_new_open(
 	return( pyolecf_file );
 }
 
-/* Creates a new file object and opens it
+/* Creates a new file object and opens it using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_file_new_open_file_object(
@@ -322,8 +346,8 @@ PyObject *pyolecf_file_new_open_file_object(
 int pyolecf_file_init(
      pyolecf_file_t *pyolecf_file )
 {
-	static char *function    = "pyolecf_file_init";
 	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_file_init";
 
 	if( pyolecf_file == NULL )
 	{
@@ -360,8 +384,8 @@ int pyolecf_file_init(
 void pyolecf_file_free(
       pyolecf_file_t *pyolecf_file )
 {
-	libcerror_error_t *error    = NULL;
 	struct _typeobject *ob_type = NULL;
+	libcerror_error_t *error    = NULL;
 	static char *function       = "pyolecf_file_free";
 	int result                  = 0;
 
@@ -486,9 +510,9 @@ PyObject *pyolecf_file_open(
 {
 	PyObject *string_object      = NULL;
 	libcerror_error_t *error     = NULL;
+	const char *filename_narrow  = NULL;
 	static char *function        = "pyolecf_file_open";
 	static char *keyword_list[]  = { "filename", "mode", NULL };
-	const char *filename_narrow  = NULL;
 	char *mode                   = NULL;
 	int result                   = 0;
 
@@ -542,7 +566,7 @@ PyObject *pyolecf_file_open(
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type unicode.",
 		 function );
 
@@ -559,7 +583,7 @@ PyObject *pyolecf_file_open(
 
 		result = libolecf_file_open_wide(
 		          pyolecf_file->file,
-	                  filename_wide,
+		          filename_wide,
 		          LIBOLECF_OPEN_READ,
 		          &error );
 
@@ -579,16 +603,16 @@ PyObject *pyolecf_file_open(
 		}
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_file_open(
 		          pyolecf_file->file,
-	                  filename_narrow,
+		          filename_narrow,
 		          LIBOLECF_OPEN_READ,
 		          &error );
 
@@ -619,17 +643,17 @@ PyObject *pyolecf_file_open(
 
 #if PY_MAJOR_VERSION >= 3
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyBytes_Type );
+	          string_object,
+	          (PyObject *) &PyBytes_Type );
 #else
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyString_Type );
+	          string_object,
+	          (PyObject *) &PyString_Type );
 #endif
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type string.",
 		 function );
 
@@ -641,16 +665,16 @@ PyObject *pyolecf_file_open(
 
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   string_object );
+		                   string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   string_object );
+		                   string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_file_open(
 		          pyolecf_file->file,
-	                  filename_narrow,
+		          filename_narrow,
 		          LIBOLECF_OPEN_READ,
 		          &error );
 
@@ -692,9 +716,9 @@ PyObject *pyolecf_file_open_file_object(
 {
 	PyObject *file_object       = NULL;
 	libcerror_error_t *error    = NULL;
-	char *mode                  = NULL;
-	static char *keyword_list[] = { "file_object", "mode", NULL };
 	static char *function       = "pyolecf_file_open_file_object";
+	static char *keyword_list[] = { "file_object", "mode", NULL };
+	char *mode                  = NULL;
 	int result                  = 0;
 
 	if( pyolecf_file == NULL )
@@ -854,6 +878,110 @@ PyObject *pyolecf_file_close(
 	return( Py_None );
 }
 
+/* Retrieves the sector size
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_file_get_sector_size(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
+{
+	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_file_get_sector_size";
+	size32_t sector_size     = 0;
+	int result               = 0;
+
+	PYOLECF_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_TypeError,
+		 "%s: invalid file.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_file_get_sector_size(
+	          pyolecf_file->file,
+	          &sector_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: failed to retrieve sector size.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	integer_object = PyLong_FromUnsignedLong(
+	                  (unsigned long) sector_size );
+
+	return( integer_object );
+}
+
+/* Retrieves the short sector size
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_file_get_short_sector_size(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
+{
+	PyObject *integer_object   = NULL;
+	libcerror_error_t *error   = NULL;
+	static char *function      = "pyolecf_file_get_short_sector_size";
+	size32_t short_sector_size = 0;
+	int result                 = 0;
+
+	PYOLECF_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_TypeError,
+		 "%s: invalid file.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_file_get_short_sector_size(
+	          pyolecf_file->file,
+	          &short_sector_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: failed to retrieve short sector size.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	integer_object = PyLong_FromUnsignedLong(
+	                  (unsigned long) short_sector_size );
+
+	return( integer_object );
+}
+
 /* Retrieves the codepage used for ASCII strings in the file
  * Returns a Python object if successful or NULL on error
  */
@@ -861,8 +989,8 @@ PyObject *pyolecf_file_get_ascii_codepage(
            pyolecf_file_t *pyolecf_file,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
+	libcerror_error_t *error    = NULL;
 	const char *codepage_string = NULL;
 	static char *function       = "pyolecf_file_get_ascii_codepage";
 	int ascii_codepage          = 0;
@@ -1021,8 +1149,8 @@ PyObject *pyolecf_file_set_ascii_codepage(
            PyObject *arguments,
            PyObject *keywords )
 {
-	static char *keyword_list[] = { "codepage", NULL };
 	char *codepage_string       = NULL;
+	static char *keyword_list[] = { "codepage", NULL };
 	int result                  = 0;
 
 	if( PyArg_ParseTupleAndKeywords(
@@ -1057,8 +1185,8 @@ int pyolecf_file_set_ascii_codepage_setter(
      void *closure PYOLECF_ATTRIBUTE_UNUSED )
 {
 	PyObject *utf8_string_object = NULL;
-	static char *function        = "pyolecf_file_set_ascii_codepage_setter";
 	char *codepage_string        = NULL;
+	static char *function        = "pyolecf_file_set_ascii_codepage_setter";
 	int result                   = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( closure )
@@ -1072,7 +1200,7 @@ int pyolecf_file_set_ascii_codepage_setter(
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type unicode.",
 		 function );
 
@@ -1096,10 +1224,10 @@ int pyolecf_file_set_ascii_codepage_setter(
 		}
 #if PY_MAJOR_VERSION >= 3
 		codepage_string = PyBytes_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #else
 		codepage_string = PyString_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #endif
 		if( codepage_string == NULL )
 		{
@@ -1119,17 +1247,17 @@ int pyolecf_file_set_ascii_codepage_setter(
 
 #if PY_MAJOR_VERSION >= 3
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyBytes_Type );
+	          string_object,
+	          (PyObject *) &PyBytes_Type );
 #else
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyString_Type );
+	          string_object,
+	          (PyObject *) &PyString_Type );
 #endif
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type string.",
 		 function );
 
@@ -1149,8 +1277,8 @@ int pyolecf_file_set_ascii_codepage_setter(
 			return( -1 );
 		}
 		result = pyolecf_file_set_ascii_codepage_from_string(
-			  pyolecf_file,
-			  codepage_string );
+		          pyolecf_file,
+		          codepage_string );
 
 		if( result != 1 )
 		{
@@ -1166,6 +1294,61 @@ int pyolecf_file_set_ascii_codepage_setter(
 	return( -1 );
 }
 
+/* Retrieves the root item type object
+ * Returns a Python type object if successful or NULL on error
+ */
+PyTypeObject *pyolecf_file_get_root_item_type_object(
+               libolecf_item_t *root_item )
+{
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_file_get_root_item_type_object";
+	uint8_t item_type        = 0;
+	int result               = 0;
+
+	if( root_item == NULL )
+	{
+		PyErr_Format(
+		 PyExc_TypeError,
+		 "%s: invalid root item.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_item_get_type(
+	          root_item,
+	          &item_type,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve item type.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	if( item_type != LIBOLECF_ITEM_TYPE_ROOT_STORAGE )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: unsupported item type: 0x%02" PRIx8 ".",
+		 function,
+		 item_type );
+
+		return( NULL );
+	}
+	return( &pyolecf_item_type_object );
+}
+
 /* Retrieves the root item
  * Returns a Python object if successful or NULL on error
  */
@@ -1173,11 +1356,11 @@ PyObject *pyolecf_file_get_root_item(
            pyolecf_file_t *pyolecf_file,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
+	PyObject *item_object      = NULL;
+	PyTypeObject *type_object  = NULL;
 	libcerror_error_t *error   = NULL;
 	libolecf_item_t *root_item = NULL;
-	PyObject *item_object      = NULL;
 	static char *function      = "pyolecf_file_get_root_item";
-	uint8_t item_type          = 0;
 	int result                 = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -1213,8 +1396,6 @@ PyObject *pyolecf_file_get_root_item(
 
 		goto on_error;
 	}
-	/* Check if the item is present
-	 */
 	else if( result == 0 )
 	{
 		Py_IncRef(
@@ -1222,42 +1403,22 @@ PyObject *pyolecf_file_get_root_item(
 
 		return( Py_None );
 	}
-	Py_BEGIN_ALLOW_THREADS
+	type_object = pyolecf_file_get_root_item_type_object(
+	               root_item );
 
-	result = libolecf_item_get_type(
-	          root_item,
-	          &item_type,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
+	if( type_object == NULL )
 	{
-		pyolecf_error_raise(
-		 error,
+		PyErr_Format(
 		 PyExc_IOError,
-		 "%s: unable to retrieve item type.",
+		 "%s: unable to retrieve root item type object.",
 		 function );
-
-		libcerror_error_free(
-		 &error );
 
 		goto on_error;
 	}
-	if( item_type != LIBOLECF_ITEM_TYPE_ROOT_STORAGE )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: unsupported item type: 0x%02" PRIx8 ".",
-		 function,
-		 item_type );
-
-		return( NULL );
-	}
 	item_object = pyolecf_item_new(
-	               &pyolecf_item_type_object,
+	               type_object,
 	               root_item,
-	               pyolecf_file );
+	               (PyObject *) pyolecf_file );
 
 	if( item_object == NULL )
 	{
@@ -1280,78 +1441,25 @@ on_error:
 	return( NULL );
 }
 
-/* Retrieves the item specified by the path
- * Returns a Python object if successful or NULL on error
+/* Retrieves the item type object
+ * Returns a Python type object if successful or NULL on error
  */
-PyObject *pyolecf_file_get_item_by_path(
-           pyolecf_file_t *pyolecf_file,
-           PyObject *arguments,
-           PyObject *keywords )
+PyTypeObject *pyolecf_file_get_item_type_object(
+               libolecf_item_t *item )
 {
-	libcerror_error_t *error    = NULL;
-	libolecf_item_t *item       = NULL;
-	PyObject *item_object       = NULL;
-	PyTypeObject *type_object   = NULL;
-	char *item_path             = NULL;
-	static char *keyword_list[] = { "item_path", NULL };
-	static char *function       = "pyolecf_file_get_item_by_path";
-	size_t item_path_length     = 0;
-	uint8_t item_type           = 0;
-	int result                  = 0;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_file_get_item_type_object";
+	uint8_t item_type        = 0;
+	int result               = 0;
 
-	if( pyolecf_file == NULL )
+	if( item == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid file.",
+		 "%s: invalid item.",
 		 function );
 
 		return( NULL );
-	}
-	if( PyArg_ParseTupleAndKeywords(
-	     arguments,
-	     keywords,
-	     "s",
-	     keyword_list,
-	     &item_path ) == 0 )
-	{
-		goto on_error;
-	}
-	item_path_length = narrow_string_length(
-	                    item_path );
-
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_file_get_item_by_utf8_path(
-	           pyolecf_file->file,
-	           (uint8_t *) item_path,
-	           item_path_length,
-	           &item,
-	           &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
-	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to retrieve item.",
-		 function );
-
-		libcerror_error_free(
-		 &error );
-
-		goto on_error;
-	}
-	/* Check if the item is present
-	 */
-	else if( result == 0 )
-	{
-		Py_IncRef(
-		 Py_None );
-
-		return( Py_None );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
@@ -1373,22 +1481,101 @@ PyObject *pyolecf_file_get_item_by_path(
 		libcerror_error_free(
 		 &error );
 
+		return( NULL );
+	}
+	if( item_type == LIBOLECF_ITEM_TYPE_STREAM )
+	{
+		return( &pyolecf_stream_type_object );
+	}
+	return( &pyolecf_item_type_object );
+}
+
+/* Retrieves the item specified by the path
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_file_get_item_by_path(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *item_object       = NULL;
+	PyTypeObject *type_object   = NULL;
+	libcerror_error_t *error    = NULL;
+	libolecf_item_t *item       = NULL;
+	static char *function       = "pyolecf_file_get_item_by_path";
+	static char *keyword_list[] = { "path", NULL };
+	char *utf8_path             = NULL;
+	size_t utf8_path_length     = 0;
+	int result                  = 0;
+
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_TypeError,
+		 "%s: invalid file.",
+		 function );
+
+		return( NULL );
+	}
+	if( PyArg_ParseTupleAndKeywords(
+	     arguments,
+	     keywords,
+	     "s",
+	     keyword_list,
+	     &utf8_path ) == 0 )
+	{
 		goto on_error;
 	}
-	switch( item_type )
-	{
-		case LIBOLECF_ITEM_TYPE_STREAM:
-			type_object = &pyolecf_stream_type_object;
-			break;
+	utf8_path_length = narrow_string_length(
+	                    utf8_path );
 
-		default:
-			type_object = &pyolecf_item_type_object;
-			break;
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_file_get_item_by_utf8_path(
+	          pyolecf_file->file,
+	          (uint8_t *) utf8_path,
+	          utf8_path_length,
+	          &item,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve item.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	type_object = pyolecf_file_get_item_type_object(
+	               item );
+
+	if( type_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to retrieve item type object.",
+		 function );
+
+		goto on_error;
 	}
 	item_object = pyolecf_item_new(
 	               type_object,
 	               item,
-	               pyolecf_file );
+	               (PyObject *) pyolecf_file );
 
 	if( item_object == NULL )
 	{

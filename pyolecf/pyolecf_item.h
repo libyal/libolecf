@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf item
+ * Python object wrapper of libolecf_item_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -25,7 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyolecf_file.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_python.h"
 
@@ -45,9 +44,9 @@ struct pyolecf_item
 	 */
 	libolecf_item_t *item;
 
-	/* The pyolecf file object
+	/* The parent object
 	 */
-	pyolecf_file_t *file_object;
+	PyObject *parent_object;
 };
 
 extern PyMethodDef pyolecf_item_object_methods[];
@@ -56,7 +55,7 @@ extern PyTypeObject pyolecf_item_type_object;
 PyObject *pyolecf_item_new(
            PyTypeObject *type_object,
            libolecf_item_t *item,
-           pyolecf_file_t *file_object );
+           PyObject *parent_object );
 
 int pyolecf_item_init(
      pyolecf_item_t *pyolecf_item );
@@ -93,7 +92,7 @@ PyObject *pyolecf_item_get_number_of_sub_items(
            PyObject *arguments );
 
 PyObject *pyolecf_item_get_sub_item_by_index(
-           pyolecf_item_t *pyolecf_item,
+           PyObject *pyolecf_item,
            int sub_item_index );
 
 PyObject *pyolecf_item_get_sub_item(

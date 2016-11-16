@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf property set
+ * Python object wrapper of libolecf_property_set_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -28,7 +28,6 @@
 
 #include "pyolecf_error.h"
 #include "pyolecf_guid.h"
-#include "pyolecf_item.h"
 #include "pyolecf_libcerror.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_property_section.h"
@@ -39,30 +38,26 @@
 
 PyMethodDef pyolecf_property_set_object_methods[] = {
 
-	/* Functions to access the property set values */
-
 	{ "get_class_identifier",
 	  (PyCFunction) pyolecf_property_set_get_class_identifier,
 	  METH_NOARGS,
-	  "get_class_identifier -> Unicode string or None\n"
+	  "get_class_identifier() -> Unicode string or None\n"
 	  "\n"
-	  "Retrieves the class identifier" },
-
-	/* Functions to access the sections */
+	  "Retrieves the class identifier." },
 
 	{ "get_number_of_sections",
 	  (PyCFunction) pyolecf_property_set_get_number_of_sections,
 	  METH_NOARGS,
-	  "get_number_of_sections() -> Integer\n"
+	  "get_number_of_sections() -> Integer or None\n"
 	  "\n"
-	  "Retrieves the number of sections" },
+	  "Retrieves the number of sections." },
 
 	{ "get_section",
 	  (PyCFunction) pyolecf_property_set_get_section,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "get_section(index) -> Object or None\n"
+	  "get_section(section_index) -> Object or None\n"
 	  "\n"
-	  "Retrieves a specific section" },
+	  "Retrieves the section specified by the index." },
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
@@ -73,19 +68,19 @@ PyGetSetDef pyolecf_property_set_object_get_set_definitions[] = {
 	{ "class_identifier",
 	  (getter) pyolecf_property_set_get_class_identifier,
 	  (setter) 0,
-	  "The class identifier",
+	  "The class identifier.",
 	  NULL },
 
 	{ "number_of_sections",
 	  (getter) pyolecf_property_set_get_number_of_sections,
 	  (setter) 0,
-	  "The number of sections",
+	  "The number of sections.",
 	  NULL },
 
 	{ "sections",
 	  (getter) pyolecf_property_set_get_sections,
 	  (setter) 0,
-	  "The sections",
+	  "The sections.",
 	  NULL },
 
 	/* Sentinel */
@@ -191,8 +186,9 @@ PyTypeObject pyolecf_property_set_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_set_new(
+           PyTypeObject *type_object,
            libolecf_property_set_t *property_set,
-           pyolecf_item_t *item_object )
+           PyObject *parent_object )
 {
 	pyolecf_property_set_t *pyolecf_property_set = NULL;
 	static char *function                        = "pyolecf_property_set_new";
@@ -208,7 +204,7 @@ PyObject *pyolecf_property_set_new(
 	}
 	pyolecf_property_set = PyObject_New(
 	                        struct pyolecf_property_set,
-	                        &pyolecf_property_set_type_object );
+	                        type_object );
 
 	if( pyolecf_property_set == NULL )
 	{
@@ -229,11 +225,11 @@ PyObject *pyolecf_property_set_new(
 
 		goto on_error;
 	}
-	pyolecf_property_set->property_set = property_set;
-	pyolecf_property_set->item_object  = item_object;
+	pyolecf_property_set->property_set  = property_set;
+	pyolecf_property_set->parent_object = parent_object;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_property_set->item_object );
+	 (PyObject *) pyolecf_property_set->parent_object );
 
 	return( (PyObject *) pyolecf_property_set );
 
@@ -275,9 +271,10 @@ int pyolecf_property_set_init(
 void pyolecf_property_set_free(
       pyolecf_property_set_t *pyolecf_property_set )
 {
-	libcerror_error_t *error    = NULL;
 	struct _typeobject *ob_type = NULL;
+	libcerror_error_t *error    = NULL;
 	static char *function       = "pyolecf_property_set_free";
+	int result                  = 0;
 
 	if( pyolecf_property_set == NULL )
 	{
@@ -318,9 +315,15 @@ void pyolecf_property_set_free(
 
 		return;
 	}
-	if( libolecf_property_set_free(
-	     &( pyolecf_property_set->property_set ),
-	     &error ) != 1 )
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_property_set_free(
+	          &( pyolecf_property_set->property_set ),
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -331,10 +334,10 @@ void pyolecf_property_set_free(
 		libcerror_error_free(
 		 &error );
 	}
-	if( pyolecf_property_set->item_object != NULL )
+	if( pyolecf_property_set->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_set->item_object );
+		 (PyObject *) pyolecf_property_set->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_set );
@@ -349,8 +352,8 @@ PyObject *pyolecf_property_set_get_class_identifier(
 {
 	uint8_t guid_data[ 16 ];
 
-	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_property_set_get_class_identifier";
 	int result               = 0;
 
@@ -388,9 +391,16 @@ PyObject *pyolecf_property_set_get_class_identifier(
 
 		return( NULL );
 	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
 	string_object = pyolecf_string_new_from_guid(
-			 guid_data,
-			 16 );
+	                 guid_data,
+	                 16 );
 
 	return( string_object );
 }
@@ -402,8 +412,8 @@ PyObject *pyolecf_property_set_get_number_of_sections(
            pyolecf_property_set_t *pyolecf_property_set,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_property_set_get_number_of_sections";
 	int number_of_sections   = 0;
 	int result               = 0;
@@ -451,20 +461,30 @@ PyObject *pyolecf_property_set_get_number_of_sections(
 	return( integer_object );
 }
 
+/* Retrieves the property section type object
+ * Returns a Python type object if successful or NULL on error
+ */
+PyTypeObject *pyolecf_property_set_get_property_section_type_object(
+               libolecf_property_section_t *property_section PYOLECF_ATTRIBUTE_UNUSED )
+{
+	PYOLECF_UNREFERENCED_PARAMETER( property_section )
+
+	return( &pyolecf_property_section_type_object );
+}
+
 /* Retrieves a specific section by index
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_set_get_section_by_index(
-           pyolecf_property_set_t *pyolecf_property_set,
+           PyObject *pyolecf_property_set,
            int section_index )
 {
-	char error_string[ PYOLECF_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error                      = NULL;
-	libolecf_property_section_t *property_section = NULL;
-	PyObject *property_section_object             = NULL;
-	static char *function                         = "pyolecf_property_set_get_section_by_index";
-	int result                                    = 0;
+	PyObject *section_object             = NULL;
+	PyTypeObject *type_object            = NULL;
+	libcerror_error_t *error             = NULL;
+	libolecf_property_section_t *section = NULL;
+	static char *function                = "pyolecf_property_set_get_section_by_index";
+	int result                           = 0;
 
 	if( pyolecf_property_set == NULL )
 	{
@@ -478,45 +498,45 @@ PyObject *pyolecf_property_set_get_section_by_index(
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libolecf_property_set_get_section_by_index(
-	          pyolecf_property_set->property_set,
+	          ( (pyolecf_property_set_t *) pyolecf_property_set )->property_set,
 	          section_index,
-	          &property_section,
+	          &section,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYOLECF_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section: %d.",
-			 function,
-			 section_index );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section: %d.\n%s",
-			 function,
-			 section_index,
-			 error_string );
-		}
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve section: %d.",
+		 function,
+		 section_index );
+
 		libcerror_error_free(
 		 &error );
 
 		goto on_error;
 	}
-	property_section_object = pyolecf_property_section_new(
-	                           property_section,
-	                           pyolecf_property_set );
+	type_object = pyolecf_property_set_get_property_section_type_object(
+	               section );
 
-	if( property_section_object == NULL )
+	if( type_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to retrieve property section type object.",
+		 function );
+
+		goto on_error;
+	}
+	section_object = pyolecf_property_section_new(
+	                  type_object,
+	                  section,
+	                  (PyObject *) pyolecf_property_set );
+
+	if( section_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
@@ -525,13 +545,13 @@ PyObject *pyolecf_property_set_get_section_by_index(
 
 		goto on_error;
 	}
-	return( property_section_object );
+	return( section_object );
 
 on_error:
-	if( property_section != NULL )
+	if( section != NULL )
 	{
 		libolecf_property_section_free(
-		 &property_section,
+		 &section,
 		 NULL );
 	}
 	return( NULL );
@@ -545,9 +565,9 @@ PyObject *pyolecf_property_set_get_section(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *property_section_object = NULL;
-	static char *keyword_list[]       = { "section_index", NULL };
-	int section_index                 = 0;
+	PyObject *section_object    = NULL;
+	static char *keyword_list[] = { "section_index", NULL };
+	int section_index           = 0;
 
 	if( PyArg_ParseTupleAndKeywords(
 	     arguments,
@@ -558,25 +578,25 @@ PyObject *pyolecf_property_set_get_section(
 	{
 		return( NULL );
 	}
-	property_section_object = pyolecf_property_set_get_section_by_index(
-	                           pyolecf_property_set,
-	                           section_index );
+	section_object = pyolecf_property_set_get_section_by_index(
+	                  (PyObject *) pyolecf_property_set,
+	                  section_index );
 
-	return( property_section_object );
+	return( section_object );
 }
 
-/* Retrieves a property sections sequence and iterator object for the sections
+/* Retrieves a sequence and iterator object for the sections
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_set_get_sections(
            pyolecf_property_set_t *pyolecf_property_set,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error           = NULL;
-	PyObject *property_sections_object = NULL;
-	static char *function              = "pyolecf_property_set_get_sections";
-	int number_of_sections             = 0;
-	int result                         = 0;
+	PyObject *sequence_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyolecf_property_set_get_sections";
+	int number_of_sections    = 0;
+	int result                = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
 
@@ -611,20 +631,21 @@ PyObject *pyolecf_property_set_get_sections(
 
 		return( NULL );
 	}
-	property_sections_object = pyolecf_property_sections_new(
-	                            pyolecf_property_set,
-	                            &pyolecf_property_set_get_section_by_index,
-	                            number_of_sections );
+	sequence_object = pyolecf_property_sections_new(
+	                   (PyObject *) pyolecf_property_set,
+	                   &pyolecf_property_set_get_section_by_index,
+	                   number_of_sections );
 
-	if( property_sections_object == NULL )
+	if( sequence_object == NULL )
 	{
-		PyErr_Format(
+		pyolecf_error_raise(
+		 error,
 		 PyExc_MemoryError,
-		 "%s: unable to create property sections object.",
+		 "%s: unable to create sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	return( property_sections_object );
+	return( sequence_object );
 }
 

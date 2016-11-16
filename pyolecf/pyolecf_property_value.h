@@ -45,17 +45,18 @@ struct pyolecf_property_value
 	 */
 	libolecf_property_value_t *property_value;
 
-	/* The pyolecf property section object
+	/* The parent object
 	 */
-	pyolecf_property_section_t *property_section_object;
+	PyObject *parent_object;
 };
 
 extern PyMethodDef pyolecf_property_value_object_methods[];
 extern PyTypeObject pyolecf_property_value_type_object;
 
 PyObject *pyolecf_property_value_new(
+           PyTypeObject *type_object,
            libolecf_property_value_t *property_value,
-           pyolecf_property_section_t *property_section_object );
+           PyObject *parent_object );
 
 int pyolecf_property_value_init(
      pyolecf_property_value_t *pyolecf_property_value );

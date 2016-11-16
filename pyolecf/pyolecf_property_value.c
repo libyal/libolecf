@@ -229,8 +229,9 @@ PyTypeObject pyolecf_property_value_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_value_new(
+           PyTypeObject *type_object,
            libolecf_property_value_t *property_value,
-           pyolecf_property_section_t *property_section_object )
+           PyObject *parent_object )
 {
 	pyolecf_property_value_t *pyolecf_property_value = NULL;
 	static char *function                            = "pyolecf_property_value_new";
@@ -267,11 +268,11 @@ PyObject *pyolecf_property_value_new(
 
 		goto on_error;
 	}
-	pyolecf_property_value->property_value          = property_value;
-	pyolecf_property_value->property_section_object = property_section_object;
+	pyolecf_property_value->property_value = property_value;
+	pyolecf_property_value->parent_object  = parent_object;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_property_value->property_section_object );
+	 (PyObject *) pyolecf_property_value->parent_object );
 
 	return( (PyObject *) pyolecf_property_value );
 
@@ -369,10 +370,10 @@ void pyolecf_property_value_free(
 		libcerror_error_free(
 		 &error );
 	}
-	if( pyolecf_property_value->property_section_object != NULL )
+	if( pyolecf_property_value->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_value->property_section_object );
+		 (PyObject *) pyolecf_property_value->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_value );

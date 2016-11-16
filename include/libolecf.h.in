@@ -388,7 +388,7 @@ int libolecf_item_get_type(
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf8_name_size(
      libolecf_item_t *item,
-     size_t *utf8_name_size,
+     size_t *utf8_string_size,
      libolecf_error_t **error );
 
 /* Retrieves the UTF-8 encoded name of the referenced item
@@ -398,8 +398,8 @@ int libolecf_item_get_utf8_name_size(
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf8_name(
      libolecf_item_t *item,
-     uint8_t *utf8_name,
-     size_t utf8_name_size,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
      libolecf_error_t **error );
 
 /* Retrieves the size of the UTF-16 encoded name of the referenced item
@@ -409,7 +409,7 @@ int libolecf_item_get_utf8_name(
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf16_name_size(
      libolecf_item_t *item,
-     size_t *utf16_name_size,
+     size_t *utf16_string_size,
      libolecf_error_t **error );
 
 /* Retrieves the UTF-16 encoded name of the referenced item
@@ -419,8 +419,8 @@ int libolecf_item_get_utf16_name_size(
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf16_name(
      libolecf_item_t *item,
-     uint16_t *utf16_name,
-     size_t utf16_name_size,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libolecf_error_t **error );
 
 /* Retrieves the size of the referenced item

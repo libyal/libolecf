@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf file
+ * Python object wrapper of libolecf_file_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -87,6 +87,14 @@ PyObject *pyolecf_file_open_file_object(
            PyObject *keywords );
 
 PyObject *pyolecf_file_close(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments );
+
+PyObject *pyolecf_file_get_sector_size(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments );
+
+PyObject *pyolecf_file_get_short_sector_size(
            pyolecf_file_t *pyolecf_file,
            PyObject *arguments );
 

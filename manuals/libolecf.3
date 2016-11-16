@@ -1,4 +1,4 @@
-.Dd November 14, 2016
+.Dd November 15, 2016
 .Dt libolecf 3
 .Os libolecf
 .Sh NAME
@@ -97,13 +97,13 @@ Item functions
 .Ft int
 .Fn libolecf_item_get_type "libolecf_item_t *item, uint8_t *type, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_utf8_name_size "libolecf_item_t *item, size_t *utf8_name_size, libolecf_error_t **error"
+.Fn libolecf_item_get_utf8_name_size "libolecf_item_t *item, size_t *utf8_string_size, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_utf8_name "libolecf_item_t *item, uint8_t *utf8_name, size_t utf8_name_size, libolecf_error_t **error"
+.Fn libolecf_item_get_utf8_name "libolecf_item_t *item, uint8_t *utf8_string, size_t utf8_string_size, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_utf16_name_size "libolecf_item_t *item, size_t *utf16_name_size, libolecf_error_t **error"
+.Fn libolecf_item_get_utf16_name_size "libolecf_item_t *item, size_t *utf16_string_size, libolecf_error_t **error"
 .Ft int
-.Fn libolecf_item_get_utf16_name "libolecf_item_t *item, uint16_t *utf16_name, size_t utf16_name_size, libolecf_error_t **error"
+.Fn libolecf_item_get_utf16_name "libolecf_item_t *item, uint16_t *utf16_string, size_t utf16_string_size, libolecf_error_t **error"
 .Ft int
 .Fn libolecf_item_get_size "libolecf_item_t *item, uint32_t *size, libolecf_error_t **error"
 .Ft int

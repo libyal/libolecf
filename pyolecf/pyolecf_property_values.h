@@ -1,5 +1,5 @@
 /*
- * Python object definition of the property values sequence and iterator
+ * Python object definition of the sequence and iterator object of property values
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -26,8 +26,6 @@
 #include <types.h>
 
 #include "pyolecf_libolecf.h"
-#include "pyolecf_property_section.h"
-#include "pyolecf_property_value.h"
 #include "pyolecf_python.h"
 
 #if defined( __cplusplus )
@@ -42,14 +40,14 @@ struct pyolecf_property_values
 	 */
 	PyObject_HEAD
 
-	/* The pyolecf property section object
+	/* The parent object
 	 */
-	pyolecf_property_section_t *property_section_object;
+	PyObject *parent_object;
 
 	/* The get property value by index callback function
 	 */
 	PyObject* (*get_property_value_by_index)(
-	             pyolecf_property_section_t *property_section_object,
+	             PyObject *parent_object,
 	             int property_value_index );
 
 	/* The (current) property value index
@@ -64,9 +62,9 @@ struct pyolecf_property_values
 extern PyTypeObject pyolecf_property_values_type_object;
 
 PyObject *pyolecf_property_values_new(
-           pyolecf_property_section_t *property_section_object,
+           PyObject *parent_object,
            PyObject* (*get_property_value_by_index)(
-                        pyolecf_property_section_t *property_section_object,
+                        PyObject *parent_object,
                         int property_value_index ),
            int number_of_property_values );
 
@@ -81,7 +79,7 @@ Py_ssize_t pyolecf_property_values_len(
 
 PyObject *pyolecf_property_values_getitem(
            pyolecf_property_values_t *pyolecf_property_values,
-           Py_ssize_t property_value_index );
+           Py_ssize_t item_index );
 
 PyObject *pyolecf_property_values_iter(
            pyolecf_property_values_t *pyolecf_property_values );

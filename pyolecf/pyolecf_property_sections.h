@@ -1,5 +1,5 @@
 /*
- * Python object definition of the property sections sequence and iterator
+ * Python object definition of the sequence and iterator object of property sections
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -26,8 +26,6 @@
 #include <types.h>
 
 #include "pyolecf_libolecf.h"
-#include "pyolecf_property_section.h"
-#include "pyolecf_property_set.h"
 #include "pyolecf_python.h"
 
 #if defined( __cplusplus )
@@ -42,14 +40,14 @@ struct pyolecf_property_sections
 	 */
 	PyObject_HEAD
 
-	/* The pyolecf property set object
+	/* The parent object
 	 */
-	pyolecf_property_set_t *property_set_object;
+	PyObject *parent_object;
 
 	/* The get property section by index callback function
 	 */
 	PyObject* (*get_property_section_by_index)(
-	             pyolecf_property_set_t *property_set_object,
+	             PyObject *parent_object,
 	             int property_section_index );
 
 	/* The (current) property section index
@@ -64,9 +62,9 @@ struct pyolecf_property_sections
 extern PyTypeObject pyolecf_property_sections_type_object;
 
 PyObject *pyolecf_property_sections_new(
-           pyolecf_property_set_t *property_set_object,
+           PyObject *parent_object,
            PyObject* (*get_property_section_by_index)(
-                        pyolecf_property_set_t *property_set_object,
+                        PyObject *parent_object,
                         int property_section_index ),
            int number_of_property_sections );
 
@@ -81,7 +79,7 @@ Py_ssize_t pyolecf_property_sections_len(
 
 PyObject *pyolecf_property_sections_getitem(
            pyolecf_property_sections_t *pyolecf_property_sections,
-           Py_ssize_t property_section_index );
+           Py_ssize_t item_index );
 
 PyObject *pyolecf_property_sections_iter(
            pyolecf_property_sections_t *pyolecf_property_sections );

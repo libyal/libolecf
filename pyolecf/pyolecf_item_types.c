@@ -247,56 +247,56 @@ on_error:
 PyObject *pyolecf_item_types_new(
            void )
 {
-	pyolecf_item_types_t *pyolecf_item_types = NULL;
+	pyolecf_item_types_t *definitions_object = NULL;
 	static char *function                    = "pyolecf_item_types_new";
 
-	pyolecf_item_types = PyObject_New(
+	definitions_object = PyObject_New(
 	                      struct pyolecf_item_types,
 	                      &pyolecf_item_types_type_object );
 
-	if( pyolecf_item_types == NULL )
+	if( definitions_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize item types.",
+		 "%s: unable to create new definitions object.",
 		 function );
 
 		goto on_error;
 	}
 	if( pyolecf_item_types_init(
-	     pyolecf_item_types ) != 0 )
+	     definitions_object ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize item types.",
+		 "%s: unable to initialize definitions object.",
 		 function );
 
 		goto on_error;
 	}
-	return( (PyObject *) pyolecf_item_types );
+	return( (PyObject *) definitions_object );
 
 on_error:
-	if( pyolecf_item_types != NULL )
+	if( definitions_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_item_types );
+		 (PyObject *) definitions_object );
 	}
 	return( NULL );
 }
 
-/* Intializes a item types object
+/* Intializes an item types object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_item_types_init(
-     pyolecf_item_types_t *pyolecf_item_types )
+     pyolecf_item_types_t *definitions_object )
 {
 	static char *function = "pyolecf_item_types_init";
 
-	if( pyolecf_item_types == NULL )
+	if( definitions_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid item types.",
+		 "%s: invalid definitions object.",
 		 function );
 
 		return( -1 );
@@ -304,25 +304,25 @@ int pyolecf_item_types_init(
 	return( 0 );
 }
 
-/* Frees a item types object
+/* Frees an item types object
  */
 void pyolecf_item_types_free(
-      pyolecf_item_types_t *pyolecf_item_types )
+      pyolecf_item_types_t *definitions_object )
 {
 	struct _typeobject *ob_type = NULL;
 	static char *function       = "pyolecf_item_types_free";
 
-	if( pyolecf_item_types == NULL )
+	if( definitions_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid item types.",
+		 "%s: invalid definitions object.",
 		 function );
 
 		return;
 	}
 	ob_type = Py_TYPE(
-	           pyolecf_item_types );
+	           definitions_object );
 
 	if( ob_type == NULL )
 	{
@@ -343,6 +343,6 @@ void pyolecf_item_types_free(
 		return;
 	}
 	ob_type->tp_free(
-	 (PyObject*) pyolecf_item_types );
+	 (PyObject*) definitions_object );
 }
 

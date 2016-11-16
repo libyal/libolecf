@@ -89,27 +89,27 @@ int libolecf_item_get_type(
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf8_name_size(
      libolecf_item_t *item,
-     size_t *utf8_name_size,
+     size_t *utf8_string_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf8_name(
      libolecf_item_t *item,
-     uint8_t *utf8_name,
-     size_t utf8_name_size,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf16_name_size(
      libolecf_item_t *item,
-     size_t *utf16_name_size,
+     size_t *utf16_string_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
 int libolecf_item_get_utf16_name(
      libolecf_item_t *item,
-     uint16_t *utf16_name,
-     size_t utf16_name_size,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \

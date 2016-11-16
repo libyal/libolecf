@@ -1,5 +1,5 @@
 /*
- * Python object definition of the items sequence and iterator
+ * Python object definition of the sequence and iterator object of items
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -25,7 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyolecf_item.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_python.h"
 
@@ -41,33 +40,33 @@ struct pyolecf_items
 	 */
 	PyObject_HEAD
 
-	/* The pyolecf item object
+	/* The parent object
 	 */
-	pyolecf_item_t *item_object;
+	PyObject *parent_object;
 
-	/* The get sub item by index callback function
+	/* The get item by index callback function
 	 */
-	PyObject* (*get_sub_item_by_index)(
-	             pyolecf_item_t *item_object,
-	             int sub_item_index );
+	PyObject* (*get_item_by_index)(
+	             PyObject *parent_object,
+	             int item_index );
 
-	/* The (current) sub item index
+	/* The (current) item index
 	 */
-	int sub_item_index;
+	int item_index;
 
-	/* The number of sub items
+	/* The number of items
 	 */
-	int number_of_sub_items;
+	int number_of_items;
 };
 
 extern PyTypeObject pyolecf_items_type_object;
 
 PyObject *pyolecf_items_new(
-           pyolecf_item_t *item_object,
-           PyObject* (*get_sub_item_by_index)(
-                        pyolecf_item_t *item_object,
-                        int sub_item_index ),
-           int number_of_sub_items );
+           PyObject *parent_object,
+           PyObject* (*get_item_by_index)(
+                        PyObject *parent_object,
+                        int item_index ),
+           int number_of_items );
 
 int pyolecf_items_init(
      pyolecf_items_t *pyolecf_items );

@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf property set
+ * Python object wrapper of libolecf_property_set_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -25,7 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyolecf_item.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_python.h"
 
@@ -45,17 +44,18 @@ struct pyolecf_property_set
 	 */
 	libolecf_property_set_t *property_set;
 
-	/* The pyolecf item object
+	/* The parent object
 	 */
-	pyolecf_item_t *item_object;
+	PyObject *parent_object;
 };
 
 extern PyMethodDef pyolecf_property_set_object_methods[];
 extern PyTypeObject pyolecf_property_set_type_object;
 
 PyObject *pyolecf_property_set_new(
+           PyTypeObject *type_object,
            libolecf_property_set_t *property_set,
-           pyolecf_item_t *item_object );
+           PyObject *parent_object );
 
 int pyolecf_property_set_init(
      pyolecf_property_set_t *pyolecf_property_set );
@@ -72,7 +72,7 @@ PyObject *pyolecf_property_set_get_number_of_sections(
            PyObject *arguments );
 
 PyObject *pyolecf_property_set_get_section_by_index(
-           pyolecf_property_set_t *pyolecf_property_set,
+           PyObject *pyolecf_property_set,
            int section_index );
 
 PyObject *pyolecf_property_set_get_section(

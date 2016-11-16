@@ -253,7 +253,7 @@ int libolecf_item_get_type(
  */
 int libolecf_item_get_utf8_name_size(
      libolecf_item_t *item,
-     size_t *utf8_name_size,
+     size_t *utf8_string_size,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -298,14 +298,14 @@ int libolecf_item_get_utf8_name_size(
 	     internal_item->directory_entry->name,
 	     internal_item->directory_entry->name_size,
 	     internal_item->io_handle->byte_order,
-	     utf8_name_size,
+	     utf8_string_size,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine UTF-8 name size.",
+		 "%s: unable to determine size of name as UTF-8 string.",
 		 function );
 
 		return( -1 );
@@ -319,8 +319,8 @@ int libolecf_item_get_utf8_name_size(
  */
 int libolecf_item_get_utf8_name(
      libolecf_item_t *item,
-     uint8_t *utf8_name,
-     size_t utf8_name_size,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -361,31 +361,31 @@ int libolecf_item_get_utf8_name(
 
 		return( -1 );
 	}
-	if( utf8_name == NULL )
+	if( utf8_string == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid UTF-8 name.",
+		 "%s: invalid UTF-8 string.",
 		 function );
 
 		return( -1 );
 	}
-	if( utf8_name_size > (size_t) SSIZE_MAX )
+	if( utf8_string_size > (size_t) SSIZE_MAX )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid UTF-8 name size value exceeds maximum.",
+		 "%s: invalid UTF-8 string size value exceeds maximum.",
 		 function );
 
 		return( -1 );
 	}
 	if( libuna_utf8_string_copy_from_utf16_stream(
-	     utf8_name,
-	     utf8_name_size,
+	     utf8_string,
+	     utf8_string_size,
 	     internal_item->directory_entry->name,
 	     internal_item->directory_entry->name_size,
 	     internal_item->io_handle->byte_order,
@@ -394,8 +394,8 @@ int libolecf_item_get_utf8_name(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set UTF-8 name.",
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to opy name to UTF-8 string.",
 		 function );
 
 		return( -1 );
@@ -409,7 +409,7 @@ int libolecf_item_get_utf8_name(
  */
 int libolecf_item_get_utf16_name_size(
      libolecf_item_t *item,
-     size_t *utf16_name_size,
+     size_t *utf16_string_size,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -454,14 +454,14 @@ int libolecf_item_get_utf16_name_size(
 	     internal_item->directory_entry->name,
 	     internal_item->directory_entry->name_size,
 	     internal_item->io_handle->byte_order,
-	     utf16_name_size,
+	     utf16_string_size,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine UTF-16 name size.",
+		 "%s: unable to determine size of name as UTF-16 string.",
 		 function );
 
 		return( -1 );
@@ -475,8 +475,8 @@ int libolecf_item_get_utf16_name_size(
  */
 int libolecf_item_get_utf16_name(
      libolecf_item_t *item,
-     uint16_t *utf16_name,
-     size_t utf16_name_size,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libcerror_error_t **error )
 {
 	libolecf_internal_item_t *internal_item = NULL;
@@ -518,8 +518,8 @@ int libolecf_item_get_utf16_name(
 		return( -1 );
 	}
 	if( libuna_utf16_string_copy_from_utf16_stream(
-	     utf16_name,
-	     utf16_name_size,
+	     utf16_string,
+	     utf16_string_size,
 	     internal_item->directory_entry->name,
 	     internal_item->directory_entry->name_size,
 	     internal_item->io_handle->byte_order,
@@ -528,8 +528,8 @@ int libolecf_item_get_utf16_name(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set UTF-16 name.",
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to opy name to UTF-16 string.",
 		 function );
 
 		return( -1 );

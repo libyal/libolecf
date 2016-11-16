@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf item
+ * Python object wrapper of libolecf_item_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,7 +30,6 @@
 
 #include "pyolecf_datetime.h"
 #include "pyolecf_error.h"
-#include "pyolecf_file.h"
 #include "pyolecf_integer.h"
 #include "pyolecf_item.h"
 #include "pyolecf_items.h"
@@ -43,79 +42,75 @@
 
 PyMethodDef pyolecf_item_object_methods[] = {
 
-	/* Functions to access the item values */
-
 	{ "get_name",
 	  (PyCFunction) pyolecf_item_get_name,
 	  METH_NOARGS,
-	  "get_name -> Unicode string or None\n"
+	  "get_name() -> Unicode string or None\n"
 	  "\n"
-	  "Retrieves the name" },
+	  "Retrieves the name." },
 
 	{ "get_size",
 	  (PyCFunction) pyolecf_item_get_size,
 	  METH_NOARGS,
-	  "get_size() -> Integer\n"
+	  "get_size() -> Integer or None\n"
 	  "\n"
-	  "Retrieves the size of the item data." },
+	  "Retrieves the size." },
 
 	{ "get_creation_time",
 	  (PyCFunction) pyolecf_item_get_creation_time,
 	  METH_NOARGS,
-	  "get_creation_time() -> Datetime\n"
+	  "get_creation_time() -> Datetime or None\n"
 	  "\n"
-	  "Returns the creation date and time" },
+	  "Retrieves the creation time." },
 
 	{ "get_creation_time_as_integer",
 	  (PyCFunction) pyolecf_item_get_creation_time_as_integer,
 	  METH_NOARGS,
-	  "get_creation_time_as_integer() -> Integer\n"
+	  "get_creation_time_as_integer() -> Integer or None\n"
 	  "\n"
-	  "Returns the creation date and time as a 64-bit integer containing a FILETIME value" },
+	  "Retrieves the creation time as a 64-bit integer containing a FILETIME value." },
 
 	{ "get_modification_time",
 	  (PyCFunction) pyolecf_item_get_modification_time,
 	  METH_NOARGS,
-	  "get_modification_time() -> Datetime\n"
+	  "get_modification_time() -> Datetime or None\n"
 	  "\n"
-	  "Returns the modification date and time" },
+	  "Retrieves the modification time." },
 
 	{ "get_modification_time_as_integer",
 	  (PyCFunction) pyolecf_item_get_modification_time_as_integer,
 	  METH_NOARGS,
-	  "get_modification_time_as_integer() -> Integer\n"
+	  "get_modification_time_as_integer() -> Integer or None\n"
 	  "\n"
-	  "Returns the modification date and time as a 64-bit integer containing a FILETIME value" },
-
-	/* Functions to access the sub items */
+	  "Retrieves the modification time as a 64-bit integer containing a FILETIME value." },
 
 	{ "get_number_of_sub_items",
 	  (PyCFunction) pyolecf_item_get_number_of_sub_items,
 	  METH_NOARGS,
-	  "get_number_of_sub_items() -> Integer\n"
+	  "get_number_of_sub_items() -> Integer or None\n"
 	  "\n"
-	  "Retrieves the number of sub items" },
+	  "Retrieves the number of sub items." },
 
 	{ "get_sub_item",
 	  (PyCFunction) pyolecf_item_get_sub_item,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "get_sub_item(index) -> Object or None\n"
+	  "get_sub_item(sub_item_index) -> Object or None\n"
 	  "\n"
-	  "Retrieves a specific sub item" },
+	  "Retrieves the sub item specified by the index." },
 
 	{ "get_sub_item_by_name",
 	  (PyCFunction) pyolecf_item_get_sub_item_by_name,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "get_sub_item_by_name(name) -> Object or None\n"
 	  "\n"
-	  "Retrieves a sub item specified by the sub item name" },
+	  "Retrieves the sub item specified by the name." },
 
 	{ "get_sub_item_by_path",
 	  (PyCFunction) pyolecf_item_get_sub_item_by_path,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "get_sub_item_by_path(path) -> Object or None\n"
 	  "\n"
-	  "Retrieves a sub item specified by the sub item path" },
+	  "Retrieves the sub item specified by the path." },
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
@@ -126,37 +121,37 @@ PyGetSetDef pyolecf_item_object_get_set_definitions[] = {
 	{ "name",
 	  (getter) pyolecf_item_get_name,
 	  (setter) 0,
-	  "The name",
+	  "The name.",
 	  NULL },
 
 	{ "size",
 	  (getter) pyolecf_item_get_size,
 	  (setter) 0,
-	  "The size of the item data.",
+	  "The size.",
 	  NULL },
 
 	{ "creation_time",
 	  (getter) pyolecf_item_get_creation_time,
 	  (setter) 0,
-	  "The creation date and time",
+	  "The creation time.",
 	  NULL },
 
 	{ "modification_time",
 	  (getter) pyolecf_item_get_modification_time,
 	  (setter) 0,
-	  "The modification date and time",
+	  "The modification time.",
 	  NULL },
 
 	{ "number_of_sub_items",
 	  (getter) pyolecf_item_get_number_of_sub_items,
 	  (setter) 0,
-	  "The number of sub items",
+	  "The number of sub items.",
 	  NULL },
 
 	{ "sub_items",
 	  (getter) pyolecf_item_get_sub_items,
 	  (setter) 0,
-	  "The sub items",
+	  "The sub items.",
 	  NULL },
 
 	/* Sentinel */
@@ -264,7 +259,7 @@ PyTypeObject pyolecf_item_type_object = {
 PyObject *pyolecf_item_new(
            PyTypeObject *type_object,
            libolecf_item_t *item,
-           pyolecf_file_t *file_object )
+           PyObject *parent_object )
 {
 	pyolecf_item_t *pyolecf_item = NULL;
 	static char *function        = "pyolecf_item_new";
@@ -301,11 +296,11 @@ PyObject *pyolecf_item_new(
 
 		goto on_error;
 	}
-	pyolecf_item->item        = item;
-	pyolecf_item->file_object = file_object;
+	pyolecf_item->item          = item;
+	pyolecf_item->parent_object = parent_object;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_item->file_object );
+	 (PyObject *) pyolecf_item->parent_object );
 
 	return( (PyObject *) pyolecf_item );
 
@@ -347,9 +342,10 @@ int pyolecf_item_init(
 void pyolecf_item_free(
       pyolecf_item_t *pyolecf_item )
 {
-	libcerror_error_t *error    = NULL;
 	struct _typeobject *ob_type = NULL;
+	libcerror_error_t *error    = NULL;
 	static char *function       = "pyolecf_item_free";
+	int result                  = 0;
 
 	if( pyolecf_item == NULL )
 	{
@@ -390,9 +386,15 @@ void pyolecf_item_free(
 
 		return;
 	}
-	if( libolecf_item_free(
-	     &( pyolecf_item->item ),
-	     &error ) != 1 )
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_item_free(
+	          &( pyolecf_item->item ),
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -403,10 +405,10 @@ void pyolecf_item_free(
 		libcerror_error_free(
 		 &error );
 	}
-	if( pyolecf_item->file_object != NULL )
+	if( pyolecf_item->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_item->file_object );
+		 (PyObject *) pyolecf_item->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_item );
@@ -419,12 +421,12 @@ PyObject *pyolecf_item_get_name(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
 	const char *errors       = NULL;
-	uint8_t *name            = NULL;
 	static char *function    = "pyolecf_item_get_name";
-	size_t name_size         = 0;
+	char *utf8_string        = NULL;
+	size_t utf8_string_size  = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -432,7 +434,7 @@ PyObject *pyolecf_item_get_name(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -442,7 +444,7 @@ PyObject *pyolecf_item_get_name(
 
 	result = libolecf_item_get_utf8_name_size(
 	          pyolecf_item->item,
-	          &name_size,
+	          &utf8_string_size,
 	          &error );
 
 	Py_END_ALLOW_THREADS
@@ -452,7 +454,7 @@ PyObject *pyolecf_item_get_name(
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve name size.",
+		 "%s: unable to determine size of name as UTF-8 string.",
 		 function );
 
 		libcerror_error_free(
@@ -461,21 +463,21 @@ PyObject *pyolecf_item_get_name(
 		goto on_error;
 	}
 	else if( ( result == 0 )
-	      || ( name_size == 0 ) )
+	      || ( utf8_string_size == 0 ) )
 	{
 		Py_IncRef(
 		 Py_None );
 
 		return( Py_None );
 	}
-	name = (uint8_t *) PyMem_Malloc(
-	                    sizeof( uint8_t ) * name_size );
+	utf8_string = (char *) PyMem_Malloc(
+	                        sizeof( char ) * utf8_string_size );
 
-	if( name == NULL )
+	if( utf8_string == NULL )
 	{
 		PyErr_Format(
-		 PyExc_IOError,
-		 "%s: unable to create name.",
+		 PyExc_MemoryError,
+		 "%s: unable to create UTF-8 string.",
 		 function );
 
 		goto on_error;
@@ -483,10 +485,10 @@ PyObject *pyolecf_item_get_name(
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libolecf_item_get_utf8_name(
-		  pyolecf_item->item,
-		  name,
-		  name_size,
-		  &error );
+	          pyolecf_item->item,
+	          (uint8_t *) utf8_string,
+	          utf8_string_size,
+	          &error );
 
 	Py_END_ALLOW_THREADS
 
@@ -495,7 +497,7 @@ PyObject *pyolecf_item_get_name(
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve name.",
+		 "%s: unable to retrieve name as UTF-8 string.",
 		 function );
 
 		libcerror_error_free(
@@ -503,25 +505,33 @@ PyObject *pyolecf_item_get_name(
 
 		goto on_error;
 	}
-	/* Pass the string length to PyUnicode_DecodeUTF8
-	 * otherwise it makes the end of string character is part
-	 * of the string
+	/* Pass the string length to PyUnicode_DecodeUTF8 otherwise it makes
+	 * the end of string character is part of the string
 	 */
 	string_object = PyUnicode_DecodeUTF8(
-			 (char *) name,
-			 (Py_ssize_t) name_size - 1,
-			 errors );
+	                 utf8_string,
+	                 (Py_ssize_t) utf8_string_size - 1,
+	                 errors );
 
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 string into Unicode object.",
+		 function );
+
+		goto on_error;
+	}
 	PyMem_Free(
-	 name );
+	 utf8_string );
 
 	return( string_object );
 
 on_error:
-	if( name != NULL )
+	if( utf8_string != NULL )
 	{
 		PyMem_Free(
-		 name );
+		 utf8_string );
 	}
 	return( NULL );
 }
@@ -533,10 +543,10 @@ PyObject *pyolecf_item_get_size(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_item_get_size";
-	uint32_t size            = 0;
+	uint32_t value_32bit     = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -554,17 +564,17 @@ PyObject *pyolecf_item_get_size(
 
 	result = libolecf_item_get_size(
 	          pyolecf_item->item,
-	          &size,
+	          &value_32bit,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: failed to retrieve size.",
+		 "%s: unable to retrieve size.",
 		 function );
 
 		libcerror_error_free(
@@ -572,21 +582,28 @@ PyObject *pyolecf_item_get_size(
 
 		return( NULL );
 	}
-	integer_object = pyolecf_integer_unsigned_new_from_64bit(
-	                  (uint64_t) size );
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	integer_object = PyLong_FromUnsignedLong(
+	                  (unsigned long) value_32bit );
 
 	return( integer_object );
 }
 
-/* Retrieves the creation date and time
+/* Retrieves the creation time
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_item_get_creation_time(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error   = NULL;
 	PyObject *date_time_object = NULL;
+	libcerror_error_t *error   = NULL;
 	static char *function      = "pyolecf_item_get_creation_time";
 	uint64_t filetime          = 0;
 	int result                 = 0;
@@ -611,7 +628,7 @@ PyObject *pyolecf_item_get_creation_time(
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -624,21 +641,28 @@ PyObject *pyolecf_item_get_creation_time(
 
 		return( NULL );
 	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
 	date_time_object = pyolecf_datetime_new_from_filetime(
 	                    filetime );
 
 	return( date_time_object );
 }
 
-/* Retrieves the creation date and time as an integer
+/* Retrieves the creation time as an integer
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_item_get_creation_time_as_integer(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_item_get_creation_time_as_integer";
 	uint64_t filetime        = 0;
 	int result               = 0;
@@ -663,7 +687,7 @@ PyObject *pyolecf_item_get_creation_time_as_integer(
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -676,21 +700,28 @@ PyObject *pyolecf_item_get_creation_time_as_integer(
 
 		return( NULL );
 	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
 	integer_object = pyolecf_integer_unsigned_new_from_64bit(
-	                  filetime );
+	                  (uint64_t) filetime );
 
 	return( integer_object );
 }
 
-/* Retrieves the modification date and time
+/* Retrieves the modification time
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_item_get_modification_time(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error   = NULL;
 	PyObject *date_time_object = NULL;
+	libcerror_error_t *error   = NULL;
 	static char *function      = "pyolecf_item_get_modification_time";
 	uint64_t filetime          = 0;
 	int result                 = 0;
@@ -715,7 +746,7 @@ PyObject *pyolecf_item_get_modification_time(
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -728,21 +759,28 @@ PyObject *pyolecf_item_get_modification_time(
 
 		return( NULL );
 	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
 	date_time_object = pyolecf_datetime_new_from_filetime(
 	                    filetime );
 
 	return( date_time_object );
 }
 
-/* Retrieves the modification date and time as an integer
+/* Retrieves the modification time as an integer
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_item_get_modification_time_as_integer(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_item_get_modification_time_as_integer";
 	uint64_t filetime        = 0;
 	int result               = 0;
@@ -767,7 +805,7 @@ PyObject *pyolecf_item_get_modification_time_as_integer(
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -780,8 +818,15 @@ PyObject *pyolecf_item_get_modification_time_as_integer(
 
 		return( NULL );
 	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
 	integer_object = pyolecf_integer_unsigned_new_from_64bit(
-	                  filetime );
+	                  (uint64_t) filetime );
 
 	return( integer_object );
 }
@@ -793,8 +838,8 @@ PyObject *pyolecf_item_get_number_of_sub_items(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_item_get_number_of_sub_items";
 	int number_of_sub_items  = 0;
 	int result               = 0;
@@ -842,26 +887,21 @@ PyObject *pyolecf_item_get_number_of_sub_items(
 	return( integer_object );
 }
 
-/* Retrieves a specific sub item by index
- * Returns a Python object if successful or NULL on error
+/* Retrieves the item type object
+ * Returns a Python type object if successful or NULL on error
  */
-PyObject *pyolecf_item_get_sub_item_by_index(
-           pyolecf_item_t *pyolecf_item,
-           int sub_item_index )
+PyTypeObject *pyolecf_item_get_item_type_object(
+               libolecf_item_t *item )
 {
-	char error_string[ PYOLECF_ERROR_STRING_SIZE ];
-	uint8_t name[ 32 ];
+	uint8_t utf8_string[ 32 ];
 
-	libcerror_error_t *error  = NULL;
-	libolecf_item_t *sub_item = NULL;
-	PyObject *item_object     = NULL;
-	PyTypeObject *type_object = NULL;
-	static char *function     = "pyolecf_item_get_sub_item_by_index";
-	size_t name_size          = 0;
-	uint8_t sub_item_type     = 0;
-	int result                = 0;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_item_get_item_type_object";
+	size_t utf8_string_size  = 0;
+	uint8_t item_type        = 0;
+	int result               = 0;
 
-	if( pyolecf_item == NULL )
+	if( item == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
@@ -872,94 +912,33 @@ PyObject *pyolecf_item_get_sub_item_by_index(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_item_get_sub_item(
-	          pyolecf_item->item,
-	          sub_item_index,
-	          &sub_item,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYOLECF_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve sub item: %d.",
-			 function,
-			 sub_item_index );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve sub item: %d.\n%s",
-			 function,
-			 sub_item_index,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		goto on_error;
-	}
-	Py_BEGIN_ALLOW_THREADS
-
 	result = libolecf_item_get_type(
-	          sub_item,
-	          &sub_item_type,
+	          item,
+	          &item_type,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
 	if( result == -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYOLECF_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve sub item type: %d.",
-			 function,
-			 sub_item_index );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve sub item type: %d.\n%s",
-			 function,
-			 sub_item_index,
-			 error_string );
-		}
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve item type.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
-		goto on_error;
+		return( NULL );
 	}
-	switch( sub_item_type )
-	{
-		case LIBOLECF_ITEM_TYPE_STREAM:
-			type_object = &pyolecf_stream_type_object;
-			break;
-
-		default:
-			type_object = &pyolecf_item_type_object;
-			break;
-	}
-	if( sub_item_type == LIBOLECF_ITEM_TYPE_STREAM )
+	if( item_type == LIBOLECF_ITEM_TYPE_STREAM )
 	{
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libolecf_item_get_utf8_name_size(
-		          sub_item,
-		          &name_size,
+		          item,
+		          &utf8_string_size,
 		          &error );
 
 		Py_END_ALLOW_THREADS
@@ -975,17 +954,17 @@ PyObject *pyolecf_item_get_sub_item_by_index(
 			libcerror_error_free(
 			 &error );
 
-			goto on_error;
+			return( NULL );
 		}
-		if( ( name_size == 20 )
-		 || ( name_size == 28 ) )
+		if( ( utf8_string_size == 20 )
+		 || ( utf8_string_size == 28 ) )
 		{
 			Py_BEGIN_ALLOW_THREADS
 
 			result = libolecf_item_get_utf8_name(
-				  sub_item,
-				  name,
-				  name_size,
+				  item,
+				  utf8_string,
+				  utf8_string_size,
 				  &error );
 
 			Py_END_ALLOW_THREADS
@@ -1001,30 +980,93 @@ PyObject *pyolecf_item_get_sub_item_by_index(
 				libcerror_error_free(
 				 &error );
 
-				goto on_error;
+				return( NULL );
 			}
-			if( ( name_size == 20 )
-			 && ( memory_compare(
-			       (uint8_t *) "\005SummaryInformation",
-			       name,
+			if( ( utf8_string_size == 20 )
+			 && ( narrow_string_compare(
+			       "\005SummaryInformation",
+			       utf8_string,
 			       19 ) == 0 ) )
 			{
-				type_object = &pyolecf_property_set_stream_type_object;
+				return( &pyolecf_property_set_stream_type_object );
 			}
-			else if( ( name_size == 28 )
-			      && ( memory_compare(
-				    (uint8_t *) "\005DocumentSummaryInformation",
-				    name,
-				    27 ) == 0 ) )
+			if( ( utf8_string_size == 28 )
+			 && ( narrow_string_compare(
+			       "\005DocumentSummaryInformation",
+			       utf8_string,
+			       27 ) == 0 ) )
 			{
-				type_object = &pyolecf_property_set_stream_type_object;
+				return( &pyolecf_property_set_stream_type_object );
 			}
 		}
+		return( &pyolecf_stream_type_object );
+	}
+	return( &pyolecf_item_type_object );
+}
+
+/* Retrieves a specific sub item by index
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_item_get_sub_item_by_index(
+           PyObject *pyolecf_item,
+           int sub_item_index )
+{
+	PyObject *item_object     = NULL;
+	PyTypeObject *type_object = NULL;
+	libcerror_error_t *error  = NULL;
+	libolecf_item_t *sub_item = NULL;
+	static char *function     = "pyolecf_item_get_sub_item_by_index";
+	int result                = 0;
+
+	if( pyolecf_item == NULL )
+	{
+		PyErr_Format(
+		 PyExc_TypeError,
+		 "%s: invalid item.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_item_get_sub_item(
+	          ( (pyolecf_item_t *) pyolecf_item )->item,
+	          sub_item_index,
+	          &sub_item,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve sub item: %d.",
+		 function,
+		 sub_item_index );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	type_object = pyolecf_item_get_item_type_object(
+	               sub_item );
+
+	if( type_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to retrieve item type object.",
+		 function );
+
+		goto on_error;
 	}
 	item_object = pyolecf_item_new(
 	               type_object,
 	               sub_item,
-	               pyolecf_item->file_object );
+	               ( (pyolecf_item_t *) pyolecf_item )->parent_object );
 
 	if( item_object == NULL )
 	{
@@ -1069,24 +1111,24 @@ PyObject *pyolecf_item_get_sub_item(
 		return( NULL );
 	}
 	item_object = pyolecf_item_get_sub_item_by_index(
-	              pyolecf_item,
-	              sub_item_index );
+	               (PyObject *) pyolecf_item,
+	               sub_item_index );
 
 	return( item_object );
 }
 
-/* Retrieves a items sequence and iterator object for the sub items
+/* Retrieves a sequence and iterator object for the sub items
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_item_get_sub_items(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error   = NULL;
-	PyObject *sub_items_object = NULL;
-	static char *function      = "pyolecf_item_get_sub_items";
-	int number_of_sub_items    = 0;
-	int result                 = 0;
+	PyObject *sequence_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyolecf_item_get_sub_items";
+	int number_of_sub_items   = 0;
+	int result                = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
 
@@ -1121,21 +1163,22 @@ PyObject *pyolecf_item_get_sub_items(
 
 		return( NULL );
 	}
-	sub_items_object = pyolecf_items_new(
-	                    pyolecf_item,
-	                    &pyolecf_item_get_sub_item_by_index,
-	                    number_of_sub_items );
+	sequence_object = pyolecf_items_new(
+	                   (PyObject *) pyolecf_item,
+	                   &pyolecf_item_get_sub_item_by_index,
+	                   number_of_sub_items );
 
-	if( sub_items_object == NULL )
+	if( sequence_object == NULL )
 	{
-		PyErr_Format(
+		pyolecf_error_raise(
+		 error,
 		 PyExc_MemoryError,
-		 "%s: unable to create sub items object.",
+		 "%s: unable to create sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	return( sub_items_object );
+	return( sequence_object );
 }
 
 /* Retrieves the sub item specified by the name
@@ -1146,18 +1189,14 @@ PyObject *pyolecf_item_get_sub_item_by_name(
            PyObject *arguments,
            PyObject *keywords )
 {
-	uint8_t name[ 32 ];
-
-	libcerror_error_t *error    = NULL;
-	libolecf_item_t *sub_item   = NULL;
 	PyObject *item_object       = NULL;
 	PyTypeObject *type_object   = NULL;
-	char *sub_item_name         = NULL;
-	static char *keyword_list[] = { "sub_item_name", NULL };
+	libcerror_error_t *error    = NULL;
+	libolecf_item_t *sub_item   = NULL;
 	static char *function       = "pyolecf_item_get_sub_item_by_name";
-	size_t name_size            = 0;
-	size_t sub_item_name_length = 0;
-	uint8_t sub_item_type       = 0;
+	static char *keyword_list[] = { "name", NULL };
+	char *utf8_name             = NULL;
+	size_t utf8_name_length     = 0;
 	int result                  = 0;
 
 	if( pyolecf_item == NULL )
@@ -1174,21 +1213,21 @@ PyObject *pyolecf_item_get_sub_item_by_name(
 	     keywords,
 	     "s",
 	     keyword_list,
-	     &sub_item_name ) == 0 )
+	     &utf8_name ) == 0 )
 	{
 		goto on_error;
 	}
-	sub_item_name_length = narrow_string_length(
-	                        sub_item_name );
+	utf8_name_length = narrow_string_length(
+	                    utf8_name );
 
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libolecf_item_get_sub_item_by_utf8_name(
-	           pyolecf_item->item,
-	           (uint8_t *) sub_item_name,
-	           sub_item_name_length,
-	           &sub_item,
-	           &error );
+	          pyolecf_item->item,
+	          (uint8_t *) utf8_name,
+	          utf8_name_length,
+	          &sub_item,
+	          &error );
 
 	Py_END_ALLOW_THREADS
 
@@ -1205,8 +1244,6 @@ PyObject *pyolecf_item_get_sub_item_by_name(
 
 		goto on_error;
 	}
-	/* Check if the sub item is present
-	 */
 	else if( result == 0 )
 	{
 		Py_IncRef(
@@ -1214,110 +1251,22 @@ PyObject *pyolecf_item_get_sub_item_by_name(
 
 		return( Py_None );
 	}
-	Py_BEGIN_ALLOW_THREADS
+	type_object = pyolecf_item_get_item_type_object(
+	               sub_item );
 
-	result = libolecf_item_get_type(
-	          sub_item,
-	          &sub_item_type,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
+	if( type_object == NULL )
 	{
-		pyolecf_error_raise(
-		 error,
+		PyErr_Format(
 		 PyExc_IOError,
-		 "%s: unable to retrieve sub item type.",
+		 "%s: unable to retrieve item type object.",
 		 function );
 
-		libcerror_error_free(
-		 &error );
-
 		goto on_error;
-	}
-	switch( sub_item_type )
-	{
-		case LIBOLECF_ITEM_TYPE_STREAM:
-			type_object = &pyolecf_stream_type_object;
-			break;
-
-		default:
-			type_object = &pyolecf_item_type_object;
-			break;
-	}
-	if( sub_item_type == LIBOLECF_ITEM_TYPE_STREAM )
-	{
-		Py_BEGIN_ALLOW_THREADS
-
-		result = libolecf_item_get_utf8_name_size(
-		          sub_item,
-		          &name_size,
-		          &error );
-
-		Py_END_ALLOW_THREADS
-
-		if( result == -1 )
-		{
-			pyolecf_error_raise(
-			 error,
-			 PyExc_IOError,
-			 "%s: unable to retrieve name size.",
-			 function );
-
-			libcerror_error_free(
-			 &error );
-
-			goto on_error;
-		}
-		if( ( name_size == 20 )
-		 || ( name_size == 28 ) )
-		{
-			Py_BEGIN_ALLOW_THREADS
-
-			result = libolecf_item_get_utf8_name(
-				  sub_item,
-				  name,
-				  name_size,
-				  &error );
-
-			Py_END_ALLOW_THREADS
-
-			if( result != 1 )
-			{
-				pyolecf_error_raise(
-				 error,
-				 PyExc_IOError,
-				 "%s: unable to retrieve name.",
-				 function );
-
-				libcerror_error_free(
-				 &error );
-
-				goto on_error;
-			}
-			if( ( name_size == 20 )
-			 && ( memory_compare(
-			       (uint8_t *) "\005SummaryInformation",
-			       name,
-			       19 ) == 0 ) )
-			{
-				type_object = &pyolecf_property_set_stream_type_object;
-			}
-			else if( ( name_size == 28 )
-			      && ( memory_compare(
-				    (uint8_t *) "\005DocumentSummaryInformation",
-				    name,
-				    27 ) == 0 ) )
-			{
-				type_object = &pyolecf_property_set_stream_type_object;
-			}
-		}
 	}
 	item_object = pyolecf_item_new(
 	               type_object,
 	               sub_item,
-	               pyolecf_item->file_object );
+	               pyolecf_item->parent_object );
 
 	if( item_object == NULL )
 	{
@@ -1348,18 +1297,14 @@ PyObject *pyolecf_item_get_sub_item_by_path(
            PyObject *arguments,
            PyObject *keywords )
 {
-	uint8_t name[ 32 ];
-
-	libcerror_error_t *error    = NULL;
-	libolecf_item_t *sub_item   = NULL;
 	PyObject *item_object       = NULL;
 	PyTypeObject *type_object   = NULL;
-	char *sub_item_path         = NULL;
-	static char *keyword_list[] = { "sub_item_path", NULL };
+	libcerror_error_t *error    = NULL;
+	libolecf_item_t *sub_item   = NULL;
 	static char *function       = "pyolecf_item_get_sub_item_by_path";
-	size_t name_size            = 0;
-	size_t sub_item_path_length = 0;
-	uint8_t sub_item_type       = 0;
+	static char *keyword_list[] = { "path", NULL };
+	char *utf8_path             = NULL;
+	size_t utf8_path_length     = 0;
 	int result                  = 0;
 
 	if( pyolecf_item == NULL )
@@ -1376,21 +1321,21 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 	     keywords,
 	     "s",
 	     keyword_list,
-	     &sub_item_path ) == 0 )
+	     &utf8_path ) == 0 )
 	{
 		goto on_error;
 	}
-	sub_item_path_length = narrow_string_length(
-	                        sub_item_path );
+	utf8_path_length = narrow_string_length(
+	                    utf8_path );
 
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libolecf_item_get_sub_item_by_utf8_path(
-	           pyolecf_item->item,
-	           (uint8_t *) sub_item_path,
-	           sub_item_path_length,
-	           &sub_item,
-	           &error );
+	          pyolecf_item->item,
+	          (uint8_t *) utf8_path,
+	          utf8_path_length,
+	          &sub_item,
+	          &error );
 
 	Py_END_ALLOW_THREADS
 
@@ -1407,8 +1352,6 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 
 		goto on_error;
 	}
-	/* Check if the sub item is present
-	 */
 	else if( result == 0 )
 	{
 		Py_IncRef(
@@ -1416,110 +1359,22 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 
 		return( Py_None );
 	}
-	Py_BEGIN_ALLOW_THREADS
+	type_object = pyolecf_item_get_item_type_object(
+	               sub_item );
 
-	result = libolecf_item_get_type(
-	          sub_item,
-	          &sub_item_type,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
+	if( type_object == NULL )
 	{
-		pyolecf_error_raise(
-		 error,
+		PyErr_Format(
 		 PyExc_IOError,
-		 "%s: unable to retrieve sub item type.",
+		 "%s: unable to retrieve item type object.",
 		 function );
 
-		libcerror_error_free(
-		 &error );
-
 		goto on_error;
-	}
-	switch( sub_item_type )
-	{
-		case LIBOLECF_ITEM_TYPE_STREAM:
-			type_object = &pyolecf_stream_type_object;
-			break;
-
-		default:
-			type_object = &pyolecf_item_type_object;
-			break;
-	}
-	if( sub_item_type == LIBOLECF_ITEM_TYPE_STREAM )
-	{
-		Py_BEGIN_ALLOW_THREADS
-
-		result = libolecf_item_get_utf8_name_size(
-		          sub_item,
-		          &name_size,
-		          &error );
-
-		Py_END_ALLOW_THREADS
-
-		if( result == -1 )
-		{
-			pyolecf_error_raise(
-			 error,
-			 PyExc_IOError,
-			 "%s: unable to retrieve name size.",
-			 function );
-
-			libcerror_error_free(
-			 &error );
-
-			goto on_error;
-		}
-		if( ( name_size == 20 )
-		 || ( name_size == 28 ) )
-		{
-			Py_BEGIN_ALLOW_THREADS
-
-			result = libolecf_item_get_utf8_name(
-				  sub_item,
-				  name,
-				  name_size,
-				  &error );
-
-			Py_END_ALLOW_THREADS
-
-			if( result != 1 )
-			{
-				pyolecf_error_raise(
-				 error,
-				 PyExc_IOError,
-				 "%s: unable to retrieve name.",
-				 function );
-
-				libcerror_error_free(
-				 &error );
-
-				goto on_error;
-			}
-			if( ( name_size == 20 )
-			 && ( memory_compare(
-			       (uint8_t *) "\005SummaryInformation",
-			       name,
-			       19 ) == 0 ) )
-			{
-				type_object = &pyolecf_property_set_stream_type_object;
-			}
-			else if( ( name_size == 28 )
-			      && ( memory_compare(
-				    (uint8_t *) "\005DocumentSummaryInformation",
-				    name,
-				    27 ) == 0 ) )
-			{
-				type_object = &pyolecf_property_set_stream_type_object;
-			}
-		}
 	}
 	item_object = pyolecf_item_new(
 	               type_object,
 	               sub_item,
-	               pyolecf_item->file_object );
+	               pyolecf_item->parent_object );
 
 	if( item_object == NULL )
 	{

@@ -50,10 +50,10 @@ PyObject *pyolecf_item_types_new(
            void );
 
 int pyolecf_item_types_init(
-     pyolecf_item_types_t *pyolecf_item_types );
+     pyolecf_item_types_t *definitions_object );
 
 void pyolecf_item_types_free(
-      pyolecf_item_types_t *pyolecf_item_types );
+      pyolecf_item_types_t *definitions_object );
 
 #if defined( __cplusplus )
 }

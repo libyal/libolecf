@@ -1,5 +1,5 @@
 /*
- * Python object definition of the items sequence and iterator
+ * Python object definition of the sequence and iterator object of items
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -97,7 +97,7 @@ PyTypeObject pyolecf_items_type_object = {
 	/* tp_flags */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_ITER,
 	/* tp_doc */
-	"internal pyolecf items sequence and iterator object",
+	"pyolecf internal sequence and iterator object of items",
 	/* tp_traverse */
 	0,
 	/* tp_clear */
@@ -154,29 +154,29 @@ PyTypeObject pyolecf_items_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_items_new(
-           pyolecf_item_t *item_object,
-           PyObject* (*get_sub_item_by_index)(
-                        pyolecf_item_t *item_object,
-                        int sub_item_index ),
-           int number_of_sub_items )
+           PyObject *parent_object,
+           PyObject* (*get_item_by_index)(
+                        PyObject *parent_object,
+                        int item_index ),
+           int number_of_items )
 {
 	pyolecf_items_t *pyolecf_items = NULL;
-	static char *function      = "pyolecf_items_new";
+	static char *function          = "pyolecf_items_new";
 
-	if( item_object == NULL )
+	if( parent_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid item object.",
+		 "%s: invalid parent object.",
 		 function );
 
 		return( NULL );
 	}
-	if( get_sub_item_by_index == NULL )
+	if( get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid get sub item by index function.",
+		 "%s: invalid get item by index function.",
 		 function );
 
 		return( NULL );
@@ -184,8 +184,8 @@ PyObject *pyolecf_items_new(
 	/* Make sure the items values are initialized
 	 */
 	pyolecf_items = PyObject_New(
-	               struct pyolecf_items,
-	               &pyolecf_items_type_object );
+	                 struct pyolecf_items,
+	                 &pyolecf_items_type_object );
 
 	if( pyolecf_items == NULL )
 	{
@@ -206,12 +206,12 @@ PyObject *pyolecf_items_new(
 
 		goto on_error;
 	}
-	pyolecf_items->item_object           = item_object;
-	pyolecf_items->get_sub_item_by_index = get_sub_item_by_index;
-	pyolecf_items->number_of_sub_items   = number_of_sub_items;
+	pyolecf_items->parent_object     = parent_object;
+	pyolecf_items->get_item_by_index = get_item_by_index;
+	pyolecf_items->number_of_items   = number_of_items;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_items->item_object );
+	 (PyObject *) pyolecf_items->parent_object );
 
 	return( (PyObject *) pyolecf_items );
 
@@ -224,7 +224,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a items object
+/* Intializes an items object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_items_init(
@@ -243,15 +243,15 @@ int pyolecf_items_init(
 	}
 	/* Make sure the items values are initialized
 	 */
-	pyolecf_items->item_object           = NULL;
-	pyolecf_items->get_sub_item_by_index = NULL;
-	pyolecf_items->sub_item_index        = 0;
-	pyolecf_items->number_of_sub_items   = 0;
+	pyolecf_items->parent_object     = NULL;
+	pyolecf_items->get_item_by_index = NULL;
+	pyolecf_items->item_index        = 0;
+	pyolecf_items->number_of_items   = 0;
 
 	return( 0 );
 }
 
-/* Frees a items object
+/* Frees an items object
  */
 void pyolecf_items_free(
       pyolecf_items_t *pyolecf_items )
@@ -267,11 +267,6 @@ void pyolecf_items_free(
 		 function );
 
 		return;
-	}
-	if( pyolecf_items->item_object != NULL )
-	{
-		Py_DecRef(
-		 (PyObject *) pyolecf_items->item_object );
 	}
 	ob_type = Py_TYPE(
 	           pyolecf_items );
@@ -294,6 +289,11 @@ void pyolecf_items_free(
 
 		return;
 	}
+	if( pyolecf_items->parent_object != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyolecf_items->parent_object );
+	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_items );
 }
@@ -314,7 +314,7 @@ Py_ssize_t pyolecf_items_len(
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) pyolecf_items->number_of_sub_items );
+	return( (Py_ssize_t) pyolecf_items->number_of_items );
 }
 
 /* The items getitem() function
@@ -323,7 +323,7 @@ PyObject *pyolecf_items_getitem(
            pyolecf_items_t *pyolecf_items,
            Py_ssize_t item_index )
 {
-	PyObject *item_object  = NULL;
+	PyObject *item_object = NULL;
 	static char *function = "pyolecf_items_getitem";
 
 	if( pyolecf_items == NULL )
@@ -335,26 +335,26 @@ PyObject *pyolecf_items_getitem(
 
 		return( NULL );
 	}
-	if( pyolecf_items->get_sub_item_by_index == NULL )
+	if( pyolecf_items->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - missing get sub item by index function.",
+		 "%s: invalid items - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->number_of_sub_items < 0 )
+	if( pyolecf_items->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid number of sub items.",
+		 "%s: invalid items - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) pyolecf_items->number_of_sub_items ) )
+	 || ( item_index >= (Py_ssize_t) pyolecf_items->number_of_items ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,9 +363,9 @@ PyObject *pyolecf_items_getitem(
 
 		return( NULL );
 	}
-	item_object = pyolecf_items->get_sub_item_by_index(
-	              pyolecf_items->item_object,
-	              (int) item_index );
+	item_object = pyolecf_items->get_item_by_index(
+	               pyolecf_items->parent_object,
+	               (int) item_index );
 
 	return( item_object );
 }
@@ -397,7 +397,7 @@ PyObject *pyolecf_items_iter(
 PyObject *pyolecf_items_iternext(
            pyolecf_items_t *pyolecf_items )
 {
-	PyObject *item_object  = NULL;
+	PyObject *item_object = NULL;
 	static char *function = "pyolecf_items_iternext";
 
 	if( pyolecf_items == NULL )
@@ -409,47 +409,47 @@ PyObject *pyolecf_items_iternext(
 
 		return( NULL );
 	}
-	if( pyolecf_items->get_sub_item_by_index == NULL )
+	if( pyolecf_items->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - missing get sub item by index function.",
+		 "%s: invalid items - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->sub_item_index < 0 )
+	if( pyolecf_items->item_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid sub item index.",
+		 "%s: invalid items - invalid item index.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->number_of_sub_items < 0 )
+	if( pyolecf_items->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid number of sub items.",
+		 "%s: invalid items - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->sub_item_index >= pyolecf_items->number_of_sub_items )
+	if( pyolecf_items->item_index >= pyolecf_items->number_of_items )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	item_object = pyolecf_items->get_sub_item_by_index(
-	              pyolecf_items->item_object,
-	              pyolecf_items->sub_item_index );
+	item_object = pyolecf_items->get_item_by_index(
+	               pyolecf_items->parent_object,
+	               pyolecf_items->item_index );
 
 	if( item_object != NULL )
 	{
-		pyolecf_items->sub_item_index++;
+		pyolecf_items->item_index++;
 	}
 	return( item_object );
 }
