@@ -102,6 +102,27 @@ int info_handle_compound_object_fprint(
      info_handle_t *info_handle,
      libcerror_error_t **error );
 
+int info_handle_property_value_fprint(
+     info_handle_t *info_handle,
+     const uint8_t *class_identifier,
+     libolecf_property_value_t *property_value,
+     libcerror_error_t **error );
+
+int info_handle_property_section_fprint(
+     info_handle_t *info_handle,
+     libolecf_property_section_t *property_section,
+     libcerror_error_t **error );
+
+int info_handle_property_set_fprint(
+     info_handle_t *info_handle,
+     libolecf_property_set_t *property_set,
+     libcerror_error_t **error );
+
+int info_handle_property_set_stream_fprint(
+     info_handle_t *info_handle,
+     libolecf_item_t *property_set_stream,
+     libcerror_error_t **error );
+
 int info_handle_document_summary_information_fprint(
      info_handle_t *info_handle,
      libcerror_error_t **error );

@@ -23,14 +23,11 @@ TODO
   - sanitize filenames
 * support files with an empty root directory entry
 * update man pages
-  - update libolecf.3
   - correct olecfinfo.1
   - correct olecfexport.1
   - add olecfmount.1
 * add support for multi types (word2003 test file)
 * refactor libolecf_io_handle_read_stream into libolecf_io_handle_read_stream ?
-* olecfinfo/info handle
-  - add functions to print property streams
 * use libfdata vector to cache sectors ?
 * olecftools: check UTF16 print support
 * implement
@@ -77,7 +74,6 @@ olecfinfo
 * print basic file data (partial)
 * print allocation data
 * print stream/directory data (partial)
-* print summary information (partial)
 * print compobj stream info
 
 20140930
