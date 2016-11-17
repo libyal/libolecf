@@ -685,9 +685,125 @@ int libolecf_property_value_get_value_type(
      uint32_t *value_type,
      libolecf_error_t **error );
 
-/* Retrieves the value data size
+/* Retrieves the data size
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_size(
+     libolecf_property_value_t *property_value,
+     size_t *data_size,
+     libolecf_error_t **error );
+
+/* Retrieves the data
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data(
+     libolecf_property_value_t *property_value,
+     uint8_t *data,
+     size_t data_size,
+     libolecf_error_t **error );
+
+/* Retrieves the data as a boolean value
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_boolean(
+     libolecf_property_value_t *property_value,
+     uint8_t *value_boolean,
+     libolecf_error_t **error );
+
+/* Retrieves the data as a 16-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_16bit_integer(
+     libolecf_property_value_t *property_value,
+     uint16_t *value_16bit,
+     libolecf_error_t **error );
+
+/* Retrieves the data as a 32-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_32bit_integer(
+     libolecf_property_value_t *property_value,
+     uint32_t *value_32bit,
+     libolecf_error_t **error );
+
+/* Retrieves the data as a 64-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_64bit_integer(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_64bit,
+     libolecf_error_t **error );
+
+/* Retrieves the data as a 64-bit filetime value
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_filetime(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_filetime,
+     libolecf_error_t **error );
+
+/* Retrieves the size of the data as an UTF-8 string value
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf8_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf8_string_size,
+     libolecf_error_t **error );
+
+/* Retrieves the data as an UTF-8 string value
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf8_string(
+     libolecf_property_value_t *property_value,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libolecf_error_t **error );
+
+/* Retrieves the size of the data as an UTF-16 string value
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf16_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf16_string_size,
+     libolecf_error_t **error );
+
+/* Retrieves the data as an UTF-16 string value
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf16_string(
+     libolecf_property_value_t *property_value,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libolecf_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Property value functions - deprecated
+ * ------------------------------------------------------------------------- */
+
+/* Retrieves the value data size
+ *
+ * This function deprecated use libolecf_property_value_get_data_size instead
+ *
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_data_size(
      libolecf_property_value_t *property_value,
@@ -695,8 +811,12 @@ int libolecf_property_value_get_value_data_size(
      libolecf_error_t **error );
 
 /* Retrieves the value data
+ *
+ * This function deprecated use libolecf_property_value_get_data instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_data(
      libolecf_property_value_t *property_value,
@@ -705,8 +825,12 @@ int libolecf_property_value_get_value_data(
      libolecf_error_t **error );
 
 /* Retrieves the boolean value
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_boolean instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_boolean(
      libolecf_property_value_t *property_value,
@@ -714,8 +838,12 @@ int libolecf_property_value_get_value_boolean(
      libolecf_error_t **error );
 
 /* Retrieves the 16-bit value
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_16bit_integer instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_16bit(
      libolecf_property_value_t *property_value,
@@ -723,8 +851,12 @@ int libolecf_property_value_get_value_16bit(
      libolecf_error_t **error );
 
 /* Retrieves the 32-bit value
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_32bit_integer instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_32bit(
      libolecf_property_value_t *property_value,
@@ -732,8 +864,12 @@ int libolecf_property_value_get_value_32bit(
      libolecf_error_t **error );
 
 /* Retrieves the 64-bit value
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_64bit_integer instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_64bit(
      libolecf_property_value_t *property_value,
@@ -741,8 +877,12 @@ int libolecf_property_value_get_value_64bit(
      libolecf_error_t **error );
 
 /* Retrieves the 64-bit filetime value
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_filetime instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_filetime(
      libolecf_property_value_t *property_value,
@@ -751,8 +891,12 @@ int libolecf_property_value_get_value_filetime(
 
 /* Retrieves the UTF-8 string size
  * The returned size includes the end of string character
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_utf8_string_size instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_utf8_string_size(
      libolecf_property_value_t *property_value,
@@ -762,8 +906,12 @@ int libolecf_property_value_get_value_utf8_string_size(
 /* Retrieves the UTF-8 string value
  * The function uses a codepage if necessary, it uses the codepage set for the library
  * The size should include the end of string character
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_utf8_string instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_utf8_string(
      libolecf_property_value_t *property_value,
@@ -773,8 +921,12 @@ int libolecf_property_value_get_value_utf8_string(
 
 /* Retrieves the UTF-16 string size
  * The returned size includes the end of string character
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_utf16_string_size instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_utf16_string_size(
      libolecf_property_value_t *property_value,
@@ -784,8 +936,12 @@ int libolecf_property_value_get_value_utf16_string_size(
 /* Retrieves the UTF-16 string value
  * The function uses a codepage if necessary, it uses the codepage set for the library
  * The size should include the end of string character
+ *
+ * This function deprecated use libolecf_property_value_get_data_as_utf16_string instead
+ *
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_DEPRECATED \
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_utf16_string(
      libolecf_property_value_t *property_value,

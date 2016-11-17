@@ -157,11 +157,11 @@ PyObject *pyolecf_items_new(
            PyObject *parent_object,
            PyObject* (*get_item_by_index)(
                         PyObject *parent_object,
-                        int item_index ),
+                        int index ),
            int number_of_items )
 {
-	pyolecf_items_t *pyolecf_items = NULL;
-	static char *function          = "pyolecf_items_new";
+	pyolecf_items_t *items_object = NULL;
+	static char *function         = "pyolecf_items_new";
 
 	if( parent_object == NULL )
 	{
@@ -183,43 +183,43 @@ PyObject *pyolecf_items_new(
 	}
 	/* Make sure the items values are initialized
 	 */
-	pyolecf_items = PyObject_New(
-	                 struct pyolecf_items,
-	                 &pyolecf_items_type_object );
+	items_object = PyObject_New(
+	                struct pyolecf_items,
+	                &pyolecf_items_type_object );
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize items.",
+		 "%s: unable to create items object.",
 		 function );
 
 		goto on_error;
 	}
 	if( pyolecf_items_init(
-	     pyolecf_items ) != 0 )
+	     items_object ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize items.",
+		 "%s: unable to initialize items object.",
 		 function );
 
 		goto on_error;
 	}
-	pyolecf_items->parent_object     = parent_object;
-	pyolecf_items->get_item_by_index = get_item_by_index;
-	pyolecf_items->number_of_items   = number_of_items;
+	items_object->parent_object     = parent_object;
+	items_object->get_item_by_index = get_item_by_index;
+	items_object->number_of_items   = number_of_items;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_items->parent_object );
+	 (PyObject *) items_object->parent_object );
 
-	return( (PyObject *) pyolecf_items );
+	return( (PyObject *) items_object );
 
 on_error:
-	if( pyolecf_items != NULL )
+	if( items_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_items );
+		 (PyObject *) items_object );
 	}
 	return( NULL );
 }
@@ -228,25 +228,25 @@ on_error:
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_items_init(
-     pyolecf_items_t *pyolecf_items )
+     pyolecf_items_t *items_object )
 {
 	static char *function = "pyolecf_items_init";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return( -1 );
 	}
 	/* Make sure the items values are initialized
 	 */
-	pyolecf_items->parent_object     = NULL;
-	pyolecf_items->get_item_by_index = NULL;
-	pyolecf_items->item_index        = 0;
-	pyolecf_items->number_of_items   = 0;
+	items_object->parent_object     = NULL;
+	items_object->get_item_by_index = NULL;
+	items_object->current_index     = 0;
+	items_object->number_of_items   = 0;
 
 	return( 0 );
 }
@@ -254,22 +254,22 @@ int pyolecf_items_init(
 /* Frees an items object
  */
 void pyolecf_items_free(
-      pyolecf_items_t *pyolecf_items )
+      pyolecf_items_t *items_object )
 {
 	struct _typeobject *ob_type = NULL;
 	static char *function       = "pyolecf_items_free";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return;
 	}
 	ob_type = Py_TYPE(
-	           pyolecf_items );
+	           items_object );
 
 	if( ob_type == NULL )
 	{
@@ -289,72 +289,72 @@ void pyolecf_items_free(
 
 		return;
 	}
-	if( pyolecf_items->parent_object != NULL )
+	if( items_object->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_items->parent_object );
+		 (PyObject *) items_object->parent_object );
 	}
 	ob_type->tp_free(
-	 (PyObject*) pyolecf_items );
+	 (PyObject*) items_object );
 }
 
 /* The items len() function
  */
 Py_ssize_t pyolecf_items_len(
-            pyolecf_items_t *pyolecf_items )
+            pyolecf_items_t *items_object )
 {
 	static char *function = "pyolecf_items_len";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) pyolecf_items->number_of_items );
+	return( (Py_ssize_t) items_object->number_of_items );
 }
 
 /* The items getitem() function
  */
 PyObject *pyolecf_items_getitem(
-           pyolecf_items_t *pyolecf_items,
+           pyolecf_items_t *items_object,
            Py_ssize_t item_index )
 {
 	PyObject *item_object = NULL;
 	static char *function = "pyolecf_items_getitem";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->get_item_by_index == NULL )
+	if( items_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - missing get item by index function.",
+		 "%s: invalid items object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->number_of_items < 0 )
+	if( items_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid number of items.",
+		 "%s: invalid items object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) pyolecf_items->number_of_items ) )
+	 || ( item_index >= (Py_ssize_t) items_object->number_of_items ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,8 +363,8 @@ PyObject *pyolecf_items_getitem(
 
 		return( NULL );
 	}
-	item_object = pyolecf_items->get_item_by_index(
-	               pyolecf_items->parent_object,
+	item_object = items_object->get_item_by_index(
+	               items_object->parent_object,
 	               (int) item_index );
 
 	return( item_object );
@@ -373,83 +373,83 @@ PyObject *pyolecf_items_getitem(
 /* The items iter() function
  */
 PyObject *pyolecf_items_iter(
-           pyolecf_items_t *pyolecf_items )
+           pyolecf_items_t *items_object )
 {
 	static char *function = "pyolecf_items_iter";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return( NULL );
 	}
 	Py_IncRef(
-	 (PyObject *) pyolecf_items );
+	 (PyObject *) items_object );
 
-	return( (PyObject *) pyolecf_items );
+	return( (PyObject *) items_object );
 }
 
 /* The items iternext() function
  */
 PyObject *pyolecf_items_iternext(
-           pyolecf_items_t *pyolecf_items )
+           pyolecf_items_t *items_object )
 {
 	PyObject *item_object = NULL;
 	static char *function = "pyolecf_items_iternext";
 
-	if( pyolecf_items == NULL )
+	if( items_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items.",
+		 "%s: invalid items object.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->get_item_by_index == NULL )
+	if( items_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - missing get item by index function.",
+		 "%s: invalid items object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->item_index < 0 )
+	if( items_object->current_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid item index.",
+		 "%s: invalid items object - invalid current index.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->number_of_items < 0 )
+	if( items_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid items - invalid number of items.",
+		 "%s: invalid items object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_items->item_index >= pyolecf_items->number_of_items )
+	if( items_object->current_index >= items_object->number_of_items )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	item_object = pyolecf_items->get_item_by_index(
-	               pyolecf_items->parent_object,
-	               pyolecf_items->item_index );
+	item_object = items_object->get_item_by_index(
+	               items_object->parent_object,
+	               items_object->current_index );
 
 	if( item_object != NULL )
 	{
-		pyolecf_items->item_index++;
+		items_object->current_index++;
 	}
 	return( item_object );
 }

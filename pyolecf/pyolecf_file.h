@@ -116,6 +116,10 @@ int pyolecf_file_set_ascii_codepage_setter(
      PyObject *string_object,
      void *closure );
 
+PyObject *pyolecf_file_get_format_version(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments );
+
 PyObject *pyolecf_file_get_root_item(
            pyolecf_file_t *pyolecf_file,
            PyObject *arguments );

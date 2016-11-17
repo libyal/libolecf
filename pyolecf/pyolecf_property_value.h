@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf property value
+ * Python object wrapper of libolecf_property_value_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -26,7 +26,6 @@
 #include <types.h>
 
 #include "pyolecf_libolecf.h"
-#include "pyolecf_property_section.h"
 #include "pyolecf_python.h"
 
 #if defined( __cplusplus )
@@ -68,7 +67,7 @@ PyObject *pyolecf_property_value_get_identifier(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments );
 
-PyObject *pyolecf_property_value_get_type(
+PyObject *pyolecf_property_value_get_value_type(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments );
 

@@ -44,48 +44,48 @@ struct pyolecf_property_sections
 	 */
 	PyObject *parent_object;
 
-	/* The get property section by index callback function
+	/* The get item by index callback function
 	 */
-	PyObject* (*get_property_section_by_index)(
+	PyObject* (*get_item_by_index)(
 	             PyObject *parent_object,
-	             int property_section_index );
+	             int index );
 
-	/* The (current) property section index
+	/* The current index
 	 */
-	int property_section_index;
+	int current_index;
 
-	/* The number of property sections
+	/* The number of items
 	 */
-	int number_of_property_sections;
+	int number_of_items;
 };
 
 extern PyTypeObject pyolecf_property_sections_type_object;
 
 PyObject *pyolecf_property_sections_new(
            PyObject *parent_object,
-           PyObject* (*get_property_section_by_index)(
+           PyObject* (*get_item_by_index)(
                         PyObject *parent_object,
-                        int property_section_index ),
-           int number_of_property_sections );
+                        int index ),
+           int number_of_items );
 
 int pyolecf_property_sections_init(
-     pyolecf_property_sections_t *pyolecf_property_sections );
+     pyolecf_property_sections_t *property_sections_object );
 
 void pyolecf_property_sections_free(
-      pyolecf_property_sections_t *pyolecf_property_sections );
+      pyolecf_property_sections_t *property_sections_object );
 
 Py_ssize_t pyolecf_property_sections_len(
-            pyolecf_property_sections_t *pyolecf_property_sections );
+            pyolecf_property_sections_t *property_sections_object );
 
 PyObject *pyolecf_property_sections_getitem(
-           pyolecf_property_sections_t *pyolecf_property_sections,
+           pyolecf_property_sections_t *property_sections_object,
            Py_ssize_t item_index );
 
 PyObject *pyolecf_property_sections_iter(
-           pyolecf_property_sections_t *pyolecf_property_sections );
+           pyolecf_property_sections_t *property_sections_object );
 
 PyObject *pyolecf_property_sections_iternext(
-           pyolecf_property_sections_t *pyolecf_property_sections );
+           pyolecf_property_sections_t *property_sections_object );
 
 #if defined( __cplusplus )
 }

@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libolecf property value
+ * Python object wrapper of libolecf_property_value_t
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -27,62 +27,65 @@
 #endif
 
 #include "pyolecf_error.h"
-#include "pyolecf_guid.h"
 #include "pyolecf_integer.h"
 #include "pyolecf_libcerror.h"
 #include "pyolecf_libolecf.h"
-#include "pyolecf_property_section.h"
 #include "pyolecf_property_value.h"
 #include "pyolecf_python.h"
 #include "pyolecf_unused.h"
 
 PyMethodDef pyolecf_property_value_object_methods[] = {
 
-	/* Functions to access the property value values */
-
 	{ "get_identifier",
 	  (PyCFunction) pyolecf_property_value_get_identifier,
 	  METH_NOARGS,
-	  "get_identifier() -> Integer\n"
+	  "get_identifier() -> Integer or None\n"
 	  "\n"
 	  "Retrieves the identifier." },
 
-	{ "get_type",
-	  (PyCFunction) pyolecf_property_value_get_type,
+	{ "get_value_type",
+	  (PyCFunction) pyolecf_property_value_get_value_type,
 	  METH_NOARGS,
-	  "get_type() -> Integer\n"
+	  "get_value_type() -> Integer or None\n"
 	  "\n"
-	  "Retrieves the type." },
+	  "Retrieves the value type." },
+
+	/* Deprecated alias of value_type */
+
+	{ "get_type",
+	  (PyCFunction) pyolecf_property_value_get_value_type,
+	  METH_NOARGS,
+	  "get_type() -> Integer or None\n"
+	  "\n"
+	  "Retrieves the value type." },
 
 	{ "get_data",
 	  (PyCFunction) pyolecf_property_value_get_data,
 	  METH_NOARGS,
-	  "get_name -> String or None\n"
+	  "get_data() -> Binary string or None\n"
 	  "\n"
-	  "Retrieves the data as a binary string." },
+	  "Retrieves the data." },
 
 	{ "get_data_as_boolean",
 	  (PyCFunction) pyolecf_property_value_get_data_as_boolean,
 	  METH_NOARGS,
-	  "get_data_as_boolean -> Boolean\n"
+	  "get_data_as_boolean() -> Integer or None\n"
 	  "\n"
 	  "Retrieves the data as a boolean." },
 
 	{ "get_data_as_integer",
 	  (PyCFunction) pyolecf_property_value_get_data_as_integer,
 	  METH_NOARGS,
-	  "get_data_as_integer -> Integer\n"
+	  "get_data_as_integer() -> Integer or None\n"
 	  "\n"
 	  "Retrieves the data as an integer." },
 
 	{ "get_data_as_string",
 	  (PyCFunction) pyolecf_property_value_get_data_as_string,
 	  METH_NOARGS,
-	  "get_data_as_string -> Unicode string or None\n"
+	  "get_data_as_string() -> Unicode string or None\n"
 	  "\n"
 	  "Retrieves the data as a string." },
-
-	/* Functions to access the values */
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
@@ -96,10 +99,18 @@ PyGetSetDef pyolecf_property_value_object_get_set_definitions[] = {
 	  "The identifier.",
 	  NULL },
 
-	{ "type",
-	  (getter) pyolecf_property_value_get_type,
+	{ "value_type",
+	  (getter) pyolecf_property_value_get_value_type,
 	  (setter) 0,
-	  "The type.",
+	  "The value type.",
+	  NULL },
+
+	/* Deprecated alias of value_type */
+
+	{ "type",
+	  (getter) pyolecf_property_value_get_value_type,
+	  (setter) 0,
+	  "The value type.",
 	  NULL },
 
 	{ "data",
@@ -111,19 +122,19 @@ PyGetSetDef pyolecf_property_value_object_get_set_definitions[] = {
 	{ "data_as_boolean",
 	  (getter) pyolecf_property_value_get_data_as_boolean,
 	  (setter) 0,
-	  "The data represented as a boolean.",
+	  "The data as a boolean.",
 	  NULL },
 
 	{ "data_as_integer",
 	  (getter) pyolecf_property_value_get_data_as_integer,
 	  (setter) 0,
-	  "The data represented as an integer.",
+	  "The data as an integer.",
 	  NULL },
 
 	{ "data_as_string",
 	  (getter) pyolecf_property_value_get_data_as_string,
 	  (setter) 0,
-	  "The data represented as a string.",
+	  "The data as a string.",
 	  NULL },
 
 	/* Sentinel */
@@ -239,7 +250,7 @@ PyObject *pyolecf_property_value_new(
 	if( property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -247,7 +258,7 @@ PyObject *pyolecf_property_value_new(
 	}
 	pyolecf_property_value = PyObject_New(
 	                          struct pyolecf_property_value,
-	                          &pyolecf_property_value_type_object );
+	                          type_object );
 
 	if( pyolecf_property_value == NULL )
 	{
@@ -296,7 +307,7 @@ int pyolecf_property_value_init(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -314,14 +325,15 @@ int pyolecf_property_value_init(
 void pyolecf_property_value_free(
       pyolecf_property_value_t *pyolecf_property_value )
 {
-	libcerror_error_t *error    = NULL;
 	struct _typeobject *ob_type = NULL;
+	libcerror_error_t *error    = NULL;
 	static char *function       = "pyolecf_property_value_free";
+	int result                  = 0;
 
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -330,7 +342,7 @@ void pyolecf_property_value_free(
 	if( pyolecf_property_value->property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value - missing libolecf property value.",
 		 function );
 
@@ -357,9 +369,15 @@ void pyolecf_property_value_free(
 
 		return;
 	}
-	if( libolecf_property_value_free(
-	     &( pyolecf_property_value->property_value ),
-	     &error ) != 1 )
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_property_value_free(
+	          &( pyolecf_property_value->property_value ),
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -386,10 +404,10 @@ PyObject *pyolecf_property_value_get_identifier(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_property_value_get_identifier";
-	uint32_t identifier      = 0;
+	uint32_t value_32bit     = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -397,7 +415,7 @@ PyObject *pyolecf_property_value_get_identifier(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -407,12 +425,12 @@ PyObject *pyolecf_property_value_get_identifier(
 
 	result = libolecf_property_value_get_identifier(
 	          pyolecf_property_value->property_value,
-	          &identifier,
+	          &value_32bit,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
@@ -425,27 +443,30 @@ PyObject *pyolecf_property_value_get_identifier(
 
 		return( NULL );
 	}
-#if PY_MAJOR_VERSION >= 3
-	integer_object = PyLong_FromLong(
-	                  (long) identifier );
-#else
-	integer_object = PyInt_FromLong(
-	                  (long) identifier );
-#endif
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	integer_object = PyLong_FromUnsignedLong(
+	                  (unsigned long) value_32bit );
+
 	return( integer_object );
 }
 
-/* Retrieves the type
+/* Retrieves the value type
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyolecf_property_value_get_type(
+PyObject *pyolecf_property_value_get_value_type(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
-	static char *function    = "pyolecf_property_value_get_type";
-	uint32_t type            = 0;
+	libcerror_error_t *error = NULL;
+	static char *function    = "pyolecf_property_value_get_value_type";
+	uint32_t value_32bit     = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -453,7 +474,7 @@ PyObject *pyolecf_property_value_get_type(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -463,17 +484,17 @@ PyObject *pyolecf_property_value_get_type(
 
 	result = libolecf_property_value_get_value_type(
 	          pyolecf_property_value->property_value,
-	          &type,
+	          &value_32bit,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve type.",
+		 "%s: unable to retrieve value type.",
 		 function );
 
 		libcerror_error_free(
@@ -481,13 +502,16 @@ PyObject *pyolecf_property_value_get_type(
 
 		return( NULL );
 	}
-#if PY_MAJOR_VERSION >= 3
-	integer_object = PyLong_FromLong(
-	                  (long) type );
-#else
-	integer_object = PyInt_FromLong(
-	                  (long) type );
-#endif
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	integer_object = PyLong_FromUnsignedLong(
+	                  (unsigned long) value_32bit );
+
 	return( integer_object );
 }
 
@@ -498,9 +522,9 @@ PyObject *pyolecf_property_value_get_data(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
+	PyObject *bytes_object   = NULL;
 	libcerror_error_t *error = NULL;
-	PyObject *string_object  = NULL;
-	uint8_t *data            = NULL;
+	char *data               = NULL;
 	static char *function    = "pyolecf_property_value_get_data";
 	size_t data_size         = 0;
 	int result               = 0;
@@ -510,7 +534,7 @@ PyObject *pyolecf_property_value_get_data(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -518,7 +542,7 @@ PyObject *pyolecf_property_value_get_data(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_property_value_get_value_data_size(
+	result = libolecf_property_value_get_data_size(
 	          pyolecf_property_value->property_value,
 	          &data_size,
 	          &error );
@@ -546,13 +570,13 @@ PyObject *pyolecf_property_value_get_data(
 
 		return( Py_None );
 	}
-	data = (uint8_t *) PyMem_Malloc(
-	                    sizeof( uint8_t ) * data_size );
+	data = (char *) PyMem_Malloc(
+	                 sizeof( char ) * data_size );
 
 	if( data == NULL )
 	{
 		PyErr_Format(
-		 PyExc_IOError,
+		 PyExc_MemoryError,
 		 "%s: unable to create data.",
 		 function );
 
@@ -560,11 +584,11 @@ PyObject *pyolecf_property_value_get_data(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_property_value_get_value_data(
-		  pyolecf_property_value->property_value,
-		  data,
-		  data_size,
-		  &error );
+	result = libolecf_property_value_get_data(
+	          pyolecf_property_value->property_value,
+	          (uint8_t *) data,
+	          data_size,
+	          &error );
 
 	Py_END_ALLOW_THREADS
 
@@ -581,19 +605,30 @@ PyObject *pyolecf_property_value_get_data(
 
 		goto on_error;
 	}
+	/* This is a binary string so include the full size
+	 */
 #if PY_MAJOR_VERSION >= 3
-	string_object = PyBytes_FromStringAndSize(
-			 (char *) data,
-			 (Py_ssize_t) data_size );
+	bytes_object = PyBytes_FromStringAndSize(
+	                data,
+	                (Py_ssize_t) data_size );
 #else
-	string_object = PyString_FromStringAndSize(
-			 (char *) data,
-			 (Py_ssize_t) data_size );
+	bytes_object = PyString_FromStringAndSize(
+	                data,
+	                (Py_ssize_t) data_size );
 #endif
+	if( bytes_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert data into Bytes object.",
+		 function );
+
+		goto on_error;
+	}
 	PyMem_Free(
 	 data );
 
-	return( string_object );
+	return( bytes_object );
 
 on_error:
 	if( data != NULL )
@@ -604,7 +639,7 @@ on_error:
 	return( NULL );
 }
 
-/* Retrieves the data represented as a boolean
+/* Retrieves the data as a boolean value
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_value_get_data_as_boolean(
@@ -612,10 +647,8 @@ PyObject *pyolecf_property_value_get_data_as_boolean(
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
-	PyObject *boolean_object = NULL;
 	static char *function    = "pyolecf_property_value_get_data_as_boolean";
-	uint32_t value_type      = 0;
-	uint8_t boolean_value    = 0;
+	uint8_t value_boolean    = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -623,56 +656,21 @@ PyObject *pyolecf_property_value_get_data_as_boolean(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid proverty value.",
+		 PyExc_ValueError,
+		 "%s: invalid property value.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_property_value_get_value_type(
+	result = libolecf_property_value_get_data_as_boolean(
 	          pyolecf_property_value->property_value,
-	          &value_type,
+	          &value_boolean,
 	          &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( result != 1 )
-	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to retrieve property value type.",
-		 function );
-
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	switch( value_type )
-	{
-		case LIBOLECF_VALUE_TYPE_BOOLEAN:
-			Py_BEGIN_ALLOW_THREADS
-
-			result = libolecf_property_value_get_value_boolean(
-				  pyolecf_property_value->property_value,
-				  &boolean_value,
-				  &error );
-
-			Py_END_ALLOW_THREADS
-
-			break;
-
-		default:
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: value is not a boolean type.",
-			 function );
-
-			return( NULL );
-	}
 	if( result == -1 )
 	{
 		pyolecf_error_raise(
@@ -686,29 +684,28 @@ PyObject *pyolecf_property_value_get_data_as_boolean(
 
 		return( NULL );
 	}
-	if( boolean_value == 0x00 )
+	if( value_boolean != 0x00 )
 	{
-		boolean_object = Py_False;
-	}
-	else
-	{
-		boolean_object = Py_True;
+		Py_IncRef(
+		 Py_True );
+
+		return( Py_True );
 	}
 	Py_IncRef(
-	 boolean_object );
+	 Py_False );
 
-	return( boolean_object );
+	return( Py_False );
 }
 
-/* Retrieves the data represented as an integer
+/* Retrieves the data as an integer value
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_value_get_data_as_integer(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyolecf_property_value_get_data_as_integer";
 	uint64_t value_64bit     = 0;
 	int64_t integer_value    = 0;
@@ -722,8 +719,8 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid proverty value.",
+		 PyExc_ValueError,
+		 "%s: invalid property value.",
 		 function );
 
 		return( NULL );
@@ -742,7 +739,7 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve property value type.",
+		 "%s: unable to retrieve value type.",
 		 function );
 
 		libcerror_error_free(
@@ -756,10 +753,10 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 		case LIBOLECF_VALUE_TYPE_INTEGER_16BIT_UNSIGNED:
 			Py_BEGIN_ALLOW_THREADS
 
-			result = libolecf_property_value_get_value_16bit(
-				  pyolecf_property_value->property_value,
-				  &value_16bit,
-				  &error );
+			result = libolecf_property_value_get_data_as_16bit_integer(
+			          pyolecf_property_value->property_value,
+			          &value_16bit,
+			          &error );
 
 			Py_END_ALLOW_THREADS
 
@@ -779,10 +776,10 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 		case LIBOLECF_VALUE_TYPE_INTEGER_32BIT_UNSIGNED:
 			Py_BEGIN_ALLOW_THREADS
 
-			result = libolecf_property_value_get_value_32bit(
-				  pyolecf_property_value->property_value,
-				  &value_32bit,
-				  &error );
+			result = libolecf_property_value_get_data_as_32bit_integer(
+			          pyolecf_property_value->property_value,
+			          &value_32bit,
+			          &error );
 
 			Py_END_ALLOW_THREADS
 
@@ -796,17 +793,16 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 			{
 				integer_value = value_32bit;
 			}
-
 			break;
 
 		case LIBOLECF_VALUE_TYPE_INTEGER_64BIT_SIGNED:
 		case LIBOLECF_VALUE_TYPE_INTEGER_64BIT_UNSIGNED:
 			Py_BEGIN_ALLOW_THREADS
 
-			result = libolecf_property_value_get_value_64bit(
-				  pyolecf_property_value->property_value,
-				  &value_64bit,
-				  &error );
+			result = libolecf_property_value_get_data_as_64bit_integer(
+			          pyolecf_property_value->property_value,
+			          &value_64bit,
+			          &error );
 
 			Py_END_ALLOW_THREADS
 
@@ -820,16 +816,15 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 			{
 				integer_value = value_64bit;
 			}
-
 			break;
 
 		case LIBOLECF_VALUE_TYPE_FILETIME:
 			Py_BEGIN_ALLOW_THREADS
 
-			result = libolecf_property_value_get_value_filetime(
-				  pyolecf_property_value->property_value,
-				  &value_64bit,
-				  &error );
+			result = libolecf_property_value_get_data_as_filetime(
+			          pyolecf_property_value->property_value,
+			          &value_64bit,
+			          &error );
 
 			Py_END_ALLOW_THREADS
 
@@ -878,20 +873,19 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 	return( integer_object );
 }
 
-/* Retrieves the data represented as a string
+/* Retrieves the data as a string
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_value_get_data_as_string(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
+	libcerror_error_t *error = NULL;
 	const char *errors       = NULL;
-	uint8_t *value_string    = NULL;
 	static char *function    = "pyolecf_value_get_data_as_string";
-	size_t value_string_size = 0;
-	uint32_t value_type      = 0;
+	char *utf8_string        = NULL;
+	size_t utf8_string_size  = 0;
 	int result               = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
@@ -899,7 +893,7 @@ PyObject *pyolecf_property_value_get_data_as_string(
 	if( pyolecf_property_value == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property value.",
 		 function );
 
@@ -907,41 +901,9 @@ PyObject *pyolecf_property_value_get_data_as_string(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_property_value_get_value_type(
+	result = libolecf_property_value_get_data_as_utf8_string_size(
 	          pyolecf_property_value->property_value,
-	          &value_type,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to retrieve value type.",
-		 function );
-
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	if( ( value_type != LIBOLECF_VALUE_TYPE_STRING_ASCII )
-	 && ( value_type != LIBOLECF_VALUE_TYPE_STRING_UNICODE ) )
-	{
-		PyErr_Format(
-		 PyExc_IOError,
-		 "%s: value is not a string type.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_property_value_get_value_utf8_string_size(
-	          pyolecf_property_value->property_value,
-	          &value_string_size,
+	          &utf8_string_size,
 	          &error );
 
 	Py_END_ALLOW_THREADS
@@ -951,7 +913,7 @@ PyObject *pyolecf_property_value_get_data_as_string(
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve value string size.",
+		 "%s: unable to determine size of data as UTF-8 string.",
 		 function );
 
 		libcerror_error_free(
@@ -960,32 +922,32 @@ PyObject *pyolecf_property_value_get_data_as_string(
 		goto on_error;
 	}
 	else if( ( result == 0 )
-	      || ( value_string_size == 0 ) )
+	      || ( utf8_string_size == 0 ) )
 	{
 		Py_IncRef(
 		 Py_None );
 
 		return( Py_None );
 	}
-	value_string = (uint8_t *) PyMem_Malloc(
-	                            sizeof( uint8_t ) * value_string_size );
+	utf8_string = (char *) PyMem_Malloc(
+	                        sizeof( char ) * utf8_string_size );
 
-	if( value_string == NULL )
+	if( utf8_string == NULL )
 	{
 		PyErr_Format(
-		 PyExc_IOError,
-		 "%s: unable to create value string.",
+		 PyExc_MemoryError,
+		 "%s: unable to create UTF-8 string.",
 		 function );
 
 		goto on_error;
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libolecf_property_value_get_value_utf8_string(
-		  pyolecf_property_value->property_value,
-		  value_string,
-		  value_string_size,
-		  &error );
+	result = libolecf_property_value_get_data_as_utf8_string(
+	          pyolecf_property_value->property_value,
+	          (uint8_t *) utf8_string,
+	          utf8_string_size,
+	          &error );
 
 	Py_END_ALLOW_THREADS
 
@@ -994,7 +956,7 @@ PyObject *pyolecf_property_value_get_data_as_string(
 		pyolecf_error_raise(
 		 error,
 		 PyExc_IOError,
-		 "%s: unable to retrieve value string.",
+		 "%s: unable to retrieve data as UTF-8 string.",
 		 function );
 
 		libcerror_error_free(
@@ -1002,25 +964,33 @@ PyObject *pyolecf_property_value_get_data_as_string(
 
 		goto on_error;
 	}
-	/* Pass the string length to PyUnicode_DecodeUTF8
-	 * otherwise it makes the end of string character is part
-	 * of the string
+	/* Pass the string length to PyUnicode_DecodeUTF8 otherwise it makes
+	 * the end of string character is part of the string
 	 */
 	string_object = PyUnicode_DecodeUTF8(
-			 (char *) value_string,
-			 (Py_ssize_t) value_string_size - 1,
-			 errors );
+	                 utf8_string,
+	                 (Py_ssize_t) utf8_string_size - 1,
+	                 errors );
 
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 string into Unicode object.",
+		 function );
+
+		goto on_error;
+	}
 	PyMem_Free(
-	 value_string );
+	 utf8_string );
 
 	return( string_object );
 
 on_error:
-	if( value_string != NULL )
+	if( utf8_string != NULL )
 	{
 		PyMem_Free(
-		 value_string );
+		 utf8_string );
 	}
 	return( NULL );
 }

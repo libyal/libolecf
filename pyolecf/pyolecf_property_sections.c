@@ -155,13 +155,13 @@ PyTypeObject pyolecf_property_sections_type_object = {
  */
 PyObject *pyolecf_property_sections_new(
            PyObject *parent_object,
-           PyObject* (*get_property_section_by_index)(
+           PyObject* (*get_item_by_index)(
                         PyObject *parent_object,
-                        int property_section_index ),
-           int number_of_property_sections )
+                        int index ),
+           int number_of_items )
 {
-	pyolecf_property_sections_t *pyolecf_property_sections = NULL;
-	static char *function                                  = "pyolecf_property_sections_new";
+	pyolecf_property_sections_t *property_sections_object = NULL;
+	static char *function                                 = "pyolecf_property_sections_new";
 
 	if( parent_object == NULL )
 	{
@@ -172,54 +172,54 @@ PyObject *pyolecf_property_sections_new(
 
 		return( NULL );
 	}
-	if( get_property_section_by_index == NULL )
+	if( get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid get property section by index function.",
+		 "%s: invalid get item by index function.",
 		 function );
 
 		return( NULL );
 	}
 	/* Make sure the property sections values are initialized
 	 */
-	pyolecf_property_sections = PyObject_New(
-	                             struct pyolecf_property_sections,
-	                             &pyolecf_property_sections_type_object );
+	property_sections_object = PyObject_New(
+	                            struct pyolecf_property_sections,
+	                            &pyolecf_property_sections_type_object );
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize property sections.",
+		 "%s: unable to create property sections object.",
 		 function );
 
 		goto on_error;
 	}
 	if( pyolecf_property_sections_init(
-	     pyolecf_property_sections ) != 0 )
+	     property_sections_object ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize property sections.",
+		 "%s: unable to initialize property sections object.",
 		 function );
 
 		goto on_error;
 	}
-	pyolecf_property_sections->parent_object                 = parent_object;
-	pyolecf_property_sections->get_property_section_by_index = get_property_section_by_index;
-	pyolecf_property_sections->number_of_property_sections   = number_of_property_sections;
+	property_sections_object->parent_object     = parent_object;
+	property_sections_object->get_item_by_index = get_item_by_index;
+	property_sections_object->number_of_items   = number_of_items;
 
 	Py_IncRef(
-	 (PyObject *) pyolecf_property_sections->parent_object );
+	 (PyObject *) property_sections_object->parent_object );
 
-	return( (PyObject *) pyolecf_property_sections );
+	return( (PyObject *) property_sections_object );
 
 on_error:
-	if( pyolecf_property_sections != NULL )
+	if( property_sections_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_sections );
+		 (PyObject *) property_sections_object );
 	}
 	return( NULL );
 }
@@ -228,25 +228,25 @@ on_error:
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_sections_init(
-     pyolecf_property_sections_t *pyolecf_property_sections )
+     pyolecf_property_sections_t *property_sections_object )
 {
 	static char *function = "pyolecf_property_sections_init";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return( -1 );
 	}
 	/* Make sure the property sections values are initialized
 	 */
-	pyolecf_property_sections->parent_object                 = NULL;
-	pyolecf_property_sections->get_property_section_by_index = NULL;
-	pyolecf_property_sections->property_section_index        = 0;
-	pyolecf_property_sections->number_of_property_sections   = 0;
+	property_sections_object->parent_object     = NULL;
+	property_sections_object->get_item_by_index = NULL;
+	property_sections_object->current_index     = 0;
+	property_sections_object->number_of_items   = 0;
 
 	return( 0 );
 }
@@ -254,22 +254,22 @@ int pyolecf_property_sections_init(
 /* Frees a property sections object
  */
 void pyolecf_property_sections_free(
-      pyolecf_property_sections_t *pyolecf_property_sections )
+      pyolecf_property_sections_t *property_sections_object )
 {
 	struct _typeobject *ob_type = NULL;
 	static char *function       = "pyolecf_property_sections_free";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return;
 	}
 	ob_type = Py_TYPE(
-	           pyolecf_property_sections );
+	           property_sections_object );
 
 	if( ob_type == NULL )
 	{
@@ -289,72 +289,72 @@ void pyolecf_property_sections_free(
 
 		return;
 	}
-	if( pyolecf_property_sections->parent_object != NULL )
+	if( property_sections_object->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_sections->parent_object );
+		 (PyObject *) property_sections_object->parent_object );
 	}
 	ob_type->tp_free(
-	 (PyObject*) pyolecf_property_sections );
+	 (PyObject*) property_sections_object );
 }
 
 /* The property sections len() function
  */
 Py_ssize_t pyolecf_property_sections_len(
-            pyolecf_property_sections_t *pyolecf_property_sections )
+            pyolecf_property_sections_t *property_sections_object )
 {
 	static char *function = "pyolecf_property_sections_len";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) pyolecf_property_sections->number_of_property_sections );
+	return( (Py_ssize_t) property_sections_object->number_of_items );
 }
 
 /* The property sections getitem() function
  */
 PyObject *pyolecf_property_sections_getitem(
-           pyolecf_property_sections_t *pyolecf_property_sections,
+           pyolecf_property_sections_t *property_sections_object,
            Py_ssize_t item_index )
 {
 	PyObject *property_section_object = NULL;
 	static char *function             = "pyolecf_property_sections_getitem";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->get_property_section_by_index == NULL )
+	if( property_sections_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections - missing get property section by index function.",
+		 "%s: invalid property sections object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->number_of_property_sections < 0 )
+	if( property_sections_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections - invalid number of property sections.",
+		 "%s: invalid property sections object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) pyolecf_property_sections->number_of_property_sections ) )
+	 || ( item_index >= (Py_ssize_t) property_sections_object->number_of_items ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,8 +363,8 @@ PyObject *pyolecf_property_sections_getitem(
 
 		return( NULL );
 	}
-	property_section_object = pyolecf_property_sections->get_property_section_by_index(
-	                           pyolecf_property_sections->parent_object,
+	property_section_object = property_sections_object->get_item_by_index(
+	                           property_sections_object->parent_object,
 	                           (int) item_index );
 
 	return( property_section_object );
@@ -373,83 +373,83 @@ PyObject *pyolecf_property_sections_getitem(
 /* The property sections iter() function
  */
 PyObject *pyolecf_property_sections_iter(
-           pyolecf_property_sections_t *pyolecf_property_sections )
+           pyolecf_property_sections_t *property_sections_object )
 {
 	static char *function = "pyolecf_property_sections_iter";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return( NULL );
 	}
 	Py_IncRef(
-	 (PyObject *) pyolecf_property_sections );
+	 (PyObject *) property_sections_object );
 
-	return( (PyObject *) pyolecf_property_sections );
+	return( (PyObject *) property_sections_object );
 }
 
 /* The property sections iternext() function
  */
 PyObject *pyolecf_property_sections_iternext(
-           pyolecf_property_sections_t *pyolecf_property_sections )
+           pyolecf_property_sections_t *property_sections_object )
 {
 	PyObject *property_section_object = NULL;
 	static char *function             = "pyolecf_property_sections_iternext";
 
-	if( pyolecf_property_sections == NULL )
+	if( property_sections_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections.",
+		 "%s: invalid property sections object.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->get_property_section_by_index == NULL )
+	if( property_sections_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections - missing get property section by index function.",
+		 "%s: invalid property sections object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->property_section_index < 0 )
+	if( property_sections_object->current_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections - invalid property section index.",
+		 "%s: invalid property sections object - invalid current index.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->number_of_property_sections < 0 )
+	if( property_sections_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property sections - invalid number of property sections.",
+		 "%s: invalid property sections object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyolecf_property_sections->property_section_index >= pyolecf_property_sections->number_of_property_sections )
+	if( property_sections_object->current_index >= property_sections_object->number_of_items )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	property_section_object = pyolecf_property_sections->get_property_section_by_index(
-	                           pyolecf_property_sections->parent_object,
-	                           pyolecf_property_sections->property_section_index );
+	property_section_object = property_sections_object->get_item_by_index(
+	                           property_sections_object->parent_object,
+	                           property_sections_object->current_index );
 
 	if( property_section_object != NULL )
 	{
-		pyolecf_property_sections->property_section_index++;
+		property_sections_object->current_index++;
 	}
 	return( property_section_object );
 }

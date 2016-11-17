@@ -93,6 +93,79 @@ int libolecf_property_value_get_value_type(
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_size(
+     libolecf_property_value_t *property_value,
+     size_t *data_size,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data(
+     libolecf_property_value_t *property_value,
+     uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_boolean(
+     libolecf_property_value_t *property_value,
+     uint8_t *value_boolean,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_16bit_integer(
+     libolecf_property_value_t *property_value,
+     uint16_t *value_16bit,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_32bit_integer(
+     libolecf_property_value_t *property_value,
+     uint32_t *value_32bit,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_64bit_integer(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_64bit,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_filetime(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_filetime,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf8_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf8_string(
+     libolecf_property_value_t *property_value,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf16_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+LIBOLECF_EXTERN \
+int libolecf_property_value_get_data_as_utf16_string(
+     libolecf_property_value_t *property_value,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Deprecated
+ * ------------------------------------------------------------------------- */
+
+LIBOLECF_EXTERN \
 int libolecf_property_value_get_value_data_size(
      libolecf_property_value_t *property_value,
      size_t *value_data_size,

@@ -1127,6 +1127,599 @@ int libolecf_property_value_get_value_type(
 /* Retrieves the data size
  * Returns 1 if successful or -1 on error
  */
+int libolecf_property_value_get_data_size(
+     libolecf_property_value_t *property_value,
+     size_t *data_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_size";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( libfvalue_value_get_data_size(
+	     internal_property_value->data_value,
+	     data_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve data size.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data(
+     libolecf_property_value_t *property_value,
+     uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( libfvalue_value_copy_data(
+	     internal_property_value->data_value,
+	     data,
+	     data_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy data.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as a boolean value
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_boolean(
+     libolecf_property_value_t *property_value,
+     uint8_t *value_boolean,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_boolean";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_BOOLEAN )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	/* Using copy to 8-bit here not to impose the libfvalue boolean logic on to the OLE boolean value
+	 */
+	if( libfvalue_value_copy_to_8bit(
+	     internal_property_value->data_value,
+	     0,
+	     value_boolean,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to boolean value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as a 16-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_16bit_integer(
+     libolecf_property_value_t *property_value,
+     uint16_t *value_16bit,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_16bit_integer";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_16BIT_SIGNED )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_16BIT_UNSIGNED ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_16bit(
+	     internal_property_value->data_value,
+	     0,
+	     value_16bit,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to 16-bit value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as a 32-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_32bit_integer(
+     libolecf_property_value_t *property_value,
+     uint32_t *value_32bit,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_32bit_integer";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_32BIT_SIGNED )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_32BIT_UNSIGNED ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_32bit(
+	     internal_property_value->data_value,
+	     0,
+	     value_32bit,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to 32-bit value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as a 64-bit integer value
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_64bit_integer(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_64bit,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_64bit_integer";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_64BIT_SIGNED )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_INTEGER_64BIT_UNSIGNED ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_64bit(
+	     internal_property_value->data_value,
+	     0,
+	     value_64bit,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to 64-bit value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as a 64-bit filetime value
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_filetime(
+     libolecf_property_value_t *property_value,
+     uint64_t *value_filetime,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_filetime";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_FILETIME )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_64bit(
+	     internal_property_value->data_value,
+	     0,
+	     value_filetime,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to 64-bit filetime value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the data as an UTF-8 string value
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_utf8_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf8_string_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_utf8_string_size";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_get_utf8_string_size(
+	     internal_property_value->data_value,
+	     0,
+	     utf8_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to determine UTF-8 string size of value data.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as an UTF-8 string value
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_utf8_string(
+     libolecf_property_value_t *property_value,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_utf8_string";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_utf8_string(
+	     internal_property_value->data_value,
+	     0,
+	     utf8_string,
+	     utf8_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the data as an UTF-16 string value
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_utf16_string_size(
+     libolecf_property_value_t *property_value,
+     size_t *utf16_string_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_utf16_string_size";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_get_utf16_string_size(
+	     internal_property_value->data_value,
+	     0,
+	     utf16_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to determine UTF-16 string size of value data.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data as an UTF-16 string value
+ * The function uses a codepage if necessary, it uses the codepage set for the library
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_value_get_data_as_utf16_string(
+     libolecf_property_value_t *property_value,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error )
+{
+	libolecf_internal_property_value_t *internal_property_value = NULL;
+	static char *function                                       = "libolecf_property_value_get_data_as_utf16_string";
+
+	if( property_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property value.",
+		 function );
+
+		return( -1 );
+	}
+	internal_property_value = (libolecf_internal_property_value_t *) property_value;
+
+	if( ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_ASCII )
+	 && ( internal_property_value->value_type != LIBOLECF_VALUE_TYPE_STRING_UNICODE ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported string value type: 0x%04" PRIx32 ".",
+		 function,
+		 internal_property_value->value_type );
+
+		return( -1 );
+	}
+	if( libfvalue_value_copy_to_utf16_string(
+	     internal_property_value->data_value,
+	     0,
+	     utf16_string,
+	     utf16_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy value data to UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* -------------------------------------------------------------------------
+ * Deprecated
+ * ------------------------------------------------------------------------- */
+
+/* Retrieves the value data size
+ * Returns 1 if successful or -1 on error
+ */
 int libolecf_property_value_get_value_data_size(
      libolecf_property_value_t *property_value,
      size_t *data_size,
@@ -1712,4 +2305,5 @@ int libolecf_property_value_get_value_utf16_string(
 	}
 	return( 1 );
 }
+
 

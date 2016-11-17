@@ -32,6 +32,7 @@
 #include "pyolecf_file.h"
 #include "pyolecf_file_object_io_handle.h"
 #include "pyolecf_item.h"
+#include "pyolecf_item_types.h"
 #include "pyolecf_items.h"
 #include "pyolecf_libcerror.h"
 #include "pyolecf_libolecf.h"
@@ -462,6 +463,7 @@ PyMODINIT_FUNC initpyolecf(
 	PyObject *module                              = NULL;
 	PyTypeObject *file_type_object                = NULL;
 	PyTypeObject *item_type_object                = NULL;
+	PyTypeObject *item_types_type_object          = NULL;
 	PyTypeObject *items_type_object               = NULL;
 	PyTypeObject *stream_type_object              = NULL;
 	PyTypeObject *property_section_type_object    = NULL;
@@ -695,6 +697,30 @@ PyMODINIT_FUNC initpyolecf(
 	 module,
 	 "property_value",
 	 (PyObject *) property_value_type_object );
+
+	/* Setup the item types type object
+	 */
+	pyolecf_item_types_type_object.tp_new = PyType_GenericNew;
+
+	if( pyolecf_item_types_init_type(
+	     &pyolecf_item_types_type_object ) != 1 )
+	{
+		goto on_error;
+	}
+	if( PyType_Ready(
+	     &pyolecf_item_types_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_item_types_type_object );
+
+	item_types_type_object = &pyolecf_item_types_type_object;
+
+	PyModule_AddObject(
+	 module,
+	 "item_types",
+	 (PyObject *) item_types_type_object );
 
 	/* Setup the value types type object
 	 */

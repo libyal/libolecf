@@ -44,48 +44,48 @@ struct pyolecf_property_values
 	 */
 	PyObject *parent_object;
 
-	/* The get property value by index callback function
+	/* The get item by index callback function
 	 */
-	PyObject* (*get_property_value_by_index)(
+	PyObject* (*get_item_by_index)(
 	             PyObject *parent_object,
-	             int property_value_index );
+	             int index );
 
-	/* The (current) property value index
+	/* The current index
 	 */
-	int property_value_index;
+	int current_index;
 
-	/* The number of property values
+	/* The number of items
 	 */
-	int number_of_property_values;
+	int number_of_items;
 };
 
 extern PyTypeObject pyolecf_property_values_type_object;
 
 PyObject *pyolecf_property_values_new(
            PyObject *parent_object,
-           PyObject* (*get_property_value_by_index)(
+           PyObject* (*get_item_by_index)(
                         PyObject *parent_object,
-                        int property_value_index ),
-           int number_of_property_values );
+                        int index ),
+           int number_of_items );
 
 int pyolecf_property_values_init(
-     pyolecf_property_values_t *pyolecf_property_values );
+     pyolecf_property_values_t *property_values_object );
 
 void pyolecf_property_values_free(
-      pyolecf_property_values_t *pyolecf_property_values );
+      pyolecf_property_values_t *property_values_object );
 
 Py_ssize_t pyolecf_property_values_len(
-            pyolecf_property_values_t *pyolecf_property_values );
+            pyolecf_property_values_t *property_values_object );
 
 PyObject *pyolecf_property_values_getitem(
-           pyolecf_property_values_t *pyolecf_property_values,
+           pyolecf_property_values_t *property_values_object,
            Py_ssize_t item_index );
 
 PyObject *pyolecf_property_values_iter(
-           pyolecf_property_values_t *pyolecf_property_values );
+           pyolecf_property_values_t *property_values_object );
 
 PyObject *pyolecf_property_values_iternext(
-           pyolecf_property_values_t *pyolecf_property_values );
+           pyolecf_property_values_t *property_values_object );
 
 #if defined( __cplusplus )
 }

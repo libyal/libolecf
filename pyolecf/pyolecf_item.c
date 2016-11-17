@@ -962,10 +962,10 @@ PyTypeObject *pyolecf_item_get_item_type_object(
 			Py_BEGIN_ALLOW_THREADS
 
 			result = libolecf_item_get_utf8_name(
-				  item,
-				  utf8_string,
-				  utf8_string_size,
-				  &error );
+			          item,
+			          utf8_string,
+			          utf8_string_size,
+			          &error );
 
 			Py_END_ALLOW_THREADS
 
@@ -982,21 +982,25 @@ PyTypeObject *pyolecf_item_get_item_type_object(
 
 				return( NULL );
 			}
-			if( ( utf8_string_size == 20 )
-			 && ( narrow_string_compare(
-			       "\005SummaryInformation",
-			       utf8_string,
-			       19 ) == 0 ) )
+			if( utf8_string_size == 20 )
 			{
-				return( &pyolecf_property_set_stream_type_object );
+				if( narrow_string_compare(
+				     "\005SummaryInformation",
+				     utf8_string,
+				     19 ) == 0 )
+				{
+					return( &pyolecf_property_set_stream_type_object );
+				}
 			}
-			if( ( utf8_string_size == 28 )
-			 && ( narrow_string_compare(
-			       "\005DocumentSummaryInformation",
-			       utf8_string,
-			       27 ) == 0 ) )
+			else if( utf8_string_size == 28 )
 			{
-				return( &pyolecf_property_set_stream_type_object );
+				if( narrow_string_compare(
+				     "\005DocumentSummaryInformation",
+				     utf8_string,
+				     27 ) == 0 )
+				{
+					return( &pyolecf_property_set_stream_type_object );
+				}
 			}
 		}
 		return( &pyolecf_stream_type_object );
