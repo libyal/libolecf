@@ -1434,7 +1434,7 @@ int libolecf_property_value_get_data_as_64bit_integer(
  */
 int libolecf_property_value_get_data_as_filetime(
      libolecf_property_value_t *property_value,
-     uint64_t *value_filetime,
+     uint64_t *filetime,
      libcerror_error_t **error )
 {
 	libolecf_internal_property_value_t *internal_property_value = NULL;
@@ -1468,7 +1468,7 @@ int libolecf_property_value_get_data_as_filetime(
 	if( libfvalue_value_copy_to_64bit(
 	     internal_property_value->data_value,
 	     0,
-	     value_filetime,
+	     filetime,
 	     error ) != 1 )
 	{
 		libcerror_error_set(

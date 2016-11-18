@@ -132,7 +132,7 @@ int libolecf_property_value_get_data_as_64bit_integer(
 LIBOLECF_EXTERN \
 int libolecf_property_value_get_data_as_filetime(
      libolecf_property_value_t *property_value,
-     uint64_t *value_filetime,
+     uint64_t *filetime,
      libcerror_error_t **error );
 
 LIBOLECF_EXTERN \
