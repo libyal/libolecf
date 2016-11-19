@@ -865,8 +865,6 @@ int olecf_test_file_open(
 	          LIBOLECF_OPEN_READ,
 	          &error );
 
-	OLECF_TEST_FPRINT_ERROR( error )
-
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,

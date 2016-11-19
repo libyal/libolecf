@@ -272,6 +272,166 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+/* Tests the libolecf_property_section_get_class_identifier function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_section_get_class_identifier(
+     void )
+{
+	uint8_t guid_data[ 16 ];
+
+	libcerror_error_t *error                      = NULL;
+	libolecf_property_section_t *property_section = NULL;
+	int result                                    = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_section_initialize(
+	          &property_section,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "property_section",
+         property_section );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_section_get_class_identifier(
+	          property_section,
+	          guid_data,
+	          16,
+	          &error );
+
+	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libolecf_property_section_get_class_identifier(
+	          NULL,
+	          guid_data,
+	          16,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_get_class_identifier(
+	          property_section,
+	          NULL,
+	          16,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_get_class_identifier(
+	          property_section,
+	          guid_data,
+	          0,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_get_class_identifier(
+	          property_section,
+	          guid_data,
+	          (size_t) SSIZE_MAX + 1,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        OLECF_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libolecf_property_section_free(
+	          &property_section,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "property_section",
+         property_section );
+
+        OLECF_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_section != NULL )
+	{
+		libolecf_property_section_free(
+		 &property_section,
+		 NULL );
+	}
+	return( 0 );
+}
+
 /* Tests the libolecf_property_section_get_number_of_properties function
  * Returns 1 if successful or 0 if not
  */
@@ -395,6 +555,8 @@ on_error:
 	return( 0 );
 }
 
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -422,21 +584,23 @@ int main(
 	 "libolecf_property_section_free",
 	 olecf_test_property_section_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && defined( TODO )
 
 	/* TODO: add tests for libolecf_property_section_read_list_entry */
 
 	/* TODO: add tests for libolecf_property_section_read */
 
-#endif /* defined( __GNUC__ ) */
-
-	/* TODO: add tests for libolecf_property_section_get_class_identifier */
+	OLECF_TEST_RUN(
+	 "libolecf_property_section_get_class_identifier",
+	 olecf_test_property_section_get_class_identifier );
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_section_get_number_of_properties",
 	 olecf_test_property_section_get_number_of_properties );
 
 	/* TODO: add tests for libolecf_property_section_get_property_by_index */
+
+#endif /* defined( __GNUC__ ) && defined( TODO ) */
 
 	return( EXIT_SUCCESS );
 

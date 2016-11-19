@@ -73,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -97,6 +101,8 @@ int main(
 	OLECF_TEST_RUN(
 	 "libolecf_item_free",
 	 olecf_test_item_free );
+
+#if defined( __GNUC__ )
 
 	/* TODO: add tests for libolecf_item_get_type */
 
@@ -125,6 +131,8 @@ int main(
 	/* TODO: add tests for libolecf_item_get_sub_item_by_utf8_path */
 
 	/* TODO: add tests for libolecf_item_get_sub_item_by_utf16_path */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 
