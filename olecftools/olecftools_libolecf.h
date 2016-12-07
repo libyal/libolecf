@@ -33,5 +33,5 @@
 
 #include <libolecf.h>
 
-#endif
+#endif /* !defined( _OLECFTOOLS_LIBOLECF_H ) */
 

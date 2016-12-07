@@ -196,7 +196,7 @@ PyObject *pyolecf_property_set_new(
 	if( property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -253,7 +253,7 @@ int pyolecf_property_set_init(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -279,7 +279,7 @@ void pyolecf_property_set_free(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -288,7 +288,7 @@ void pyolecf_property_set_free(
 	if( pyolecf_property_set->property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set - missing libolecf property set.",
 		 function );
 
@@ -362,7 +362,7 @@ PyObject *pyolecf_property_set_get_class_identifier(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -423,7 +423,7 @@ PyObject *pyolecf_property_set_get_number_of_sections(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -489,7 +489,7 @@ PyObject *pyolecf_property_set_get_section_by_index(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 
@@ -603,7 +603,7 @@ PyObject *pyolecf_property_set_get_sections(
 	if( pyolecf_property_set == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property set.",
 		 function );
 

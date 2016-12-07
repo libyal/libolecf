@@ -196,7 +196,7 @@ PyObject *pyolecf_property_section_new(
 	if( property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -253,7 +253,7 @@ int pyolecf_property_section_init(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -279,7 +279,7 @@ void pyolecf_property_section_free(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -288,7 +288,7 @@ void pyolecf_property_section_free(
 	if( pyolecf_property_section->property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section - missing libolecf property section.",
 		 function );
 
@@ -362,7 +362,7 @@ PyObject *pyolecf_property_section_get_class_identifier(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -423,7 +423,7 @@ PyObject *pyolecf_property_section_get_number_of_properties(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -489,7 +489,7 @@ PyObject *pyolecf_property_section_get_property_by_index(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 
@@ -603,7 +603,7 @@ PyObject *pyolecf_property_section_get_properties(
 	if( pyolecf_property_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid property section.",
 		 function );
 

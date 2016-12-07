@@ -38,9 +38,9 @@
 #include <libolecf/extern.h>
 
 #else
-#define LIBOLECF_EXTERN	extern
+#define LIBOLECF_EXTERN	/* extern */
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 
 #endif /* !defined( _LIBOLECF_INTERNAL_EXTERN_H ) */
 
