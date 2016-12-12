@@ -26,8 +26,6 @@
 #include <types.h>
 #include <wide_string.h>
 
-#include <stdio.h>
-
 #if defined( HAVE_UNISTD_H )
 #include <unistd.h>
 #endif
@@ -36,15 +34,22 @@
 #include <stdlib.h>
 #endif
 
+#include <stdio.h>
+
 #include "export_handle.h"
 #include "log_handle.h"
-#include "olecfoutput.h"
+#include "olecftools_getopt.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libclocale.h"
 #include "olecftools_libcnotify.h"
 #include "olecftools_libcpath.h"
-#include "olecftools_libcsystem.h"
 #include "olecftools_libolecf.h"
+#include "olecftools_output.h"
+#include "olecftools_signal.h"
+#include "olecftools_unused.h"
+
+export_handle_t *olecfexport_export_handle = NULL;
+int olecfexport_abort                      = 0;
 
 /* Prints the executable usage information
  */
@@ -75,6 +80,50 @@ void usage_fprint(
 	fprintf( stream, "\t-V:     print version\n" );
 }
 
+/* Signal handler for olecfexport
+ */
+void olecfexport_signal_handler(
+      olecftools_signal_t signal OLECFTOOLS_ATTRIBUTE_UNUSED )
+{
+	libcerror_error_t *error = NULL;
+	static char *function    = "olecfexport_signal_handler";
+
+	OLECFTOOLS_UNREFERENCED_PARAMETER( signal )
+
+	olecfexport_abort = 1;
+
+	if( olecfexport_export_handle != NULL )
+	{
+		if( export_handle_signal_abort(
+		     olecfexport_export_handle,
+		     &error ) != 1 )
+		{
+			libcnotify_printf(
+			 "%s: unable to signal export handle to abort.\n",
+			 function );
+
+			libcnotify_print_error_backtrace(
+			 error );
+			libcerror_error_free(
+			 &error );
+		}
+	}
+	/* Force stdin to close otherwise any function reading it will remain blocked
+	 */
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
+	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
+	{
+		libcnotify_printf(
+		 "%s: unable to close stdin.\n",
+		 function );
+	}
+}
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -83,19 +132,18 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	export_handle_t *olecfexport_export_handle = NULL;
-	libcerror_error_t *error                   = NULL;
-	log_handle_t *log_handle                   = NULL;
-	system_character_t *log_filename           = NULL;
-	system_character_t *option_ascii_codepage  = NULL;
-	system_character_t *option_target_path     = NULL;
-	system_character_t *path_separator         = NULL;
-	system_character_t *source                 = NULL;
-	char *program                              = "olecfexport";
-	system_integer_t option                    = 0;
-	size_t source_length                       = 0;
-	int result                                 = 0;
-	int verbose                                = 0;
+	libcerror_error_t *error                  = NULL;
+	log_handle_t *log_handle                  = NULL;
+	system_character_t *log_filename          = NULL;
+	system_character_t *option_ascii_codepage = NULL;
+	system_character_t *option_target_path    = NULL;
+	system_character_t *path_separator        = NULL;
+	system_character_t *source                = NULL;
+	char *program                             = "olecfexport";
+	system_integer_t option                   = 0;
+	size_t source_length                      = 0;
+	int result                                = 0;
+	int verbose                               = 0;
 
 	libcnotify_stream_set(
 	 stderr,
@@ -113,21 +161,21 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_initialize(
+	if( olecftools_output_initialize(
 	     _IONBF,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
-	olecfoutput_version_fprint(
+	olecftools_output_version_fprint(
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = olecftools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "c:hl:t:vV" ) ) ) != (system_integer_t) -1 )
@@ -173,7 +221,7 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'V':
-				olecfoutput_copyright_fprint(
+				olecftools_output_copyright_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );

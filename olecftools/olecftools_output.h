@@ -1,5 +1,5 @@
 /*
- * The libfole header wrapper
+ * Output functions
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,37 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _OLECFTOOLS_LIBFOLE_H )
-#define _OLECFTOOLS_LIBFOLE_H
+#if !defined( _OLECFTOOLS_OUTPUT_H )
+#define _OLECFTOOLS_OUTPUT_H
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
-/* Define HAVE_LOCAL_LIBFOLE for local use of libfole
- */
-#if defined( HAVE_LOCAL_LIBFOLE )
+#include "olecftools_libcerror.h"
 
-#include <libfole_definitions.h>
-#include <libfole_value_type.h>
-#include <libfole_support.h>
-#include <libfole_types.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBFOLE_DLL_IMPORT
- * before including libfole.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFOLE_DLL_IMPORT
+#if defined( __cplusplus )
+extern "C" {
 #endif
 
-#include <libfole.h>
+int olecftools_output_initialize(
+     int stdio_mode,
+     libcerror_error_t **error );
 
+void olecftools_output_copyright_fprint(
+      FILE *stream );
+
+void olecftools_output_version_fprint(
+      FILE *stream,
+      const char *program );
+
+void olecftools_output_detailed_version_fprint(
+      FILE *stream,
+      const char *program );
+
+#if defined( __cplusplus )
+}
 #endif
 
-#endif
+#endif /* !defined( _OLECFTOOLS_OUTPUT_H ) */
 

@@ -1,5 +1,5 @@
 /*
- * Common output functions for the olecftools
+ * Output functions
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -24,20 +24,81 @@
 #include <memory.h>
 #include <types.h>
 
-#include "olecfoutput.h"
+#include "olecftools_i18n.h"
 #include "olecftools_libbfio.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libcfile.h"
 #include "olecftools_libclocale.h"
 #include "olecftools_libcnotify.h"
 #include "olecftools_libcpath.h"
-#include "olecftools_libcsystem.h"
+#include "olecftools_libfdatetime.h"
+#include "olecftools_libfguid.h"
+#include "olecftools_libfole.h"
 #include "olecftools_libolecf.h"
 #include "olecftools_libuna.h"
+#include "olecftools_output.h"
+
+/* Initializes output settings
+ * Returns 1 if successful or -1 on error
+ */
+int olecftools_output_initialize(
+     int stdio_mode,
+     libcerror_error_t **error )
+{
+	static char *function = "olecftools_output_initialize";
+
+	if( ( stdio_mode != _IOFBF )
+	 && ( stdio_mode != _IOLBF )
+	 && ( stdio_mode != _IONBF ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported standard IO mode.",
+		 function );
+
+		return( -1 );
+	}
+#if !defined( __BORLANDC__ )
+	if( setvbuf(
+	     stdout,
+	     NULL,
+	     stdio_mode,
+	     0 ) != 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set IO mode of stdout.",
+		 function );
+
+		return( -1 );
+	}
+	if( setvbuf(
+	     stderr,
+	     NULL,
+	     stdio_mode,
+	     0 ) != 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set IO mode of stderr.",
+		 function );
+
+		return( -1 );
+	}
+#endif /* !defined( __BORLANDC__ ) */
+
+	return( 1 );
+}
 
 /* Prints the copyright information
  */
-void olecfoutput_copyright_fprint(
+void olecftools_output_copyright_fprint(
       FILE *stream )
 {
 	if( stream == NULL )
@@ -69,7 +130,7 @@ void olecfoutput_copyright_fprint(
 
 /* Prints the version information
  */
-void olecfoutput_version_fprint(
+void olecftools_output_version_fprint(
       FILE *stream,
       const char *program )
 {
@@ -90,7 +151,7 @@ void olecfoutput_version_fprint(
 
 /* Prints the detailed version information
  */
-void olecfoutput_detailed_version_fprint(
+void olecftools_output_detailed_version_fprint(
       FILE *stream,
       const char *program )
 {
@@ -116,7 +177,7 @@ void olecfoutput_detailed_version_fprint(
 
 	fprintf(
 	 stream,
-	 ", libclocle %s",
+	 ", libclocale %s",
 	 LIBCLOCALE_VERSION_STRING );
 
 	fprintf(
@@ -144,7 +205,20 @@ void olecfoutput_detailed_version_fprint(
 	 ", libbfio %s",
 	 LIBBFIO_VERSION_STRING );
 
-/* TODO add info */
+	fprintf(
+	 stream,
+	 ", libfdatetime %s",
+	 LIBFDATETIME_VERSION_STRING );
+
+	fprintf(
+	 stream,
+	 ", libfguid %s",
+	 LIBFGUID_VERSION_STRING );
+
+	fprintf(
+	 stream,
+	 ", libfole %s",
+	 LIBFOLE_VERSION_STRING );
 
         fprintf(
 	 stream,

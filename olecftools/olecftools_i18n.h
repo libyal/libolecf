@@ -1,5 +1,5 @@
 /*
- * The libfole header wrapper
+ * Internationalization (i18n) functions
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,30 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _OLECFTOOLS_LIBFOLE_H )
-#define _OLECFTOOLS_LIBFOLE_H
+#if !defined( _OLECFTOOLS_I18N_H )
+#define _OLECFTOOLS_I18N_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBFOLE for local use of libfole
- */
-#if defined( HAVE_LOCAL_LIBFOLE )
-
-#include <libfole_definitions.h>
-#include <libfole_value_type.h>
-#include <libfole_support.h>
-#include <libfole_types.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBFOLE_DLL_IMPORT
- * before including libfole.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFOLE_DLL_IMPORT
+#if defined( HAVE_LIBINTL_H )
+#include <libintl.h>
 #endif
 
-#include <libfole.h>
-
+#if defined( __cplusplus )
+extern "C" {
 #endif
 
+/* TODO for now do nothing i18n-like
+#define	_( string ) \
+	gettext( string )
+*/
+
+#define	_( string ) \
+	string
+
+#if defined( __cplusplus )
+}
 #endif
+
+#endif /* !defined( _OLECFTOOLS_I18N_H ) */
 

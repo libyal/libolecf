@@ -74,6 +74,10 @@ int export_handle_free(
      export_handle_t **export_handle,
      libcerror_error_t **error );
 
+int export_handle_signal_abort(
+     export_handle_t *export_handle,
+     libcerror_error_t **error );
+
 int export_handle_set_ascii_codepage(
      export_handle_t *export_handle,
      const system_character_t *string,

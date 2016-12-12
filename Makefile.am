@@ -19,7 +19,6 @@ SUBDIRS = \
 	libfvalue \
 	libfwps \
 	libolecf \
-	libcsystem \
 	olecftools \
 	pyolecf \
 	pyolecf-python2 \
@@ -127,7 +126,6 @@ splint:
 	(cd $(srcdir)/libfvalue && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libfwps && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libolecf && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcsystem && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/olecftools && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/pyolecf && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/po && $(MAKE) splint $(AM_MAKEFLAGS))

@@ -183,6 +183,45 @@ int export_handle_free(
 	return( result );
 }
 
+/* Signals the export handle to abort
+ * Returns 1 if successful or -1 on error
+ */
+int export_handle_signal_abort(
+     export_handle_t *export_handle,
+     libcerror_error_t **error )
+{
+	static char *function = "export_handle_signal_abort";
+
+	if( export_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid export handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( export_handle->input_file != NULL )
+	{
+		if( libolecf_file_signal_abort(
+		     export_handle->input_file,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to signal input file to abort.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	return( 1 );
+}
+
 /* Sets the ascii codepage
  * Returns 1 if successful or -1 on error
  */

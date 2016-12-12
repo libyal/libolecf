@@ -99,29 +99,14 @@ AX_LIBFVALUE_CHECK_ENABLE
 dnl Check for enabling libfwps for Windows Property Store support
 AX_LIBFWPS_CHECK_ENABLE
 
-dnl Check for library function support
+dnl Check for libolecf function support
 AX_LIBOLECF_CHECK_LOCAL
-
-dnl Check for enabling libcsystem for cross-platform C generic system functions
-AX_LIBCSYSTEM_CHECK_ENABLE
 
 dnl Check for libfuse Filesystem in Userspace (FUSE) support
 AX_LIBFUSE_CHECK_ENABLE
 
-dnl Check for functions
-AS_IF(
- [test "x$ac_cv_enable_winapi" = xno],
- [AC_CHECK_FUNCS([getegid geteuid])
- ])
-
-dnl Check if olecftools should be build as static executables
-AX_COMMON_CHECK_ENABLE_STATIC_EXECUTABLES
-
-dnl Check if libolecf should be build with verbose output
-AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
-
-dnl Check if libolecf should be build with debug output
-AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
+dnl Check for olecftools function support
+AX_OLECFTOOLS_CHECK_LOCAL
 
 dnl Check if libolecf python bindings (pyolecf) should be build
 AX_PYTHON_CHECK_PYPREFIX
@@ -146,29 +131,6 @@ AS_IF(
 dnl Check for test function support
 AX_TESTS_CHECK_LOCAL
 
-dnl Check if DLL support is needed
-AS_IF(
- [test "x$enable_shared" = xyes],
- [AS_CASE(
-  [$host],
-  [*cygwin* | *mingw*],
-  [AC_DEFINE(
-   [HAVE_DLLMAIN],
-   [1],
-   [Define to 1 to enable the DllMain function.])
-  AC_SUBST(
-   [HAVE_DLLMAIN],
-   [1])
-
-  AS_IF(
-   [test "x$ac_cv_enable_static_executables" = xno],
-   [AC_SUBST(
-    [LIBOLECF_DLL_IMPORT],
-    ["-DLIBOLECF_DLL_IMPORT"])
-   ])
-  ])
- ])
-
 dnl Set additional compiler flags
 CFLAGS="$CFLAGS -Wall";
 
@@ -184,7 +146,7 @@ AS_IF(
  ])
 
 AS_IF(
- [test "x$ac_cv_libcsystem" = xyes || test "x$ac_cv_libfuse" != xno],
+ [test "x$ac_cv_libfuse" != xno],
  [AC_SUBST(
   [libolecf_spec_tools_build_requires],
   [BuildRequires:])
@@ -225,7 +187,6 @@ AC_CONFIG_FILES([libfole/Makefile])
 AC_CONFIG_FILES([libfvalue/Makefile])
 AC_CONFIG_FILES([libfwps/Makefile])
 AC_CONFIG_FILES([libolecf/Makefile])
-AC_CONFIG_FILES([libcsystem/Makefile])
 AC_CONFIG_FILES([olecftools/Makefile])
 AC_CONFIG_FILES([pyolecf/Makefile])
 AC_CONFIG_FILES([pyolecf-python2/Makefile])
@@ -271,7 +232,6 @@ Building:
    libfole support:                            $ac_cv_libfole
    libfvalue support:                          $ac_cv_libfvalue
    libfwps support:                            $ac_cv_libfwps
-   libcsystem support:                         $ac_cv_libcsystem
    FUSE support:                               $ac_cv_libfuse
 
 Features:

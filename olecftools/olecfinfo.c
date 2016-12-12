@@ -21,10 +21,10 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
 #include <system_string.h>
 #include <types.h>
-
-#include <stdio.h>
+#include <wide_string.h>
 
 #if defined( HAVE_UNISTD_H )
 #include <unistd.h>
@@ -34,13 +34,17 @@
 #include <stdlib.h>
 #endif
 
+#include <stdio.h>
+
 #include "info_handle.h"
-#include "olecfoutput.h"
+#include "olecftools_getopt.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libclocale.h"
 #include "olecftools_libcnotify.h"
-#include "olecftools_libcsystem.h"
 #include "olecftools_libolecf.h"
+#include "olecftools_output.h"
+#include "olecftools_signal.h"
+#include "olecftools_unused.h"
 
 info_handle_t *olecfinfo_info_handle = NULL;
 int olecfinfo_abort                  = 0;
@@ -74,12 +78,12 @@ void usage_fprint(
 /* Signal handler for olecfinfo
  */
 void olecfinfo_signal_handler(
-      libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
+      olecftools_signal_t signal OLECFTOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
 	static char *function   = "olecfinfo_signal_handler";
 
-	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
+	OLECFTOOLS_UNREFERENCED_PARAMETER( signal )
 
 	olecfinfo_abort = 1;
 
@@ -101,8 +105,13 @@ void olecfinfo_signal_handler(
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
-	if( libcsystem_file_io_close(
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
 	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
 	{
 		libcnotify_printf(
 		 "%s: unable to close stdin.\n",
@@ -143,21 +152,21 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_initialize(
+	if( olecftools_output_initialize(
 	     _IONBF,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
-	olecfoutput_version_fprint(
+	olecftools_output_version_fprint(
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = olecftools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "ac:hvV" ) ) ) != (system_integer_t) -1 )
@@ -198,7 +207,7 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'V':
-				olecfoutput_copyright_fprint(
+				olecftools_output_copyright_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
