@@ -30,10 +30,10 @@
 #include <stdlib.h>
 #endif
 
+#include "olecf_test_getopt.h"
 #include "olecf_test_libbfio.h"
 #include "olecf_test_libcerror.h"
 #include "olecf_test_libclocale.h"
-#include "olecf_test_libcsystem.h"
 #include "olecf_test_libolecf.h"
 #include "olecf_test_libuna.h"
 #include "olecf_test_macros.h"
@@ -1018,7 +1018,7 @@ int main(
 	system_character_t *source = NULL;
 	system_integer_t option    = 0;
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = olecf_test_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "" ) ) ) != (system_integer_t) -1 )

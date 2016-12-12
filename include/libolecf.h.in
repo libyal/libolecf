@@ -589,6 +589,7 @@ int libolecf_property_set_free(
  * The identifier is a GUID and is 16 bytes of size
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_EXTERN \
 int libolecf_property_set_get_class_identifier(
      libolecf_property_set_t *property_set,
      uint8_t *guid_data,
@@ -630,6 +631,7 @@ int libolecf_property_section_free(
  * The identifier is a GUID and is 16 bytes of size
  * Returns 1 if successful or -1 on error
  */
+LIBOLECF_EXTERN \
 int libolecf_property_section_get_class_identifier(
      libolecf_property_section_t *property_section,
      uint8_t *guid_data,
