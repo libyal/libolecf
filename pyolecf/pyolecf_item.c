@@ -267,7 +267,7 @@ PyObject *pyolecf_item_new(
 	if( item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -324,7 +324,7 @@ int pyolecf_item_init(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -350,7 +350,7 @@ void pyolecf_item_free(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -359,7 +359,7 @@ void pyolecf_item_free(
 	if( pyolecf_item->item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item - missing libolecf item.",
 		 function );
 
@@ -554,7 +554,7 @@ PyObject *pyolecf_item_get_size(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -602,11 +602,11 @@ PyObject *pyolecf_item_get_creation_time(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	PyObject *date_time_object = NULL;
-	libcerror_error_t *error   = NULL;
-	static char *function      = "pyolecf_item_get_creation_time";
-	uint64_t filetime          = 0;
-	int result                 = 0;
+	PyObject *datetime_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyolecf_item_get_creation_time";
+	uint64_t filetime         = 0;
+	int result                = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
 
@@ -648,10 +648,10 @@ PyObject *pyolecf_item_get_creation_time(
 
 		return( Py_None );
 	}
-	date_time_object = pyolecf_datetime_new_from_filetime(
-	                    filetime );
+	datetime_object = pyolecf_datetime_new_from_filetime(
+	                   filetime );
 
-	return( date_time_object );
+	return( datetime_object );
 }
 
 /* Retrieves the creation time as an integer
@@ -720,11 +720,11 @@ PyObject *pyolecf_item_get_modification_time(
            pyolecf_item_t *pyolecf_item,
            PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
 {
-	PyObject *date_time_object = NULL;
-	libcerror_error_t *error   = NULL;
-	static char *function      = "pyolecf_item_get_modification_time";
-	uint64_t filetime          = 0;
-	int result                 = 0;
+	PyObject *datetime_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyolecf_item_get_modification_time";
+	uint64_t filetime         = 0;
+	int result                = 0;
 
 	PYOLECF_UNREFERENCED_PARAMETER( arguments )
 
@@ -766,10 +766,10 @@ PyObject *pyolecf_item_get_modification_time(
 
 		return( Py_None );
 	}
-	date_time_object = pyolecf_datetime_new_from_filetime(
-	                    filetime );
+	datetime_object = pyolecf_datetime_new_from_filetime(
+	                   filetime );
 
-	return( date_time_object );
+	return( datetime_object );
 }
 
 /* Retrieves the modification time as an integer
@@ -849,7 +849,7 @@ PyObject *pyolecf_item_get_number_of_sub_items(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -1025,7 +1025,7 @@ PyObject *pyolecf_item_get_sub_item_by_index(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -1139,7 +1139,7 @@ PyObject *pyolecf_item_get_sub_items(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -1206,7 +1206,7 @@ PyObject *pyolecf_item_get_sub_item_by_name(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 
@@ -1314,7 +1314,7 @@ PyObject *pyolecf_item_get_sub_item_by_path(
 	if( pyolecf_item == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid item.",
 		 function );
 

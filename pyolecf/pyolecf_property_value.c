@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #endif
 
+#include "pyolecf_datetime.h"
 #include "pyolecf_error.h"
 #include "pyolecf_integer.h"
 #include "pyolecf_libcerror.h"
@@ -80,6 +81,13 @@ PyMethodDef pyolecf_property_value_object_methods[] = {
 	  "\n"
 	  "Retrieves the data as an integer." },
 
+	{ "get_data_as_datetime",
+	  (PyCFunction) pyolecf_property_value_get_data_as_datetime,
+	  METH_NOARGS,
+	  "get_data_as_datetime() -> Datetime or None\n"
+	  "\n"
+	  "Retrieves the data as a datetime object." },
+
 	{ "get_data_as_string",
 	  (PyCFunction) pyolecf_property_value_get_data_as_string,
 	  METH_NOARGS,
@@ -129,6 +137,12 @@ PyGetSetDef pyolecf_property_value_object_get_set_definitions[] = {
 	  (getter) pyolecf_property_value_get_data_as_integer,
 	  (setter) 0,
 	  "The data as an integer.",
+	  NULL },
+
+	{ "data_as_datetime",
+	  (getter) pyolecf_property_value_get_data_as_datetime,
+	  (setter) 0,
+	  "The data as a datetime object.",
 	  NULL },
 
 	{ "data_as_string",
@@ -871,6 +885,93 @@ PyObject *pyolecf_property_value_get_data_as_integer(
 			break;
 	}
 	return( integer_object );
+}
+
+/* Retrieves the data as an datetime value
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_property_value_get_data_as_datetime(
+           pyolecf_property_value_t *pyolecf_property_value,
+           PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
+{
+	PyObject *datetime_object = NULL;
+	libcerror_error_t *error  = NULL;
+	static char *function     = "pyolecf_property_value_get_data_as_datetime";
+	uint64_t value_64bit      = 0;
+	uint32_t value_type       = 0;
+	int result                = 0;
+
+	PYOLECF_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyolecf_property_value == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid property value.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_property_value_get_value_type(
+	          pyolecf_property_value->property_value,
+	          &value_type,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result != 1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve value type.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	switch( value_type )
+	{
+		case LIBOLECF_VALUE_TYPE_FILETIME:
+			Py_BEGIN_ALLOW_THREADS
+
+			result = libolecf_property_value_get_data_as_filetime(
+			          pyolecf_property_value->property_value,
+			          &value_64bit,
+			          &error );
+
+			Py_END_ALLOW_THREADS
+
+			datetime_object = pyolecf_datetime_new_from_filetime(
+			                   value_64bit );
+			break;
+
+		default:
+			PyErr_Format(
+			 PyExc_IOError,
+			 "%s: value is not an datetime type.",
+			 function );
+
+			return( NULL );
+	}
+	if( result == -1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve datetime value.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		return( NULL );
+	}
+	return( datetime_object );
 }
 
 /* Retrieves the data as a string

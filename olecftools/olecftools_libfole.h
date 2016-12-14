@@ -1,5 +1,5 @@
 /*
- * The libfole header wrapper
+ * The internal libfole header
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -44,7 +44,7 @@
 
 #include <libfole.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBFOLE ) */
 
-#endif
+#endif /* !defined( _OLECFTOOLS_LIBFOLE_H ) */
 

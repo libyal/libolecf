@@ -83,6 +83,10 @@ PyObject *pyolecf_property_value_get_data_as_integer(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments );
 
+PyObject *pyolecf_property_value_get_data_as_datetime(
+           pyolecf_property_value_t *pyolecf_property_value,
+           PyObject *arguments );
+
 PyObject *pyolecf_property_value_get_data_as_string(
            pyolecf_property_value_t *pyolecf_property_value,
            PyObject *arguments );

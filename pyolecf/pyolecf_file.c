@@ -909,7 +909,7 @@ PyObject *pyolecf_file_get_sector_size(
 	if( pyolecf_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -961,7 +961,7 @@ PyObject *pyolecf_file_get_short_sector_size(
 	if( pyolecf_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -1329,7 +1329,7 @@ PyObject *pyolecf_file_get_format_version(
 	if( pyolecf_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -1401,153 +1401,6 @@ PyObject *pyolecf_file_get_format_version(
 	return( string_object );
 }
 
-/* Retrieves the root item type object
- * Returns a Python type object if successful or NULL on error
- */
-PyTypeObject *pyolecf_file_get_root_item_type_object(
-               libolecf_item_t *root_item )
-{
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyolecf_file_get_root_item_type_object";
-	uint8_t item_type        = 0;
-	int result               = 0;
-
-	if( root_item == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid root item.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_item_get_type(
-	          root_item,
-	          &item_type,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
-	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to retrieve item type.",
-		 function );
-
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	if( item_type != LIBOLECF_ITEM_TYPE_ROOT_STORAGE )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: unsupported item type: 0x%02" PRIx8 ".",
-		 function,
-		 item_type );
-
-		return( NULL );
-	}
-	return( &pyolecf_item_type_object );
-}
-
-/* Retrieves the root item
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyolecf_file_get_root_item(
-           pyolecf_file_t *pyolecf_file,
-           PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
-{
-	PyObject *item_object      = NULL;
-	PyTypeObject *type_object  = NULL;
-	libcerror_error_t *error   = NULL;
-	libolecf_item_t *root_item = NULL;
-	static char *function      = "pyolecf_file_get_root_item";
-	int result                 = 0;
-
-	PYOLECF_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyolecf_file == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid file.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_file_get_root_item(
-	          pyolecf_file->file,
-	          &root_item,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
-	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to retrieve root item.",
-		 function );
-
-		libcerror_error_free(
-		 &error );
-
-		goto on_error;
-	}
-	else if( result == 0 )
-	{
-		Py_IncRef(
-		 Py_None );
-
-		return( Py_None );
-	}
-	type_object = pyolecf_file_get_root_item_type_object(
-	               root_item );
-
-	if( type_object == NULL )
-	{
-		PyErr_Format(
-		 PyExc_IOError,
-		 "%s: unable to retrieve root item type object.",
-		 function );
-
-		goto on_error;
-	}
-	item_object = pyolecf_item_new(
-	               type_object,
-	               root_item,
-	               (PyObject *) pyolecf_file );
-
-	if( item_object == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to create item object.",
-		 function );
-
-		goto on_error;
-	}
-	return( item_object );
-
-on_error:
-	if( root_item != NULL )
-	{
-		libolecf_item_free(
-		 &root_item,
-		 NULL );
-	}
-	return( NULL );
-}
-
 /* Retrieves the item type object
  * Returns a Python type object if successful or NULL on error
  */
@@ -1597,6 +1450,98 @@ PyTypeObject *pyolecf_file_get_item_type_object(
 	return( &pyolecf_item_type_object );
 }
 
+/* Retrieves the root item
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_file_get_root_item(
+           pyolecf_file_t *pyolecf_file,
+           PyObject *arguments PYOLECF_ATTRIBUTE_UNUSED )
+{
+	PyObject *item_object      = NULL;
+	PyTypeObject *type_object  = NULL;
+	libcerror_error_t *error   = NULL;
+	libolecf_item_t *root_item = NULL;
+	static char *function      = "pyolecf_file_get_root_item";
+	int result                 = 0;
+
+	PYOLECF_UNREFERENCED_PARAMETER( arguments )
+
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid file.",
+		 function );
+
+		return( NULL );
+	}
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libolecf_file_get_root_item(
+	          pyolecf_file->file,
+	          &root_item,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve root item.",
+		 function );
+
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	else if( result == 0 )
+	{
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	type_object = pyolecf_file_get_item_type_object(
+	               root_item );
+
+	if( type_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to retrieve root item type object.",
+		 function );
+
+		goto on_error;
+	}
+	item_object = pyolecf_item_new(
+	               type_object,
+	               root_item,
+	               (PyObject *) pyolecf_file );
+
+	if( item_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create item object.",
+		 function );
+
+		goto on_error;
+	}
+	return( item_object );
+
+on_error:
+	if( root_item != NULL )
+	{
+		libolecf_item_free(
+		 &root_item,
+		 NULL );
+	}
+	return( NULL );
+}
+
 /* Retrieves the item specified by the path
  * Returns a Python object if successful or NULL on error
  */
@@ -1618,7 +1563,7 @@ PyObject *pyolecf_file_get_item_by_path(
 	if( pyolecf_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
