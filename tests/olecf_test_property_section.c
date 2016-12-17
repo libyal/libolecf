@@ -1,5 +1,5 @@
 /*
- * Library property_section type testing program
+ * Library property_section type test program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *

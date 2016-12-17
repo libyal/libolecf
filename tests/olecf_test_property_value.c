@@ -1,5 +1,5 @@
 /*
- * Library property_value type testing program
+ * Library property_value type test program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *

@@ -21,8 +21,7 @@ AM_CPPFLAGS = \
 
 if HAVE_PYTHON_TESTS
 TESTS_PYOLECF = \
-	test_python_functions.sh \
-	test_pyolecf_set_ascii_codepage.sh
+	test_python_functions.sh
 endif
 
 TESTS = \
@@ -33,14 +32,11 @@ TESTS = \
 	$(TESTS_PYOLECF)
 
 check_SCRIPTS = \
-	pyolecf_test_get_version.py \
-	pyolecf_test_open_close.py \
-	pyolecf_test_set_ascii_codepage.py \
+	pyolecf_test_support.py \
 	test_api_functions.sh \
 	test_api_types.sh \
 	test_olecfexport.sh \
 	test_olecfinfo.sh \
-	test_pyolecf_set_ascii_codepage.sh \
 	test_python_functions.sh \
 	test_runner.sh
 

@@ -1,5 +1,5 @@
 /*
- * Library directory_entry type testing program
+ * Library directory_entry type test program
  *
  * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
  *
