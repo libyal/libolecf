@@ -32,6 +32,7 @@ TESTS = \
 	$(TESTS_PYOLECF)
 
 check_SCRIPTS = \
+	pyolecf_test_file.py \
 	pyolecf_test_support.py \
 	test_api_functions.sh \
 	test_api_types.sh \
