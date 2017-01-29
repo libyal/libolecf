@@ -21,12 +21,11 @@ AM_CPPFLAGS = \
 
 if HAVE_PYTHON_TESTS
 TESTS_PYOLECF = \
-	test_python_functions.sh
+	test_python_module.sh
 endif
 
 TESTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_olecfinfo.sh \
 	test_olecfexport.sh \
 	$(TESTS_PYOLECF)
@@ -34,11 +33,10 @@ TESTS = \
 check_SCRIPTS = \
 	pyolecf_test_file.py \
 	pyolecf_test_support.py \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_olecfexport.sh \
 	test_olecfinfo.sh \
-	test_python_functions.sh \
+	test_python_module.sh \
 	test_runner.sh
 
 EXTRA_DIST = \

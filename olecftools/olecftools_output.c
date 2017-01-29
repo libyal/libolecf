@@ -1,7 +1,7 @@
 /*
  * Output functions
  *
- * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -109,7 +109,7 @@ void olecftools_output_copyright_fprint(
 	 */
 	fprintf(
 	 stream,
-	 _( "Copyright (C) 2008-2016, %s.\n" ),
+	 _( "Copyright (C) 2008-2017, %s.\n" ),
 	 _( "Joachim Metz" ) );
 
 	fprintf(

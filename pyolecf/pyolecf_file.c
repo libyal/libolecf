@@ -1,7 +1,7 @@
 /*
  * Python object wrapper of libolecf_file_t
  *
- * Copyright (C) 2008-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -763,6 +763,16 @@ PyObject *pyolecf_file_open_file_object(
 		 mode );
 
 		return( NULL );
+	}
+	if( pyolecf_file->file_io_handle != NULL )
+	{
+		pyolecf_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: invalid file - file IO handle already set.",
+		 function );
+
+		goto on_error;
 	}
 	if( pyolecf_file_object_initialize(
 	     &( pyolecf_file->file_io_handle ),
