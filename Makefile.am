@@ -34,13 +34,12 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libolecf.docs \
-	dpkg/libolecf-dev.docs \
-	dpkg/libolecf-python.docs \
-	dpkg/libolecf-python3.docs \
-	dpkg/libolecf-tools.docs \
+	dpkg/libolecf.install \
+	dpkg/libolecf-dev.install \
+	dpkg/libolecf-python.install \
+	dpkg/libolecf-python3.install \
+	dpkg/libolecf-tools.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
