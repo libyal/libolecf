@@ -72,8 +72,8 @@ int olecf_test_property_value_initialize(
          "error",
          error );
 
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -147,8 +147,8 @@ int olecf_test_property_value_initialize(
 
 			if( property_value != NULL )
 			{
-				libolecf_property_value_free(
-				 &property_value,
+				libolecf_internal_property_value_free(
+				 (libolecf_internal_property_value_t **) &property_value,
 				 NULL );
 			}
 		}
@@ -189,8 +189,8 @@ int olecf_test_property_value_initialize(
 
 			if( property_value != NULL )
 			{
-				libolecf_property_value_free(
-				 &property_value,
+				libolecf_internal_property_value_free(
+				 (libolecf_internal_property_value_t **) &property_value,
 				 NULL );
 			}
 		}
@@ -225,8 +225,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -363,8 +363,8 @@ int olecf_test_property_value_get_identifier(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -390,8 +390,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -486,8 +486,8 @@ int olecf_test_property_value_get_value_type(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -513,8 +513,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -609,8 +609,8 @@ int olecf_test_property_value_get_data_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -636,8 +636,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -732,8 +732,8 @@ int olecf_test_property_value_get_data_as_boolean(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -759,8 +759,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -855,8 +855,8 @@ int olecf_test_property_value_get_data_as_16bit_integer(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -882,8 +882,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -978,8 +978,8 @@ int olecf_test_property_value_get_data_as_32bit_integer(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1005,8 +1005,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1101,8 +1101,8 @@ int olecf_test_property_value_get_data_as_64bit_integer(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1128,8 +1128,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1224,8 +1224,8 @@ int olecf_test_property_value_get_data_as_filetime(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1251,8 +1251,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1347,8 +1347,8 @@ int olecf_test_property_value_get_data_as_utf8_string_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1374,8 +1374,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1470,8 +1470,8 @@ int olecf_test_property_value_get_data_as_utf16_string_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1497,8 +1497,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1593,8 +1593,8 @@ int olecf_test_property_value_get_value_data_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1620,8 +1620,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1716,8 +1716,8 @@ int olecf_test_property_value_get_value_boolean(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1743,8 +1743,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1839,8 +1839,8 @@ int olecf_test_property_value_get_value_16bit(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1866,8 +1866,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -1962,8 +1962,8 @@ int olecf_test_property_value_get_value_32bit(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -1989,8 +1989,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -2085,8 +2085,8 @@ int olecf_test_property_value_get_value_64bit(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -2112,8 +2112,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -2208,8 +2208,8 @@ int olecf_test_property_value_get_value_filetime(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -2235,8 +2235,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -2331,8 +2331,8 @@ int olecf_test_property_value_get_value_utf8_string_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -2358,8 +2358,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );
@@ -2454,8 +2454,8 @@ int olecf_test_property_value_get_value_utf16_string_size(
 	}
 	/* Clean up
 	 */
-	result = libolecf_property_value_free(
-	          &property_value,
+	result = libolecf_internal_property_value_free(
+	          (libolecf_internal_property_value_t **) &property_value,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -2481,8 +2481,8 @@ on_error:
 	}
 	if( property_value != NULL )
 	{
-		libolecf_property_value_free(
-		 &property_value,
+		libolecf_internal_property_value_free(
+		 (libolecf_internal_property_value_t **) &property_value,
 		 NULL );
 	}
 	return( 0 );

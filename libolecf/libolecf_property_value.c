@@ -776,6 +776,10 @@ int libolecf_property_value_read_data(
 #endif
 		if( value_data_size > 0 )
 		{
+			if( internal_property_value->value_type == LIBOLECF_VALUE_TYPE_STRING_UNICODE )
+			{
+				value_data_size *= 2;
+			}
 #if SIZEOF_SIZE_T <= 4
 			if( value_data_size > (uint32_t) SSIZE_MAX )
 			{

@@ -1100,8 +1100,24 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
-	/* The directory entries are no longer managed by the list but by the tree
-	 */
+	if( result == 0 )
+	{
+		/* Free the empty root directory entry
+		 */
+		result = libcdata_list_free(
+		          &directory_entry_list,
+		          (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
+		          error );
+	}
+	else
+	{
+		/* The directory entries are no longer managed by the list but by the tree
+		 */
+		result = libcdata_list_free(
+		          &directory_entry_list,
+		          NULL,
+		          error );
+	}
 	if( libcdata_list_free(
 	     &directory_entry_list,
 	     NULL,
