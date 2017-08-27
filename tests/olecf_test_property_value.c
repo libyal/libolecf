@@ -35,7 +35,7 @@
 
 #include "../libolecf/libolecf_property_value.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_value_initialize function
  * Returns 1 if successful or 0 if not
@@ -232,7 +232,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 /* Tests the libolecf_property_value_free function
  * Returns 1 if successful or 0 if not
@@ -272,7 +272,7 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_value_get_identifier function
  * Returns 1 if successful or 0 if not
@@ -2488,7 +2488,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -2505,13 +2505,13 @@ int main(
 	OLECF_TEST_UNREFERENCED_PARAMETER( argc )
 	OLECF_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_value_initialize",
 	 olecf_test_property_value_initialize );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_value_free",

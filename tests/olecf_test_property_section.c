@@ -35,7 +35,7 @@
 
 #include "../libolecf/libolecf_property_section.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_section_initialize function
  * Returns 1 if successful or 0 if not
@@ -232,7 +232,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 /* Tests the libolecf_property_section_free function
  * Returns 1 if successful or 0 if not
@@ -272,7 +272,7 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_section_get_class_identifier function
  * Returns 1 if successful or 0 if not
@@ -555,7 +555,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -572,13 +572,13 @@ int main(
 	OLECF_TEST_UNREFERENCED_PARAMETER( argc )
 	OLECF_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_section_initialize",
 	 olecf_test_property_section_initialize );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_section_free",
