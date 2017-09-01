@@ -1,23 +1,15 @@
 #!/bin/bash
 # Export tool testing script
 #
-# Version: 20160507
+# Version: 20170901
 
 EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-TEST_PREFIX=`dirname ${PWD}`;
-TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\).*$/\1/'`;
-TEST_SUFFIX="export";
-
-TEST_PROFILE="${TEST_PREFIX}${TEST_SUFFIX}";
-TEST_DESCRIPTION="${TEST_PREFIX}${TEST_SUFFIX}";
 OPTION_SETS="";
+OPTIONS="";
 
-TEST_TOOL_DIRECTORY="../${TEST_PREFIX}tools";
-TEST_TOOL="${TEST_PREFIX}${TEST_SUFFIX}";
-INPUT_DIRECTORY="input";
 INPUT_GLOB="*";
 
 test_callback()
@@ -30,8 +22,8 @@ test_callback()
 	shift 5;
 	local ARGUMENTS=$@;
 
-	TEST_EXECUTABLE=`readlink -f ${TEST_EXECUTABLE}`;
-	INPUT_FILE_FULL_PATH=`readlink -f "${INPUT_FILE}"`;
+	TEST_EXECUTABLE=$( readlink_f "${TEST_EXECUTABLE}" );
+	INPUT_FILE_FULL_PATH=$( readlink_f "${INPUT_FILE}" );
 
 	(cd ${TMPDIR} && run_test_with_input_and_arguments "${TEST_EXECUTABLE}" "${INPUT_FILE_FULL_PATH}" ${ARGUMENTS[@]} ${OPTIONS[@]});
 	local RESULT=$?;
@@ -40,24 +32,24 @@ test_callback()
 
 	if test "${PLATFORM}" = "Darwin";
 	then
-		(cd ${TMPDIR} && find "${INPUT_NAME}.export" -type f -exec md5 {} \; | sort -k 2 > "${TEST_LOG}");
+		(cd ${TMPDIR} && find "'${INPUT_NAME}.export'" -type f -exec md5 {} \; | sort -k 2 > "'${TEST_LOG}'");
 	else
-		(cd ${TMPDIR} && find "${INPUT_NAME}.export" -type f -exec md5sum {} \; | sort -k 2 > "${TEST_LOG}");
+		(cd ${TMPDIR} && find "'${INPUT_NAME}.export'" -type f -exec md5sum {} \; | sort -k 2 > "'${TEST_LOG}'");
 	fi
 
 	local TEST_RESULTS="${TMPDIR}/${TEST_LOG}";
 	local STORED_TEST_RESULTS="${TEST_SET_DIRECTORY}/${TEST_LOG}.gz";
 
-	if test -f "${STORED_TEST_RESULTS}";
+	if test -f "'${STORED_TEST_RESULTS}'";
 	then
 		# Using zcat here since zdiff has issues on Mac OS X.
 		# Note that zcat on Mac OS X requires the input from stdin.
-		zcat < "${STORED_TEST_RESULTS}" | diff "${TEST_RESULTS}" -;
+		zcat < "'${STORED_TEST_RESULTS}'" | diff "'${TEST_RESULTS}'" -;
 		RESULT=$?;
 	else
-		gzip ${TEST_RESULTS};
+		gzip "'${TEST_RESULTS}'";
 
-		mv "${TEST_RESULTS}.gz" ${TEST_SET_DIRECTORY};
+		mv "'${TEST_RESULTS}.gz'" ${TEST_SET_DIRECTORY};
 	fi
 	return ${RESULT};
 }
@@ -67,11 +59,11 @@ then
 	exit ${EXIT_IGNORE};
 fi
 
-TEST_EXECUTABLE="${TEST_TOOL_DIRECTORY}/${TEST_TOOL}";
+TEST_EXECUTABLE="../olecftools/olecfexport";
 
 if ! test -x "${TEST_EXECUTABLE}";
 then
-	TEST_EXECUTABLE="${TEST_TOOL_DIRECTORY}/${TEST_TOOL}.exe";
+	TEST_EXECUTABLE="../olecftools/olecfexport.exe";
 fi
 
 if ! test -x "${TEST_EXECUTABLE}";
@@ -108,7 +100,7 @@ else
 	assert_availability_binary md5sum;
 fi
 
-run_test_on_input_directory "${TEST_PROFILE}" "${TEST_DESCRIPTION}" "with_callback" "${OPTION_SETS}" "${TEST_EXECUTABLE}" "${INPUT_DIRECTORY}" "${INPUT_GLOB}";
+run_test_on_input_directory "olecfexport" "olecfexport" "with_callback" "${OPTION_SETS}" "${TEST_EXECUTABLE}" "input" "${INPUT_GLOB}" "${OPTIONS}";
 RESULT=$?;
 
 exit ${RESULT};

@@ -55,9 +55,9 @@ int olecf_test_item_free(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

@@ -65,13 +65,13 @@ int olecf_test_allocation_table_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "allocation_table",
-         allocation_table );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "allocation_table",
+	 allocation_table );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_allocation_table_free(
 	          &allocation_table,
@@ -82,13 +82,13 @@ int olecf_test_allocation_table_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "allocation_table",
-         allocation_table );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "allocation_table",
+	 allocation_table );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -102,9 +102,9 @@ int olecf_test_allocation_table_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -121,9 +121,9 @@ int olecf_test_allocation_table_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -257,9 +257,9 @@ int olecf_test_allocation_table_free(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

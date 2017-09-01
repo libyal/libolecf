@@ -64,13 +64,13 @@ int olecf_test_property_section_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "property_section",
-         property_section );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_section",
+	 property_section );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_internal_property_section_free(
 	          (libolecf_internal_property_section_t **) &property_section,
@@ -81,13 +81,13 @@ int olecf_test_property_section_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "property_section",
-         property_section );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_section",
+	 property_section );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int olecf_test_property_section_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int olecf_test_property_section_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -254,9 +254,9 @@ int olecf_test_property_section_free(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -297,13 +297,13 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "property_section",
-         property_section );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_section",
+	 property_section );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test regular cases
 	 */
@@ -318,9 +318,9 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -335,9 +335,9 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -353,9 +353,9 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -371,9 +371,9 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -389,9 +389,9 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -407,13 +407,13 @@ int olecf_test_property_section_get_class_identifier(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "property_section",
-         property_section );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_section",
+	 property_section );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 

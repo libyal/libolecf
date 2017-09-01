@@ -65,13 +65,13 @@ int olecf_test_directory_entry_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "directory_entry",
-         directory_entry );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "directory_entry",
+	 directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_directory_entry_free(
 	          &directory_entry,
@@ -82,13 +82,13 @@ int olecf_test_directory_entry_initialize(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "directory_entry",
-         directory_entry );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "directory_entry",
+	 directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -101,9 +101,9 @@ int olecf_test_directory_entry_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -119,9 +119,9 @@ int olecf_test_directory_entry_initialize(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -253,9 +253,9 @@ int olecf_test_directory_entry_free(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -293,13 +293,13 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "first_directory_entry",
-         first_directory_entry );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "first_directory_entry",
+	 first_directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_directory_entry_initialize(
 	          &second_directory_entry,
@@ -310,13 +310,13 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "second_directory_entry",
-         second_directory_entry );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "second_directory_entry",
+	 second_directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test regular cases
 	 */
@@ -330,9 +330,9 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 LIBCDATA_COMPARE_EQUAL );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -346,9 +346,9 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -363,9 +363,9 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 -1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -381,13 +381,13 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "second_directory_entry",
-         second_directory_entry );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "second_directory_entry",
+	 second_directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_directory_entry_free(
 	          &first_directory_entry,
@@ -398,13 +398,13 @@ int olecf_test_directory_entry_compare(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "first_directory_entry",
-         first_directory_entry );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "first_directory_entry",
+	 first_directory_entry );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
