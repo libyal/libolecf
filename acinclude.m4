@@ -1,3 +1,7 @@
+dnl Checks for required headers and functions
+dnl
+dnl Version: 20170916
+
 dnl Function to detect if libolecf dependencies are available
 AC_DEFUN([AX_LIBOLECF_CHECK_LOCAL],
   [dnl Check for internationalization functions in libolecf/libolecf_i18n.c 
@@ -38,6 +42,19 @@ AC_DEFUN([AX_OLECFTOOLS_CHECK_LOCAL],
      [Missing function: close],
      [1])
   ])
+
+  dnl Headers included in olecftools/log_handle.c
+  AC_CHECK_HEADERS([stdarg.h varargs.h])
+
+  AS_IF(
+    [test "x$ac_cv_header_stdarg_h" != xyes && test "x$ac_cv_header_varargs_h" != xyes],
+    [AC_MSG_FAILURE(
+      [Missing headers: stdarg.h and varargs.h],
+      [1])
+  ])
+
+  dnl Headers included in olecftools/olecfmount.c
+  AC_CHECK_HEADERS([errno.h])
 
   dnl Check for functions in olecftools/olecfmount.c
   AS_IF(
