@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libolecf],
- [20170916],
+ [20171008],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -125,11 +125,11 @@ AM_CONDITIONAL(
   HAVE_PYTHON_TESTS,
   [test "x${ac_cv_enable_python}" != xno || test "x${ac_cv_enable_python2}" != xno || test "x${ac_cv_enable_python3}" != xno])
 
+dnl Check if libfuse or required headers and functions are available
+AX_LIBFUSE_CHECK_ENABLE
+
 dnl Check if olecftools required headers and functions are available
 AX_OLECFTOOLS_CHECK_LOCAL
-
-dnl Check for libfuse Filesystem in Userspace (FUSE) support
-AX_LIBFUSE_CHECK_ENABLE
 
 dnl Check if libolecf should be build with verbose output
 AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
@@ -172,6 +172,13 @@ AS_IF(
   [Requires:])
  AC_SUBST(
   [libolecf_spec_build_requires],
+  [BuildRequires:])
+ ])
+
+AS_IF(
+ [test "x$ac_cv_libfuse" != xno],
+ [AC_SUBST(
+  [libolecf_spec_tools_build_requires],
   [BuildRequires:])
  ])
 
