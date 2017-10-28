@@ -270,6 +270,104 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libolecf_io_handle_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_io_handle_clear(
+     void )
+{
+	libcerror_error_t *error        = NULL;
+	libolecf_io_handle_t *io_handle = NULL;
+	int result                      = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "io_handle",
+	 io_handle );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libolecf_io_handle_clear(
+	          NULL,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libolecf_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "io_handle",
+	 io_handle );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libolecf_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 /* The main program
@@ -297,7 +395,9 @@ int main(
 	 "libolecf_io_handle_free",
 	 olecf_test_io_handle_free );
 
-	/* TODO: add tests for libolecf_io_handle_clear */
+	OLECF_TEST_RUN(
+	 "libolecf_io_handle_clear",
+	 olecf_test_io_handle_clear );
 
 	/* TODO: add tests for libolecf_io_handle_read_file_header */
 

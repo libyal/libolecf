@@ -91,17 +91,24 @@ olecf_test_error_LDADD = \
 
 olecf_test_file_SOURCES = \
 	olecf_test_file.c \
+	olecf_test_functions.c olecf_test_functions.h \
 	olecf_test_getopt.c olecf_test_getopt.h \
+	olecf_test_libbfio.h \
 	olecf_test_libcerror.h \
 	olecf_test_libclocale.h \
 	olecf_test_libcnotify.h \
 	olecf_test_libolecf.h \
 	olecf_test_libuna.h \
 	olecf_test_macros.h \
-	olecf_test_memory.c olecf_test_memory.h
+	olecf_test_memory.c olecf_test_memory.h \
+	olecf_test_unused.h
 
 olecf_test_file_LDADD = \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
@@ -180,6 +187,7 @@ olecf_test_property_value_LDADD = \
 	@LIBCERROR_LIBADD@
 
 olecf_test_support_SOURCES = \
+	olecf_test_functions.c olecf_test_functions.h \
 	olecf_test_getopt.c olecf_test_getopt.h \
 	olecf_test_libbfio.h \
 	olecf_test_libcerror.h \
@@ -188,7 +196,8 @@ olecf_test_support_SOURCES = \
 	olecf_test_libolecf.h \
 	olecf_test_libuna.h \
 	olecf_test_macros.h \
-	olecf_test_support.c
+	olecf_test_support.c \
+	olecf_test_unused.h
 
 olecf_test_support_LDADD = \
 	@LIBBFIO_LIBADD@ \
