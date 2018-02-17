@@ -7,7 +7,7 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-LIBRARY_TESTS="allocation_table directory_entry error io_handle item notify property_section property_set property_value";
+LIBRARY_TESTS="allocation_table directory_entry error file_header io_handle item notify property_section property_set property_value";
 LIBRARY_TESTS_WITH_INPUT="file support";
 OPTION_SETS="";
 

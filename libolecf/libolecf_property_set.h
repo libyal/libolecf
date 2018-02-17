@@ -51,6 +51,10 @@ struct libolecf_internal_property_set
 	 */
 	uint32_t system_version;
 
+	/* The number of sections
+	 */
+	uint16_t number_of_sections;
+
 	/* The class indentifier
 	 */
 	uint8_t class_identifier[ 16 ];
@@ -67,6 +71,12 @@ int libolecf_property_set_initialize(
 LIBOLECF_EXTERN \
 int libolecf_property_set_free(
      libolecf_property_set_t **property_set,
+     libcerror_error_t **error );
+
+int libolecf_property_set_read_header(
+     libolecf_internal_property_set_t *internal_property_set,
+     const uint8_t *data,
+     size_t data_size,
      libcerror_error_t **error );
 
 int libolecf_property_set_read(

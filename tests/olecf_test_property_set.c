@@ -35,6 +35,14 @@
 
 #include "../libolecf/libolecf_property_set.h"
 
+uint8_t olecf_test_property_set_data1[ 28 ] = {
+	0xfe, 0xff, 0x00, 0x00, 0x05, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+
+uint8_t olecf_test_property_set_error_data1[ 28 ] = {
+	0xff, 0xff, 0x00, 0x00, 0x05, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+
 #if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_set_initialize function
@@ -273,6 +281,182 @@ on_error:
 }
 
 #if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
+
+/* Tests the libolecf_property_set_read_header function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_set_read_header(
+     void )
+{
+	libcerror_error_t *error              = NULL;
+	libolecf_property_set_t *property_set = NULL;
+	int result                            = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_set_initialize(
+	          &property_set,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_set",
+	 property_set );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_set_read_header(
+	          (libolecf_internal_property_set_t *) property_set,
+	          olecf_test_property_set_data1,
+	          28,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libolecf_property_set_read_header(
+	          NULL,
+	          olecf_test_property_set_data1,
+	          28,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_set_read_header(
+	          (libolecf_internal_property_set_t *) property_set,
+	          NULL,
+	          28,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_set_read_header(
+	          (libolecf_internal_property_set_t *) property_set,
+	          olecf_test_property_set_data1,
+	          0,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_set_read_header(
+	          (libolecf_internal_property_set_t *) property_set,
+	          olecf_test_property_set_data1,
+	          (size_t) SSIZE_MAX + 1,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test error case where byte order is invalid
+	 */
+	result = libolecf_property_set_read_header(
+	          (libolecf_internal_property_set_t *) property_set,
+	          olecf_test_property_set_error_data1,
+	          28,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libolecf_property_set_free(
+	          &property_set,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_set",
+	 property_set );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_set != NULL )
+	{
+		libolecf_property_set_free(
+		 &property_set,
+		 NULL );
+	}
+	return( 0 );
+}
 
 /* Tests the libolecf_property_set_get_class_identifier function
  * Returns 1 if successful or 0 if not
@@ -585,6 +769,10 @@ int main(
 	 olecf_test_property_set_free );
 
 #if defined( __GNUC__ ) && defined( TODO )
+
+	OLECF_TEST_RUN(
+	 "libolecf_property_set_read_header",
+	 olecf_test_property_set_read_header );
 
 	/* TODO: add tests for libolecf_property_set_read */
 

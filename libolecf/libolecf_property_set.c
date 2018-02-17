@@ -174,6 +174,197 @@ int libolecf_property_set_free(
         return( result );
 }
 
+/* Reads the property set header
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_set_read_header(
+     libolecf_internal_property_set_t *internal_property_set,
+     const uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error )
+{
+	static char *function = "libolecf_property_set_read_header";
+
+	if( internal_property_set == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property set.",
+		 function );
+
+		return( -1 );
+	}
+	if( data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid data.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size < sizeof( olecf_property_set_header_t ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid data size value too small.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size > (size_t) SSIZE_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid data size value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: property set header:\n",
+		 function );
+		libcnotify_print_data(
+		 data,
+		 sizeof( olecf_property_set_header_t ),
+		 0 );
+	}
+#endif
+	if( ( ( (olecf_property_set_header_t *) data )->byte_order[ 0 ] == 0xfe )
+	 && ( ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] == 0xff ) )
+	{
+		internal_property_set->byte_order = LIBOLECF_ENDIAN_LITTLE;
+	}
+	else if( ( ( (olecf_property_set_header_t *) data )->byte_order[ 0 ] == 0xff )
+	      && ( ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] == 0xfe ) )
+	{
+		internal_property_set->byte_order = LIBOLECF_ENDIAN_BIG;
+	}
+	else
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported byte order: 0x%02" PRIx8 " 0x%02" PRIx8 ".",
+		 function,
+		 ( (olecf_property_set_header_t *) data )->byte_order[ 0 ],
+		 ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] );
+
+		return( -1 );
+	}
+	if( internal_property_set->byte_order == LIBOLECF_ENDIAN_LITTLE )
+	{
+		byte_stream_copy_to_uint16_little_endian(
+		 ( (olecf_property_set_header_t *) data )->format,
+		 internal_property_set->format );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (olecf_property_set_header_t *) data )->system_version,
+		 internal_property_set->system_version );
+
+		byte_stream_copy_to_uint16_little_endian(
+		 ( (olecf_property_set_header_t *) data )->number_of_sections,
+		 internal_property_set->number_of_sections );
+	}
+	else if( internal_property_set->byte_order == LIBOLECF_ENDIAN_BIG )
+	{
+		byte_stream_copy_to_uint16_big_endian(
+		 ( (olecf_property_set_header_t *) data )->format,
+		 internal_property_set->format );
+
+		byte_stream_copy_to_uint32_big_endian(
+		 ( (olecf_property_set_header_t *) data )->system_version,
+		 internal_property_set->system_version );
+
+		byte_stream_copy_to_uint16_big_endian(
+		 ( (olecf_property_set_header_t *) data )->number_of_sections,
+		 internal_property_set->number_of_sections );
+	}
+	if( memory_copy(
+	     internal_property_set->class_identifier,
+	     ( (olecf_property_set_header_t *) data )->class_identifier,
+	     16 ) == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+		 "%s: unable to copy class identifier.",
+		 function );
+
+		return( -1 );
+	}
+/* TODO make sure the class identifier is set in little endian */
+
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: byte order\t\t\t\t: 0x%02" PRIx8 " 0x%02" PRIx8 "\n",
+		 function,
+		 ( (olecf_property_set_header_t *) data )->byte_order[ 0 ],
+		 ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] );
+
+		libcnotify_printf(
+		 "%s: format\t\t\t\t: %" PRIu16 "\n",
+		 function,
+		 internal_property_set->format );
+		
+		libcnotify_printf(
+		 "%s: system version\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 internal_property_set->system_version );
+
+		if( libolecf_debug_print_guid_value(
+		     function,
+		     "class identifier\t\t\t",
+		     internal_property_set->class_identifier,
+		     16,
+		     internal_property_set->byte_order,
+		     LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+			 "%s: unable to print GUID value.",
+			 function );
+
+			return( -1 );
+		}
+		libcnotify_printf(
+		 "%s: class name\t\t\t\t: %s (%s)\n",
+		 function,
+		 libfwps_format_class_identifier_get_identifier(
+		  internal_property_set->class_identifier ),
+		 libfwps_format_class_identifier_get_description(
+		  internal_property_set->class_identifier ) );
+
+		libcnotify_printf(
+		 "%s: number of sections\t\t\t: %" PRIu16 "\n",
+		 function,
+		 internal_property_set->number_of_sections );
+
+		libcnotify_printf(
+		 "\n" );
+	}
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+	return( 1 );
+}
+
 /* Reads the property set from the property set stream
  * Returns 1 if successful or -1 on error
  */
@@ -183,7 +374,7 @@ int libolecf_property_set_read(
      libolecf_item_t *property_set_stream,
      libcerror_error_t **error )
 {
-	olecf_property_set_header_t property_set_header;
+	uint8_t property_set_header_data[ sizeof( olecf_property_set_header_t ) ];
 
 	libolecf_internal_property_set_t *internal_property_set = NULL;
 	libolecf_property_section_t *property_section           = NULL;
@@ -191,7 +382,6 @@ int libolecf_property_set_read(
 	off64_t section_list_entry_offset                       = 0;
 	ssize_t read_count                                      = 0;
 	uint32_t section_header_offset                          = 0;
-	uint16_t number_of_sections                             = 0;
 	uint16_t section_index                                  = 0;
 	int sections_entry                                      = 0;
 
@@ -218,14 +408,14 @@ int libolecf_property_set_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek property set header offset: 0.",
+		 "%s: unable to seek property set header offset: 0 (0x00000000).",
 		 function );
 
 		goto on_error;
 	}
 	read_count = libolecf_stream_read_buffer(
 	              property_set_stream,
-	              (uint8_t *) &property_set_header,
+	              property_set_header_data,
 	              sizeof( olecf_property_set_header_t ),
 	              error );
 
@@ -240,143 +430,25 @@ int libolecf_property_set_read(
 
 		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: property set header:\n",
-		 function );
-		libcnotify_print_data(
-		 (uint8_t *) &property_set_header,
-		 sizeof( olecf_property_set_header_t ),
-		 0 );
-	}
-#endif
-	if( ( property_set_header.byte_order[ 0 ] == 0xfe )
-	 && ( property_set_header.byte_order[ 1 ] == 0xff ) )
-	{
-		internal_property_set->byte_order = LIBOLECF_ENDIAN_LITTLE;
-	}
-	else if( ( property_set_header.byte_order[ 0 ] == 0xff )
-	      && ( property_set_header.byte_order[ 1 ] == 0xfe ) )
-	{
-		internal_property_set->byte_order = LIBOLECF_ENDIAN_BIG;
-	}
-	else
+	if( libolecf_property_set_read_header(
+	     internal_property_set,
+	     property_set_header_data,
+	     sizeof( olecf_property_set_header_t ),
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported byte order: 0x%02" PRIx8 " 0x%02" PRIx8 ".",
-		 function,
-		 property_set_header.byte_order[ 0 ],
-		 property_set_header.byte_order[ 1 ] );
-
-		goto on_error;
-	}
-	if( internal_property_set->byte_order == LIBOLECF_ENDIAN_LITTLE )
-	{
-		byte_stream_copy_to_uint16_little_endian(
-		 property_set_header.format,
-		 internal_property_set->format );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 property_set_header.system_version,
-		 internal_property_set->system_version );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 property_set_header.number_of_sections,
-		 number_of_sections );
-	}
-	else if( internal_property_set->byte_order == LIBOLECF_ENDIAN_BIG )
-	{
-		byte_stream_copy_to_uint16_big_endian(
-		 property_set_header.format,
-		 internal_property_set->format );
-
-		byte_stream_copy_to_uint32_big_endian(
-		 property_set_header.system_version,
-		 internal_property_set->system_version );
-
-		byte_stream_copy_to_uint16_big_endian(
-		 property_set_header.number_of_sections,
-		 number_of_sections );
-	}
-	if( memory_copy(
-	     internal_property_set->class_identifier,
-	     property_set_header.class_identifier,
-	     16 ) == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_MEMORY,
-		 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
-		 "%s: unable to copy class identifier.",
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read property set header.",
 		 function );
 
 		goto on_error;
 	}
-/* TODO make sure the class identifier is set in little endian */
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: property set header byte order\t\t: 0x%02" PRIx8 " 0x%02" PRIx8 "\n",
-		 function,
-		 property_set_header.byte_order[ 0 ],
-		 property_set_header.byte_order[ 1 ] );
-
-		libcnotify_printf(
-		 "%s: property set header format\t\t\t: %" PRIu16 "\n",
-		 function,
-		 internal_property_set->format );
-		
-		libcnotify_printf(
-		 "%s: property set header system version\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 internal_property_set->system_version );
-
-		if( libolecf_debug_print_guid_value(
-		     function,
-		     "property set header class identifier\t",
-		     internal_property_set->class_identifier,
-		     16,
-		     internal_property_set->byte_order,
-		     LIBFGUID_STRING_FORMAT_FLAG_USE_LOWER_CASE,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
-			 "%s: unable to print GUID value.",
-			 function );
-
-			goto on_error;
-		}
-		libcnotify_printf(
-		 "%s: property set header class name\t\t: %s (%s)\n",
-		 function,
-		 libfwps_format_class_identifier_get_identifier(
-		  internal_property_set->class_identifier ),
-		 libfwps_format_class_identifier_get_description(
-		  internal_property_set->class_identifier ) );
-
-		libcnotify_printf(
-		 "%s: property set header number of sections\t: %" PRIu16 "\n",
-		 function,
-		 number_of_sections );
-
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
 	section_list_entry_offset = sizeof( olecf_property_set_header_t );
 
 	for( section_index = 0;
-	     section_index < (int) number_of_sections;
+	     section_index < (int) internal_property_set->number_of_sections;
 	     section_index++ )
 	{
 		if( libolecf_property_section_initialize(

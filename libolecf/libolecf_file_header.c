@@ -442,27 +442,27 @@ int libolecf_file_header_read_data(
 		 0 );
 
 		libcnotify_printf(
-		 "%s: sector stream minimum data size\t: %" PRIu32 "\n",
+		 "%s: sector stream minimum data size\t\t: %" PRIu32 "\n",
 		 function,
 		 file_header->sector_stream_minimum_data_size );
 	
 		libcnotify_printf(
-		 "%s: SSAT sector identifier\t\t: 0x%08" PRIx32 "\n",
+		 "%s: SSAT sector identifier\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 file_header->ssat_sector_identifier );
 
 		libcnotify_printf(
-		 "%s: number of SSAT sectors\t\t: %" PRIu32 "\n",
+		 "%s: number of SSAT sectors\t\t\t: %" PRIu32 "\n",
 		 function,
 		 file_header->number_of_ssat_sectors );
 	
 		libcnotify_printf(
-		 "%s: MSAT sector identifier\t\t: 0x%08" PRIx32 "\n",
+		 "%s: MSAT sector identifier\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 file_header->msat_sector_identifier );
 
 		libcnotify_printf(
-		 "%s: number of MSAT sectors\t\t: %" PRIu32 "\n",
+		 "%s: number of MSAT sectors\t\t\t: %" PRIu32 "\n",
 		 function,
 		 file_header->number_of_msat_sectors );
 	}
