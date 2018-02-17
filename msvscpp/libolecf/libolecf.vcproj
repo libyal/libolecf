@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libolecf\libolecf_file_header.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libolecf\libolecf_io_handle.c"
 				>
 			</File>
@@ -289,6 +293,10 @@
 			</File>
 			<File
 				RelativePath="..\..\libolecf\libolecf_file.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libolecf\libolecf_file_header.h"
 				>
 			</File>
 			<File

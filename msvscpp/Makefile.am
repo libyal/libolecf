@@ -20,6 +20,7 @@ MSVSCPP_FILES = \
 	olecf_test_directory_entry/olecf_test_directory_entry.vcproj \
 	olecf_test_error/olecf_test_error.vcproj \
 	olecf_test_file/olecf_test_file.vcproj \
+	olecf_test_file_header/olecf_test_file_header.vcproj \
 	olecf_test_io_handle/olecf_test_io_handle.vcproj \
 	olecf_test_item/olecf_test_item.vcproj \
 	olecf_test_notify/olecf_test_notify.vcproj \

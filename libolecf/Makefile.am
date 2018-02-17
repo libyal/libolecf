@@ -33,6 +33,7 @@ libolecf_la_SOURCES = \
 	libolecf_error.c libolecf_error.h \
 	libolecf_extern.h \
 	libolecf_file.c libolecf_file.h \
+	libolecf_file_header.c libolecf_file_header.h \
 	libolecf_io_handle.c libolecf_io_handle.h \
 	libolecf_item.c libolecf_item.h \
 	libolecf_libbfio.h \

@@ -31,6 +31,7 @@
 #include "libolecf_directory_entry.h"
 #include "libolecf_directory_tree.h"
 #include "libolecf_file.h"
+#include "libolecf_file_header.h"
 #include "libolecf_item.h"
 #include "libolecf_io_handle.h"
 #include "libolecf_libbfio.h"
@@ -806,15 +807,10 @@ int libolecf_file_open_read(
      libbfio_handle_t *file_io_handle,
      libcerror_error_t **error )
 {
-	libcdata_list_t *directory_entry_list     = NULL;
-	static char *function                     = "libolecf_file_open_read";
-	uint32_t msat_sector_identifier           = 0;
-	uint32_t number_of_msat_sectors           = 0;
-	uint32_t number_of_sat_sectors            = 0;
-	uint32_t ssat_sector_identifier           = 0;
-	uint32_t number_of_ssat_sectors           = 0;
-	uint32_t root_directory_sector_identifier = 0;
-	int result                                = 0;
+	libcdata_list_t *directory_entry_list = NULL;
+	libolecf_file_header_t *file_header   = NULL;
+	static char *function                 = "libolecf_file_open_read";
+	int result                            = 0;
 
 	if( internal_file == NULL )
 	{
@@ -893,9 +889,29 @@ int libolecf_file_open_read(
 
 		return( -1 );
 	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "Reading file header:\n" );
+	}
+#endif
+	if( libolecf_file_header_initialize(
+	     &file_header,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create file header.",
+		 function );
+
+		goto on_error;
+	}
 	if( libolecf_allocation_table_initialize(
 	     &( internal_file->msat ),
-	     0,
+	     109,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -907,51 +923,10 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
-	if( libolecf_allocation_table_initialize(
-	     &( internal_file->sat ),
-	     0,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create SAT.",
-		 function );
-
-		goto on_error;
-	}
-	if( libolecf_allocation_table_initialize(
-	     &( internal_file->ssat ),
-	     0,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create SSAT.",
-		 function );
-
-		goto on_error;
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "Reading file header:\n" );
-	}
-#endif
-	if( libolecf_io_handle_read_file_header(
-	     internal_file->io_handle,
+	if( libolecf_file_header_read_file_io_handle(
+	     file_header,
 	     file_io_handle,
 	     internal_file->msat,
-	     &msat_sector_identifier,
-	     &number_of_msat_sectors,
-	     &number_of_sat_sectors,
-	     &ssat_sector_identifier,
-	     &number_of_ssat_sectors,
-	     &root_directory_sector_identifier,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -963,6 +938,13 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
+	internal_file->io_handle->byte_order                      = file_header->byte_order;
+	internal_file->io_handle->major_format_version            = file_header->major_format_version;
+	internal_file->io_handle->minor_format_version            = file_header->minor_format_version;
+	internal_file->io_handle->sector_stream_minimum_data_size = file_header->sector_stream_minimum_data_size;
+	internal_file->io_handle->sector_size                     = file_header->sector_size;
+	internal_file->io_handle->short_sector_size               = file_header->short_sector_size;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -974,8 +956,8 @@ int libolecf_file_open_read(
 	     internal_file->io_handle,
 	     file_io_handle,
 	     internal_file->msat,
-	     msat_sector_identifier,
-	     number_of_msat_sectors,
+	     file_header->msat_sector_identifier,
+	     file_header->number_of_msat_sectors,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -994,12 +976,26 @@ int libolecf_file_open_read(
 		 "Reading sector allocation table (SAT):\n" );
 	}
 #endif
+	if( libolecf_allocation_table_initialize(
+	     &( internal_file->sat ),
+	     0,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create SAT.",
+		 function );
+
+		goto on_error;
+	}
 	if( libolecf_io_handle_read_sat(
 	     internal_file->io_handle,
 	     file_io_handle,
 	     internal_file->msat,
 	     internal_file->sat,
-	     number_of_sat_sectors,
+	     file_header->number_of_sat_sectors,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1018,13 +1014,27 @@ int libolecf_file_open_read(
 		 "Reading short sector allocation table (SSAT):\n" );
 	}
 #endif
+	if( libolecf_allocation_table_initialize(
+	     &( internal_file->ssat ),
+	     0,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create SSAT.",
+		 function );
+
+		goto on_error;
+	}
 	if( libolecf_io_handle_read_ssat(
 	     internal_file->io_handle,
 	     file_io_handle,
 	     internal_file->sat,
 	     internal_file->ssat,
-	     ssat_sector_identifier,
-	     number_of_ssat_sectors,
+	     file_header->ssat_sector_identifier,
+	     file_header->number_of_ssat_sectors,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1036,6 +1046,13 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "Reading directory entries:\n" );
+	}
+#endif
 	if( libcdata_list_initialize(
 	     &directory_entry_list,
 	     error ) != 1 )
@@ -1049,19 +1066,12 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "Reading directory entries:\n" );
-	}
-#endif
 	if( libolecf_io_handle_read_directory_entries(
 	     internal_file->io_handle,
 	     file_io_handle,
 	     internal_file->sat,
 	     directory_entry_list,
-	     root_directory_sector_identifier,
+	     file_header->root_directory_sector_identifier,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1069,6 +1079,19 @@ int libolecf_file_open_read(
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read directory entries.",
+		 function );
+
+		goto on_error;
+	}
+	if( libolecf_file_header_free(
+	     &file_header,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free file header.",
 		 function );
 
 		goto on_error;
@@ -1172,6 +1195,12 @@ on_error:
 	{
 		libolecf_allocation_table_free(
 		 &( internal_file->msat ),
+		 NULL );
+	}
+	if( file_header != NULL )
+	{
+		libolecf_file_header_free(
+		 &file_header,
 		 NULL );
 	}
 	return( -1 );
@@ -1475,8 +1504,8 @@ int libolecf_file_get_format_version(
 
 		return( -1 );
 	}
-	*major_version = internal_file->io_handle->major_version;
-	*minor_version = internal_file->io_handle->minor_version;
+	*major_version = internal_file->io_handle->major_format_version;
+	*minor_version = internal_file->io_handle->minor_format_version;
 
 	return( 1 );
 }

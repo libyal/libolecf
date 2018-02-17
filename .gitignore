@@ -130,6 +130,7 @@ stamp-h[1-9]
 /tests/olecf_test_directory_entry
 /tests/olecf_test_error
 /tests/olecf_test_file
+/tests/olecf_test_file_header
 /tests/olecf_test_io_handle
 /tests/olecf_test_item
 /tests/olecf_test_notify

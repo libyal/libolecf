@@ -47,6 +47,7 @@ check_PROGRAMS = \
 	olecf_test_directory_entry \
 	olecf_test_error \
 	olecf_test_file \
+	olecf_test_file_header \
 	olecf_test_io_handle \
 	olecf_test_item \
 	olecf_test_notify \
@@ -116,6 +117,28 @@ olecf_test_file_LDADD = \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@PTHREAD_LIBADD@
+
+olecf_test_file_header_SOURCES = \
+	olecf_test_file_header.c \
+	olecf_test_functions.c olecf_test_functions.h \
+	olecf_test_libbfio.h \
+	olecf_test_libcerror.h \
+	olecf_test_libolecf.h \
+	olecf_test_macros.h \
+	olecf_test_memory.c olecf_test_memory.h \
+	olecf_test_unused.h
+
+olecf_test_file_header_LDADD = \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
+	@LIBCNOTIFY_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
 
 olecf_test_io_handle_SOURCES = \
 	olecf_test_io_handle.c \

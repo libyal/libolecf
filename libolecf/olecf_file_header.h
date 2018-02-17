@@ -48,13 +48,13 @@ struct olecf_file_header
 	/* The minor version of the OLECF format used
 	 * Consists of 2 bytes
 	 */
-	uint8_t minor_version[ 2 ];
+	uint8_t minor_format_version[ 2 ];
 
 	/* The major verion of the OLECF format used
 	 * also used refered to as DLL version
 	 * Consists of 2 bytes
 	 */
-	uint8_t major_version[ 2 ];
+	uint8_t major_format_version[ 2 ];
 
 	/* The byte order within the file
 	 * 0xfffe indicates little endian
