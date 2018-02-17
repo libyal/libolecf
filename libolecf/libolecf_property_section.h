@@ -68,6 +68,14 @@ int libolecf_property_section_read_list_entry(
      uint32_t *section_header_offset,
      libcerror_error_t **error );
 
+int libolecf_property_section_read_list_entry_data(
+     libolecf_internal_property_section_t *internal_property_section,
+     const uint8_t *data,
+     size_t data_size,
+     uint8_t byte_order,
+     uint32_t *section_header_offset,
+     libcerror_error_t **error );
+
 int libolecf_property_section_read(
      libolecf_internal_property_section_t *internal_property_section,
      libolecf_io_handle_t *io_handle,

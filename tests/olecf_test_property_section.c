@@ -35,6 +35,10 @@
 
 #include "../libolecf/libolecf_property_section.h"
 
+uint8_t olecf_test_property_section_list_entry_data1[ 20 ] = {
+	0xe0, 0x85, 0x9f, 0xf2, 0xf9, 0x4f, 0x68, 0x10, 0xab, 0x91, 0x08, 0x00, 0x2b, 0x27, 0xb3, 0xd9,
+	0x30, 0x00, 0x00, 0x00 };
+
 #if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 /* Tests the libolecf_property_section_initialize function
@@ -273,6 +277,213 @@ on_error:
 }
 
 #if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
+
+/* Tests the libolecf_property_section_read_list_entry_data function
+ * Returns 1 if successful or 0 if not
+ */
+int olecf_test_property_section_read_list_entry_data(
+     void )
+{
+	libcerror_error_t *error                      = NULL;
+	libolecf_property_section_t *property_section = NULL;
+	uint32_t section_header_offset                = 0;
+	int result                                    = 0;
+
+	/* Initialize test
+	 */
+	result = libolecf_property_section_initialize(
+	          &property_section,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "property_section",
+	 property_section );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          olecf_test_property_section_list_entry_data1,
+	          20,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libolecf_property_section_read_list_entry_data(
+	          NULL,
+	          olecf_test_property_section_list_entry_data1,
+	          20,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          NULL,
+	          20,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          olecf_test_property_section_list_entry_data1,
+	          0,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          olecf_test_property_section_list_entry_data1,
+	          (size_t) SSIZE_MAX + 1,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          olecf_test_property_section_list_entry_data1,
+	          20,
+	          -1,
+	          &section_header_offset,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libolecf_property_section_read_list_entry_data(
+	          (libolecf_internal_property_section_t *) property_section,
+	          olecf_test_property_section_list_entry_data1,
+	          20,
+	          LIBOLECF_ENDIAN_LITTLE,
+	          NULL,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libolecf_property_section_free(
+	          &property_section,
+	          &error );
+
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "property_section",
+	 property_section );
+
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( property_section != NULL )
+	{
+		libolecf_property_section_free(
+		 &property_section,
+		 NULL );
+	}
+	return( 0 );
+}
 
 /* Tests the libolecf_property_section_get_class_identifier function
  * Returns 1 if successful or 0 if not
@@ -584,11 +795,17 @@ int main(
 	 "libolecf_property_section_free",
 	 olecf_test_property_section_free );
 
-#if defined( __GNUC__ ) && defined( TODO )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 	/* TODO: add tests for libolecf_property_section_read_list_entry */
 
+	OLECF_TEST_RUN(
+	 "libolecf_property_section_read_list_entry_data",
+	 olecf_test_property_section_read_list_entry_data );
+
 	/* TODO: add tests for libolecf_property_section_read */
+
+#if defined( TODO )
 
 	OLECF_TEST_RUN(
 	 "libolecf_property_section_get_class_identifier",
@@ -600,7 +817,9 @@ int main(
 
 	/* TODO: add tests for libolecf_property_section_get_property_by_index */
 
-#endif /* defined( __GNUC__ ) && defined( TODO ) */
+#endif /* defined( TODO ) */
+
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

@@ -282,10 +282,10 @@ on_error:
 
 #if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
-/* Tests the libolecf_property_set_read_header function
+/* Tests the libolecf_property_set_read_header_data function
  * Returns 1 if successful or 0 if not
  */
-int olecf_test_property_set_read_header(
+int olecf_test_property_set_read_header_data(
      void )
 {
 	libcerror_error_t *error              = NULL;
@@ -313,7 +313,7 @@ int olecf_test_property_set_read_header(
 
 	/* Test regular cases
 	 */
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          (libolecf_internal_property_set_t *) property_set,
 	          olecf_test_property_set_data1,
 	          28,
@@ -330,7 +330,7 @@ int olecf_test_property_set_read_header(
 
 	/* Test error cases
 	 */
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          NULL,
 	          olecf_test_property_set_data1,
 	          28,
@@ -348,7 +348,7 @@ int olecf_test_property_set_read_header(
 	libcerror_error_free(
 	 &error );
 
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          (libolecf_internal_property_set_t *) property_set,
 	          NULL,
 	          28,
@@ -366,7 +366,7 @@ int olecf_test_property_set_read_header(
 	libcerror_error_free(
 	 &error );
 
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          (libolecf_internal_property_set_t *) property_set,
 	          olecf_test_property_set_data1,
 	          0,
@@ -384,7 +384,7 @@ int olecf_test_property_set_read_header(
 	libcerror_error_free(
 	 &error );
 
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          (libolecf_internal_property_set_t *) property_set,
 	          olecf_test_property_set_data1,
 	          (size_t) SSIZE_MAX + 1,
@@ -404,7 +404,7 @@ int olecf_test_property_set_read_header(
 
 	/* Test error case where byte order is invalid
 	 */
-	result = libolecf_property_set_read_header(
+	result = libolecf_property_set_read_header_data(
 	          (libolecf_internal_property_set_t *) property_set,
 	          olecf_test_property_set_error_data1,
 	          28,
@@ -768,11 +768,13 @@ int main(
 	 "libolecf_property_set_free",
 	 olecf_test_property_set_free );
 
-#if defined( __GNUC__ ) && defined( TODO )
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
 
 	OLECF_TEST_RUN(
-	 "libolecf_property_set_read_header",
-	 olecf_test_property_set_read_header );
+	 "libolecf_property_set_read_header_data",
+	 olecf_test_property_set_read_header_data );
+
+#if defined( TODO )
 
 	/* TODO: add tests for libolecf_property_set_read */
 
@@ -786,7 +788,9 @@ int main(
 
 	/* TODO: add tests for libolecf_property_set_get_section_by_index */
 
-#endif /* defined( __GNUC__ ) && defined( TODO ) */
+#endif /* defined( TODO ) */
+
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

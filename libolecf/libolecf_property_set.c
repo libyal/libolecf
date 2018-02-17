@@ -177,13 +177,13 @@ int libolecf_property_set_free(
 /* Reads the property set header
  * Returns 1 if successful or -1 on error
  */
-int libolecf_property_set_read_header(
+int libolecf_property_set_read_header_data(
      libolecf_internal_property_set_t *internal_property_set,
      const uint8_t *data,
      size_t data_size,
      libcerror_error_t **error )
 {
-	static char *function = "libolecf_property_set_read_header";
+	static char *function = "libolecf_property_set_read_header_data";
 
 	if( internal_property_set == NULL )
 	{
@@ -312,7 +312,7 @@ int libolecf_property_set_read_header(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: byte order\t\t\t\t: 0x%02" PRIx8 " 0x%02" PRIx8 "\n",
+		 "%s: byte order\t\t\t0x%02" PRIx8 " 0x%02" PRIx8 "\n",
 		 function,
 		 ( (olecf_property_set_header_t *) data )->byte_order[ 0 ],
 		 ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] );
@@ -329,7 +329,7 @@ int libolecf_property_set_read_header(
 
 		if( libolecf_debug_print_guid_value(
 		     function,
-		     "class identifier\t\t\t",
+		     "class identifier\t\t",
 		     internal_property_set->class_identifier,
 		     16,
 		     internal_property_set->byte_order,
@@ -346,7 +346,7 @@ int libolecf_property_set_read_header(
 			return( -1 );
 		}
 		libcnotify_printf(
-		 "%s: class name\t\t\t\t: %s (%s)\n",
+		 "%s: class name\t\t\t: %s (%s)\n",
 		 function,
 		 libfwps_format_class_identifier_get_identifier(
 		  internal_property_set->class_identifier ),
@@ -354,7 +354,7 @@ int libolecf_property_set_read_header(
 		  internal_property_set->class_identifier ) );
 
 		libcnotify_printf(
-		 "%s: number of sections\t\t\t: %" PRIu16 "\n",
+		 "%s: number of sections\t\t: %" PRIu16 "\n",
 		 function,
 		 internal_property_set->number_of_sections );
 
@@ -430,7 +430,7 @@ int libolecf_property_set_read(
 
 		goto on_error;
 	}
-	if( libolecf_property_set_read_header(
+	if( libolecf_property_set_read_header_data(
 	     internal_property_set,
 	     property_set_header_data,
 	     sizeof( olecf_property_set_header_t ),

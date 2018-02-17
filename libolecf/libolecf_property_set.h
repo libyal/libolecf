@@ -73,7 +73,7 @@ int libolecf_property_set_free(
      libolecf_property_set_t **property_set,
      libcerror_error_t **error );
 
-int libolecf_property_set_read_header(
+int libolecf_property_set_read_header_data(
      libolecf_internal_property_set_t *internal_property_set,
      const uint8_t *data,
      size_t data_size,

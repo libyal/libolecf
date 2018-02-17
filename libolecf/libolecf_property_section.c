@@ -212,7 +212,7 @@ int libolecf_property_section_read_list_entry(
      uint32_t *section_header_offset,
      libcerror_error_t **error )
 {
-	olecf_property_section_list_entry_t property_section_list_entry;
+	uint8_t property_section_list_entry_data[ sizeof( olecf_property_section_list_entry_t ) ];
 
 	static char *function = "libolecf_property_section_read_list_entry";
 	ssize_t read_count    = 0;
@@ -224,6 +224,100 @@ int libolecf_property_section_read_list_entry(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid property section.",
+		 function );
+
+		return( -1 );
+	}
+	read_count = libolecf_stream_read_buffer(
+		      property_set_stream,
+		      property_section_list_entry_data,
+		      sizeof( olecf_property_section_list_entry_t ),
+		      error );
+
+	if( read_count != (ssize_t) sizeof( olecf_property_section_list_entry_t ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read list entry.",
+		 function );
+
+		return( -1 );
+	}
+	if( libolecf_property_section_read_list_entry_data(
+	     internal_property_section,
+	     property_section_list_entry_data,
+	     sizeof( olecf_property_section_list_entry_t ),
+	     byte_order,
+	     section_header_offset,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read list entry.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Reads the property section list entry
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_property_section_read_list_entry_data(
+     libolecf_internal_property_section_t *internal_property_section,
+     const uint8_t *data,
+     size_t data_size,
+     uint8_t byte_order,
+     uint32_t *section_header_offset,
+     libcerror_error_t **error )
+{
+	static char *function = "libolecf_property_section_read_list_entry_data";
+
+	if( internal_property_section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid property section.",
+		 function );
+
+		return( -1 );
+	}
+	if( data == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid data.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size < sizeof( olecf_property_section_list_entry_t ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid data size value too small.",
+		 function );
+
+		return( -1 );
+	}
+	if( data_size > (size_t) SSIZE_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid data size value exceeds maximum.",
 		 function );
 
 		return( -1 );
@@ -252,23 +346,6 @@ int libolecf_property_section_read_list_entry(
 
 		return( -1 );
 	}
-	read_count = libolecf_stream_read_buffer(
-		      property_set_stream,
-		      (uint8_t *) &property_section_list_entry,
-		      sizeof( olecf_property_section_list_entry_t ),
-		      error );
-
-	if( read_count != (ssize_t) sizeof( olecf_property_section_list_entry_t ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read list entry.",
-		 function );
-
-		return( -1 );
-	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -276,7 +353,7 @@ int libolecf_property_section_read_list_entry(
 		 "%s: list entry data:\n",
 		 function );
 		libcnotify_print_data(
-		 (uint8_t *) &property_section_list_entry,
+		 data,
 		 sizeof( olecf_property_section_list_entry_t ),
 		 0 );
 	}
@@ -284,18 +361,18 @@ int libolecf_property_section_read_list_entry(
 	if( byte_order == LIBOLECF_ENDIAN_LITTLE )
 	{
 		byte_stream_copy_to_uint32_little_endian(
-		 property_section_list_entry.offset,
+		 ( (olecf_property_section_list_entry_t *) data )->offset,
 		 *section_header_offset );
 	}
 	else if( byte_order == LIBOLECF_ENDIAN_BIG )
 	{
 		byte_stream_copy_to_uint32_big_endian(
-		 property_section_list_entry.offset,
+		 ( (olecf_property_section_list_entry_t *) data )->offset,
 		 *section_header_offset );
 	}
 	if( memory_copy(
 	     internal_property_section->class_identifier,
-	     property_section_list_entry.class_identifier,
+	     ( (olecf_property_section_list_entry_t *) data )->class_identifier,
 	     16 ) == NULL )
 	{
 		libcerror_error_set(
@@ -314,7 +391,7 @@ int libolecf_property_section_read_list_entry(
 	{
 		if( libolecf_debug_print_guid_value(
 		     function,
-		     "class identifier\t\t",
+		     "class identifier\t",
 		     internal_property_section->class_identifier,
 		     16,
 		     byte_order,
@@ -331,7 +408,7 @@ int libolecf_property_section_read_list_entry(
 			return( -1 );
 		}
 		libcnotify_printf(
-		 "%s: class name\t\t\t: %s (%s)\n",
+		 "%s: class name\t\t: %s (%s)\n",
 		 function,
                  libfwps_format_class_identifier_get_identifier(
                   internal_property_section->class_identifier ),
@@ -346,7 +423,8 @@ int libolecf_property_section_read_list_entry(
 		libcnotify_printf(
 		 "\n" );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	return( 1 );
 }
 
