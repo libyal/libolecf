@@ -332,6 +332,36 @@ int olecf_test_io_handle_clear(
 	libcerror_error_free(
 	 &error );
 
+#if defined( HAVE_OLECF_TEST_MEMORY )
+
+	/* Test libolecf_io_handle_clear with memset failing
+	 */
+	olecf_test_memset_attempts_before_fail = 0;
+
+	result = libolecf_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	if( olecf_test_memset_attempts_before_fail != -1 )
+	{
+		olecf_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		OLECF_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		OLECF_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_OLECF_TEST_MEMORY ) */
+
 	/* Clean up
 	 */
 	result = libolecf_io_handle_free(

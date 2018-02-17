@@ -70,6 +70,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "olecf_test_notify", "olecf_test_notify\olecf_test_notify.vcproj", "{A66A16CC-32E3-421D-8544-EDC7DB192D6A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE4D2E19-C7AC-4BCF-ABEC-C4D6C804D3EB} = {CE4D2E19-C7AC-4BCF-ABEC-C4D6C804D3EB}
+		{BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C} = {BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "olecf_test_property_section", "olecf_test_property_section\olecf_test_property_section.vcproj", "{7D2CB576-7E68-4228-99D7-8FF2C6287F89}"
