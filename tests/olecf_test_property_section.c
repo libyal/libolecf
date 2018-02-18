@@ -451,8 +451,8 @@ int olecf_test_property_section_read_list_entry_data(
 
 	/* Clean up
 	 */
-	result = libolecf_property_section_free(
-	          &property_section,
+	result = libolecf_internal_property_section_free(
+	          (libolecf_internal_property_section_t **) &property_section,
 	          &error );
 
 	OLECF_TEST_ASSERT_EQUAL_INT(
@@ -478,8 +478,8 @@ on_error:
 	}
 	if( property_section != NULL )
 	{
-		libolecf_property_section_free(
-		 &property_section,
+		libolecf_internal_property_section_free(
+		 (libolecf_internal_property_section_t **) &property_section,
 		 NULL );
 	}
 	return( 0 );
