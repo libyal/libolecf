@@ -751,23 +751,25 @@ int export_handle_export_item(
      log_handle_t *log_handle,
      libcerror_error_t **error )
 {
-	libcfile_file_t *stream_data_file = NULL;
-	system_character_t *item_name     = NULL;
-	system_character_t *item_path     = NULL;
-	system_character_t *target_path   = NULL;
-	uint8_t *buffer                   = NULL;
-	static char *function             = "export_handle_export_item";
-	size_t buffer_size                = EXPORT_HANDLE_BUFFER_SIZE;
-	size_t item_name_size             = 0;
-	size_t item_path_size             = 0;
-	size_t minimum_item_name_size     = 0;
-	size_t read_size                  = 0;
-	size_t target_path_size           = 0;
-	ssize_t read_count                = 0;
-	ssize_t write_count               = 0;
-	uint32_t stream_data_size         = 0;
-	int print_count                   = 0;
-	int result                        = 0;
+	libcfile_file_t *stream_data_file  = NULL;
+	system_character_t *item_name      = NULL;
+	system_character_t *item_path      = NULL;
+	system_character_t *sanitized_name = NULL;
+	system_character_t *target_path    = NULL;
+	uint8_t *buffer                    = NULL;
+	static char *function              = "export_handle_export_item";
+	size_t buffer_size                 = EXPORT_HANDLE_BUFFER_SIZE;
+	size_t item_name_size              = 0;
+	size_t item_path_size              = 0;
+	size_t minimum_item_name_size      = 0;
+	size_t read_size                   = 0;
+	size_t sanitized_name_size         = 0;
+	size_t target_path_size            = 0;
+	ssize_t read_count                 = 0;
+	ssize_t write_count                = 0;
+	uint32_t stream_data_size          = 0;
+	int print_count                    = 0;
+	int result                         = 0;
 
 	if( export_handle == NULL )
 	{
@@ -878,17 +880,20 @@ int export_handle_export_item(
 		goto on_error;
 	}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	result = libcpath_path_sanitize_filename_wide(
-	          item_name,
-	          &item_name_size,
-	          error );
+	if( libcpath_path_get_sanitized_filename_wide(
+	     item_name,
+	     item_name_size - 1,
+	     &sanitized_name,
+	     &sanitized_name_size,
+	     error ) != 1 )
 #else
-	result = libcpath_path_sanitize_filename(
-	          item_name,
-	          &item_name_size,
-	          error );
+	if( libcpath_path_get_sanitized_filename(
+	     item_name,
+	     item_name_size - 1,
+	     &sanitized_name,
+	     &sanitized_name_size,
+	     error ) != 1 )
 #endif
-	if( result != 1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -899,6 +904,14 @@ int export_handle_export_item(
 
 		goto on_error;
 	}
+	memory_free(
+	 item_name );
+
+	item_name           = sanitized_name;
+	item_name_size      = sanitized_name_size;
+	sanitized_name      = NULL;
+	sanitized_name_size = 0;
+
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libcpath_path_join_wide(
 	          &item_path,
@@ -1341,6 +1354,11 @@ on_error:
 	{
 		memory_free(
 		 item_path );
+	}
+	if( sanitized_name != NULL )
+	{
+		memory_free(
+		 sanitized_name );
 	}
 	if( item_name != NULL )
 	{
