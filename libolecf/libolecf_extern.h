@@ -37,8 +37,11 @@
 
 #include <libolecf/extern.h>
 
+#define LIBOLECF_EXTERN_VARIABLE	LIBOLECF_EXTERN
+
 #else
-#define LIBOLECF_EXTERN	/* extern */
+#define LIBOLECF_EXTERN		/* extern */
+#define LIBOLECF_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 
