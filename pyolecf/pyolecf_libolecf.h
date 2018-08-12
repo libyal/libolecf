@@ -24,14 +24,7 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled set LIBOLECF_DLL_IMPORT
- * before including libolecf.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBOLECF_DLL_IMPORT
-#endif
-
 #include <libolecf.h>
 
-#endif
+#endif /* !defined( _PYOLECF_LIBOLECF_H ) */
 

@@ -113,6 +113,8 @@ int olecf_test_io_handle_initialize(
 	          &io_handle,
 	          &error );
 
+	io_handle = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int olecf_test_io_handle_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	io_handle = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -428,10 +428,6 @@ int main(
 	OLECF_TEST_RUN(
 	 "libolecf_io_handle_clear",
 	 olecf_test_io_handle_clear );
-
-	/* TODO: add tests for libolecf_io_handle_read_file_header */
-
-	/* TODO: add tests for libolecf_io_handle_read_file_header_data */
 
 	/* TODO: add tests for libolecf_io_handle_read_msat */
 

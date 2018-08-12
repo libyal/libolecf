@@ -28,13 +28,6 @@
  */
 #if !defined( HAVE_LOCAL_LIBOLECF )
 
-/* If libtool DLL support is enabled set LIBOLECF_DLL_EXPORT
- * before including libolecf/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBOLECF_DLL_EXPORT
-#endif
-
 #include <libolecf/extern.h>
 
 #define LIBOLECF_EXTERN_VARIABLE	LIBOLECF_EXTERN

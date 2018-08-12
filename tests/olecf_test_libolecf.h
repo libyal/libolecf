@@ -24,13 +24,6 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled and do not want to create static
- * executables set LIBOLECF_DLL_IMPORT before including libolecf.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
-#define LIBOLECF_DLL_IMPORT
-#endif
-
 #include <libolecf.h>
 
 #endif /* !defined( _OLECF_TEST_LIBOLECF_H ) */
