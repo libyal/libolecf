@@ -8,44 +8,46 @@ Source: %{name}-%{version}.tar.gz
 URL: https://github.com/libyal/libolecf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 @libolecf_spec_requires@ @ax_libbfio_spec_requires@ @ax_libcdata_spec_requires@ @ax_libcerror_spec_requires@ @ax_libcfile_spec_requires@ @ax_libclocale_spec_requires@ @ax_libcnotify_spec_requires@ @ax_libcpath_spec_requires@ @ax_libcsplit_spec_requires@ @ax_libcthreads_spec_requires@ @ax_libfdatetime_spec_requires@ @ax_libfguid_spec_requires@ @ax_libfole_spec_requires@ @ax_libfvalue_spec_requires@ @ax_libfwps_spec_requires@ @ax_libuna_spec_requires@
-@libolecf_spec_build_requires@ @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libfdatetime_spec_build_requires@ @ax_libfguid_spec_build_requires@ @ax_libfole_spec_build_requires@ @ax_libfvalue_spec_build_requires@ @ax_libfwps_spec_build_requires@ @ax_libuna_spec_build_requires@
+BuildRequires: gcc @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libfdatetime_spec_build_requires@ @ax_libfguid_spec_build_requires@ @ax_libfole_spec_build_requires@ @ax_libfvalue_spec_build_requires@ @ax_libfwps_spec_build_requires@ @ax_libuna_spec_build_requires@
 
-%description
+%description -n libolecf
 Library to access the Object Linking and Embedding (OLE) Compound File (CF) format
 
-%package devel
+%package -n libolecf-devel
 Summary: Header files and libraries for developing applications for libolecf
 Group: Development/Libraries
 Requires: libolecf = %{version}-%{release}
 
-%description devel
+%description -n libolecf-devel
 Header files and libraries for developing applications for libolecf.
 
-%package python
+%package -n libolecf-python2
+Obsoletes: libolecf-python < %{version}
+Provides: libolecf-python = %{version}
 Summary: Python 2 bindings for libolecf
 Group: System Environment/Libraries
-Requires: libolecf = %{version}-%{release} python
-BuildRequires: python-devel
+Requires: libolecf = %{version}-%{release} python2
+BuildRequires: python2-devel
 
-%description python
+%description -n libolecf-python2
 Python 2 bindings for libolecf
 
-%package python3
+%package -n libolecf-python3
 Summary: Python 3 bindings for libolecf
 Group: System Environment/Libraries
 Requires: libolecf = %{version}-%{release} python3
 BuildRequires: python3-devel
 
-%description python3
+%description -n libolecf-python3
 Python 3 bindings for libolecf
 
-%package tools
+%package -n libolecf-tools
 Summary: Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF)
 Group: Applications/System
 Requires: libolecf = %{version}-%{release} @ax_libfuse_spec_requires@
 @libolecf_spec_tools_build_requires@ @ax_libfuse_spec_build_requires@
 
-%description tools
+%description -n libolecf-tools
 Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF)
 
 %prep
@@ -66,13 +68,13 @@ rm -rf %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -n libolecf
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
-%files devel
+%files -n libolecf-devel
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README ChangeLog
@@ -83,7 +85,7 @@ rm -rf %{buildroot}
 %{_includedir}/*
 %{_mandir}/man3/*
 
-%files python
+%files -n libolecf-python2
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
@@ -91,7 +93,7 @@ rm -rf %{buildroot}
 %{_libdir}/python2*/site-packages/*.la
 %{_libdir}/python2*/site-packages/*.so
 
-%files python3
+%files -n libolecf-python3
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
@@ -99,7 +101,7 @@ rm -rf %{buildroot}
 %{_libdir}/python3*/site-packages/*.la
 %{_libdir}/python3*/site-packages/*.so
 
-%files tools
+%files -n libolecf-tools
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
