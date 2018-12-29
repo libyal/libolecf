@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libolecf
 Package: libolecf
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libolecf1
+Replaces: libolecf1
 Suggests: libolecf-dbg
 Description: Library to access the Object Linking and Embedding (OLE) Compound File (CF) format
  libolecf is a library to access the Object Linking and Embedding (OLE) Compound File (CF) format.
@@ -31,6 +33,8 @@ Package: libolecf-tools
 Section: utils
 Architecture: any
 Depends: libolecf (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libolecf-utils
+Replaces: libolecf-utils
 Description: Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF)
  Several tools for reading Object Linking and Embedding (OLE) Compound Files (CF).
 
@@ -45,6 +49,8 @@ Package: libolecf-python
 Section: python
 Architecture: any
 Depends: libolecf (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-libolecf
+Replaces: python-libolecf
 Suggests: libolecf-python-dbg
 Description: Python 2 bindings for libolecf
  Python 2 bindings for libolecf.
@@ -60,6 +66,8 @@ Package: libolecf-python3
 Section: python
 Architecture: any
 Depends: libolecf (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python3-libolecf
+Replaces: python3-libolecf
 Suggests: libolecf-python3-dbg
 Description: Python 3 bindings for libolecf
  Python 3 bindings for libolecf.

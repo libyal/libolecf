@@ -785,11 +785,12 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
      libcdata_tree_node_t **sub_directory_tree_node,
      libcerror_error_t **error )
 {
-	libolecf_directory_entry_t *sub_directory_entry = NULL;
-	static char *function                           = "libolecf_directory_tree_get_sub_node_by_utf8_name";
-	int number_of_sub_nodex                         = 0;
-	int result                                      = 0;
-	int sub_node_index                              = 0;
+	libcdata_tree_node_t *safe_sub_directory_tree_node = NULL;
+	libolecf_directory_entry_t *sub_directory_entry    = NULL;
+	static char *function                              = "libolecf_directory_tree_get_sub_node_by_utf8_name";
+	int number_of_sub_nodex                            = 0;
+	int result                                         = 0;
+	int sub_node_index                                 = 0;
 
 	if( directory_tree_node == NULL )
 	{
@@ -813,6 +814,8 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
 
 		return( -1 );
 	}
+	*sub_directory_tree_node = NULL;
+
 	if( libcdata_tree_node_get_number_of_sub_nodes(
 	     directory_tree_node,
 	     &number_of_sub_nodex,
@@ -834,7 +837,7 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
 		if( libcdata_tree_node_get_sub_node_by_index(
 		     directory_tree_node,
 		     sub_node_index,
-		     sub_directory_tree_node,
+		     &safe_sub_directory_tree_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -848,7 +851,7 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
 			return( -1 );
 		}
 		if( libcdata_tree_node_get_value(
-		     *sub_directory_tree_node,
+		     safe_sub_directory_tree_node,
 		     (intptr_t **) &sub_directory_entry,
 		     error ) != 1 )
 		{
@@ -894,13 +897,14 @@ int libolecf_directory_tree_get_sub_node_by_utf8_name(
 
 			return( -1 );
 		}
-		else if( result == 1 )
+		else if( result == LIBUNA_COMPARE_EQUAL )
 		{
-			break;
+			*sub_directory_tree_node = safe_sub_directory_tree_node;
+
+			return( 1 );
 		}
-		*sub_directory_tree_node = NULL;
 	}
-	return( result );
+	return( 0 );
 }
 
 /* Retrieves the sub node for the specific UTF-16 formatted name
@@ -914,11 +918,12 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
      libcdata_tree_node_t **sub_directory_tree_node,
      libcerror_error_t **error )
 {
-	libolecf_directory_entry_t *sub_directory_entry = NULL;
-	static char *function                           = "libolecf_directory_tree_get_sub_node_by_utf16_name";
-	int number_of_sub_nodex                         = 0;
-	int result                                      = 0;
-	int sub_node_index                              = 0;
+	libcdata_tree_node_t *safe_sub_directory_tree_node = NULL;
+	libolecf_directory_entry_t *sub_directory_entry    = NULL;
+	static char *function                              = "libolecf_directory_tree_get_sub_node_by_utf16_name";
+	int number_of_sub_nodex                            = 0;
+	int result                                         = 0;
+	int sub_node_index                                 = 0;
 
 	if( directory_tree_node == NULL )
 	{
@@ -942,6 +947,8 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 
 		return( -1 );
 	}
+	*sub_directory_tree_node = NULL;
+
 	if( libcdata_tree_node_get_number_of_sub_nodes(
 	     directory_tree_node,
 	     &number_of_sub_nodex,
@@ -963,7 +970,7 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 		if( libcdata_tree_node_get_sub_node_by_index(
 		     directory_tree_node,
 		     sub_node_index,
-		     sub_directory_tree_node,
+		     &safe_sub_directory_tree_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -977,7 +984,7 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 			return( -1 );
 		}
 		if( libcdata_tree_node_get_value(
-		     *sub_directory_tree_node,
+		     safe_sub_directory_tree_node,
 		     (intptr_t **) &sub_directory_entry,
 		     error ) != 1 )
 		{
@@ -1023,12 +1030,13 @@ int libolecf_directory_tree_get_sub_node_by_utf16_name(
 
 			return( -1 );
 		}
-		else if( result == 1 )
+		else if( result == LIBUNA_COMPARE_EQUAL )
 		{
-			break;
+			*sub_directory_tree_node = safe_sub_directory_tree_node;
+
+			return( 1 );
 		}
-		*sub_directory_tree_node = NULL;
 	}
-	return( result );
+	return( 0 );
 }
 

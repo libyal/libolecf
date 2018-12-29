@@ -26,6 +26,8 @@
 #include <file_stream.h>
 #include <types.h>
 
+#include "mount_file_entry.h"
+#include "mount_file_system.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libolecf.h"
 
@@ -37,9 +39,9 @@ typedef struct mount_handle mount_handle_t;
 
 struct mount_handle
 {
-	/* The libolecf input file
+	/* The file system
 	 */
-	libolecf_file_t *input_file;
+	mount_file_system_t *file_system;
 
 	/* The ascii codepage
 	 */
@@ -67,7 +69,7 @@ int mount_handle_set_ascii_codepage(
      const system_character_t *string,
      libcerror_error_t **error );
 
-int mount_handle_open_input(
+int mount_handle_open(
      mount_handle_t *mount_handle,
      const system_character_t *filename,
      libcerror_error_t **error );
@@ -76,31 +78,10 @@ int mount_handle_close(
      mount_handle_t *mount_handle,
      libcerror_error_t **error );
 
-int mount_handle_get_item_by_path(
+int mount_handle_get_file_entry_by_path(
      mount_handle_t *mount_handle,
      const system_character_t *path,
-     size_t path_length,
-     system_character_t path_separator,
-     libolecf_item_t **item,
-     libcerror_error_t **error );
-
-int mount_handle_get_filename(
-     mount_handle_t *mount_handle,
-     const system_character_t *sanitized_name,
-     size_t sanitized_name_size,
-     system_character_t path_separator,
-     system_character_t **name,
-     size_t *name_size,
-     size_t *last_path_seperator_index,
-     libcerror_error_t **error );
-
-int mount_handle_get_sanitized_filename(
-     mount_handle_t *mount_handle,
-     const system_character_t *name,
-     size_t name_size,
-     system_character_t path_separator,
-     system_character_t **sanitized_name,
-     size_t *sanitized_name_size,
+     mount_file_entry_t **file_entry,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )
