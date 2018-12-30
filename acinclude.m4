@@ -1,6 +1,6 @@
 dnl Checks for required headers and functions
 dnl
-dnl Version: 20170916
+dnl Version: 20181231
 
 dnl Function to detect if libolecf dependencies are available
 AC_DEFUN([AX_LIBOLECF_CHECK_LOCAL],
@@ -56,10 +56,12 @@ AC_DEFUN([AX_OLECFTOOLS_CHECK_LOCAL],
   dnl Headers included in olecftools/olecfmount.c
   AC_CHECK_HEADERS([errno.h])
 
-  dnl Check for functions in olecftools/olecfmount.c
+  AC_HEADER_TIME
+
+  dnl Functions included in olecftools/mount_file_system.c and olecftools/mount_file_entry.c
   AS_IF(
     [test "x$ac_cv_enable_winapi" = xno],
-    [AC_CHECK_FUNCS([getegid geteuid])
+    [AC_CHECK_FUNCS([clock_gettime getegid geteuid time])
   ])
 
   dnl Check if tools should be build as static executables

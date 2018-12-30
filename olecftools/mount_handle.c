@@ -31,6 +31,7 @@
 #include "mount_handle.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libclocale.h"
+#include "olecftools_libcpath.h"
 #include "olecftools_libolecf.h"
 
 /* Creates a mount handle
@@ -416,7 +417,7 @@ int mount_handle_close(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_CLOSE_FAILED,
-		 "%s: unable to close input file.",
+		 "%s: unable to close file.",
 		 function );
 
 		goto on_error;
@@ -455,14 +456,13 @@ int mount_handle_get_file_entry_by_path(
      mount_file_entry_t **file_entry,
      libcerror_error_t **error )
 {
-	libolecf_item_t *item         = NULL;
-	system_character_t *item_name = NULL;
-	system_character_t *name      = NULL;
-	static char *function         = "mount_handle_get_file_entry_by_path";
-	size_t item_name_size         = 0; 
-	size_t name_size              = 0; 
-	size_t path_length            = 0;
-	int result                    = 0;
+	libolecf_item_t *item              = NULL;
+	const system_character_t *filename = NULL;
+	static char *function              = "mount_handle_get_file_entry_by_path";
+	size_t filename_length             = 0;
+	size_t path_index                  = 0;
+	size_t path_length                 = 0;
+	int result                         = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -489,6 +489,44 @@ int mount_handle_get_file_entry_by_path(
 	path_length = system_string_length(
 	               path );
 
+	if( path_length == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid path length value out of bounds.",
+		 function );
+
+		goto on_error;
+	}
+	if( ( path_length >= 2 )
+	 && ( path[ path_length - 1 ] == LIBCPATH_SEPARATOR ) )
+	{
+		path_length--;
+	}
+	path_index = path_length;
+
+	while( path_index > 0 )
+	{
+		if( path[ path_index ] == LIBCPATH_SEPARATOR )
+		{
+			break;
+		}
+		path_index--;
+	}
+	/* Ignore the name of the root item
+	 */
+	if( path_length == 0 )
+	{
+		filename        = _SYSTEM_STRING( "" );
+		filename_length = 0;
+	}
+	else
+	{
+		filename        = &( path[ path_index + 1 ] );
+		filename_length = path_length - ( path_index + 1 );
+	}
 	result = mount_file_system_get_item_by_path(
 	          mount_handle->file_system,
 	          path,
@@ -509,94 +547,11 @@ int mount_handle_get_file_entry_by_path(
 	}
 	else if( result != 0 )
 	{
-		if( path_length > 1 )
-		{
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-			result = libolecf_item_get_utf16_name_size(
-			          item,
-			          &item_name_size,
-			          error );
-#else
-			result = libolecf_item_get_utf8_name_size(
-			          item,
-			          &item_name_size,
-			          error );
-#endif
-			if( result != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve item name size.",
-				 function );
-
-				goto on_error;
-			}
-			item_name = system_string_allocate(
-			             item_name_size );
-
-			if( item_name == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_MEMORY,
-				 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-				 "%s: unable to create item name string.",
-				 function );
-
-				goto on_error;
-			}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-			result = libolecf_item_get_utf16_name(
-			          item,
-			          (uint16_t *) item_name,
-			          item_name_size,
-			          error );
-#else
-			result = libolecf_item_get_utf8_name(
-			          item,
-			          (uint8_t *) item_name,
-			          item_name_size,
-			          error );
-#endif
-			if( result != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve item name.",
-				 function );
-
-				goto on_error;
-			}
-			if( mount_file_system_get_sanitized_filename(
-			     mount_handle->file_system,
-			     item_name,
-			     item_name_size - 1,
-			     &name,
-			     &name_size,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve file entry name.",
-				 function );
-
-				goto on_error;
-			}
-			memory_free(
-			 item_name );
-
-			item_name = NULL;
-		}
 		if( mount_file_entry_initialize(
 		     file_entry,
 		     mount_handle->file_system,
-		     name,
+		     filename,
+		     filename_length,
 		     item,
 		     error ) != 1 )
 		{
@@ -604,30 +559,15 @@ int mount_handle_get_file_entry_by_path(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to initialize file entry.",
+			 "%s: unable to initialize file entry for item.",
 			 function );
 
 			goto on_error;
-		}
-		if( name != NULL )
-		{
-			memory_free(
-			 name );
 		}
 	}
 	return( result );
 
 on_error:
-	if( item_name != NULL )
-	{
-		memory_free(
-		 item_name );
-	}
-	if( name != NULL )
-	{
-		memory_free(
-		 name );
-	}
 	if( item != NULL )
 	{
 		libolecf_item_free(

@@ -7,6 +7,7 @@ Analysis of the OLECF format
 :numbered!:
 [abstract]
 == Summary
+
 OLECF is short for Object Linking and Embedding Compound File and is a 
 container file format used for different purposes. OLECF is mainly known as the 
 OLE2 File, Compound Binary File and Compound Document File format.
@@ -17,6 +18,7 @@ this file type.
 
 [preface]
 == Document information
+
 [cols="1,5"]
 |===
 | Author(s): | Joachim Metz <joachim.metz@gmail.com>
@@ -27,8 +29,9 @@ this file type.
 
 [preface]
 == License
+
 ....
-Copyright (C) 2008-2017, Joachim Metz <joachim.metz@gmail.com>.
+Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>.
 Permission is granted to copy, distribute and/or modify this document under the 
 terms of the GNU Free Documentation License, Version 1.3 or any later version 
 published by the Free Software Foundation; with no Invariant Sections, no 
@@ -38,6 +41,7 @@ in the section entitled "GNU Free Documentation License".
 
 [preface]
 == Revision history
+
 [cols="1,1,1,5",options="header"]
 |===
 | Version | Author | Date | Comments
@@ -57,10 +61,12 @@ June 2009 | Initial version based on earlier notes.
 | 0.0.12 | J.B. Metz | December 2014 | Switched to asccidoc format.
 | 0.0.13 | J.B. Metz | December 2015 | Additional information on OLE compound file with unused root directory entry.
 | 0.0.14 | J.B. Metz | August 2017 | Additional information about VT_LPWSTR property.
+| 0.0.15 | J.B. Metz | December 2018 | Changes to formatting.
 |===
 
 :numbered:
 == Overview
+
 The OLE (Object Linking and Embedding) CF (Compound File) format is used for 
 different file types. It is mainly known by containing Microsoft Office 97 – 
 2003 documents. The file format is commonly known by the name OLE2 but also is 
@@ -95,12 +101,14 @@ Unicode strings are stored in UTF-16 little-endian without the byte order mark (
 |===
 
 === Test version
+
 The following version of programs were used to test the information within this document:
 
 * Microsoft Office
 * OpenOffice
 
 == The file header
+
 The file header is 512 bytes of size but note that the entire first sector is used to store it. The file header consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -141,6 +149,7 @@ The MSAT is also referred to as Double Indirect FAT (DIF).
 
 === File format version
 
+
 [cols="1,1,5",options="header"]
 |===
 | Major version | Minor version | Description
@@ -150,6 +159,7 @@ The MSAT is also referred to as Double Indirect FAT (DIF).
 |===
 
 == The allocation table
+
 The OLE CF format contains multiple types of allocation tables:
 
 * the Master Sector Allocation Table (MSAT);
@@ -185,6 +195,7 @@ The SID needs to be corrected by 1 to account for the first sector that
 contains the file header.
 
 === Master Sector Allocation Table (MSAT)
+
 The MSAT start at offset 76 in the file header. The MSAT contains sector 
 identifiers (SID) that refer to where SAT sector are situated in the OLE CF. In 
 the file header there is room for 109 SID and [yellow-background]*last SID
@@ -206,6 +217,7 @@ number of SIDs = ( sector size / 4 ) - 1
 ....
 
 === Sector Allocation Table (SAT)
+
 The SAT sectors can be determined by the MSAT. The SAT contains chains of 
 sector identifiers (SID) that refer to the next sector in the chain or the end 
 of the chain. A SID chain contains the sequence of sectors in a stream.
@@ -216,6 +228,7 @@ number of SIDs = ( sector size / 4 )
 ....
 
 === Short Sector Allocation Table (SSAT)
+
 The SSAT sectors can be determined by the MSAT. The SAT contains chains of 
 sector identifiers (SID) that refer to the next sector in the chain or the end 
 of the chain. A SID chain contains the sequence of sectors in a stream.
@@ -226,6 +239,7 @@ number of SIDs = ( sector size / 4 )
 ....
 
 == The directory
+
 The directory consists of multiple entries. 
 
 A directory entry is 128 bytes of size and consists of:
@@ -302,6 +316,7 @@ Some OLECF files do not have directory entries at all.
 |===
 
 === Root directory
+
 A directory with the name "RootEntry" should be the first directory entry in 
 the directory chain (stream). The root directory should have a type of 0x05. 
 Some older implementations of OLE CF only store the name "R".
@@ -312,6 +327,7 @@ has no directory entries at all, or the root directory entry can be marked
 unused.
 
 === Short-sector streams
+
 When the size of a stream is smaller than the minimum size of a standard stream 
 the data of that stream is stored in the short-sector stream. The size and the 
 sector identifier of the short-sector stream is stored in the root directory.
@@ -324,6 +340,7 @@ file offset = ( SSID x short-sector size ) + offset short-sector stream
 ....
 
 === Shared property streams
+
 [yellow-background]*All shared property sets are identified by a stream or 
 storage name with the prefix "\005" (or 0x05) to show that it is a property set 
 that can be shared among applications. The Summary Information property set is 
@@ -331,6 +348,7 @@ no exception. The name of the stream that contains the Summary Information
 property set is: "\005SummaryInformation"*
 
 == Compound object stream
+
 [yellow-background]*The object stream contains binary data for embedded 
 objects. Word has no knowledge of the contents of this stream.*
 
@@ -352,6 +370,7 @@ Unicode strings are stored in UTF-16 little-endian without the byte order mark (
 |===
 
 === The compound object header
+
 The compound object header 28 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -365,6 +384,7 @@ The compound object header 28 bytes of size and consists of:
 |===
 
 === The compound object stream
+
 The compound object stream is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -403,6 +423,7 @@ UTF-16 little-endian string terminated by an end-of-string character
 
 ==== Standard clipboard format identifiers
 
+
 [cols="1,1,5",options="header"]
 |===
 | Value | Identifier | Description
@@ -415,9 +436,11 @@ UTF-16 little-endian string terminated by an end-of-string character
 |===
 
 ==== Registered clipboard format identifiers
+
 [yellow-background]*TODO*
 
 == Property set streams
+
 Certain streams are property set streams. These streams contain information 
 defined as properties. A property set stream consists of:
 
@@ -439,6 +462,7 @@ Unicode strings are stored in UTF-16 little-endian without the byte order mark (
 |===
 
 === The property set header
+
 The property set header is 28 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -458,6 +482,7 @@ The upper 16-bit contain the operating platform type +
 |===
 
 === The property set section list
+
 The property set header is followed by the property set section list entries. A 
 property set section list entry is 20 bytes of size and consists of:
 
@@ -469,6 +494,7 @@ property set section list entry is 20 bytes of size and consists of:
 |===
 
 ==== The property set class identifier
+
 The following property set identifiers are known to be used. For more 
 information about the property sets and values see: https://github.com/libyal/libfwps/blob/master/documentation/Windows%20Property%20Store%20format.asciidoc[[LIBFWPS\]].
 
@@ -482,6 +508,7 @@ information about the property sets and values see: https://github.com/libyal/li
 |===
 
 === The property set section header
+
 A property set section header is 8 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -492,6 +519,7 @@ A property set section header is 8 bytes of size and consists of:
 |===
 
 === The property set section property list
+
 The property set section header is followed by the property set section 
 property list entries. A property set section property list entry is 8 bytes of 
 size and consists of:
@@ -505,6 +533,7 @@ The offset is relative from the start of the property set section header
 |===
 
 === The property set section property
+
 The property set section property list is followed by the property set section 
 properties. A property set section property is variable of size and consists of:
 
@@ -519,6 +548,7 @@ Contains an OLE defines property (variant) types. Also see https://github.com/li
 [NOTE] The size of a VT_LPWSTR is stored as number of characters.
 
 == Notes
+
 There are multiple type of data sectors
 * MSAT sector (marked by 0xfffffffd (-3) in the SAT) +
 Consist of ( sector size / 4 ) MSAT sector values

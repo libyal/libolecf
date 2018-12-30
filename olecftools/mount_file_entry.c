@@ -51,11 +51,11 @@ int mount_file_entry_initialize(
      mount_file_entry_t **file_entry,
      mount_file_system_t *file_system,
      const system_character_t *name,
+     size_t name_length,
      libolecf_item_t *item,
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_entry_initialize";
-	size_t name_length    = 0;
 
 	if( file_entry == NULL )
 	{
@@ -86,6 +86,17 @@ int mount_file_entry_initialize(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid file system.",
+		 function );
+
+		return( -1 );
+	}
+	if( name_length > (size_t) ( SSIZE_MAX - 1 ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid name length value exceeds maximum.",
 		 function );
 
 		return( -1 );
@@ -127,9 +138,6 @@ int mount_file_entry_initialize(
 
 	if( name != NULL )
 	{
-		name_length = system_string_length(
-		               name );
-
 		( *file_entry )->name = system_string_allocate(
 		                         name_length + 1 );
 
@@ -144,19 +152,22 @@ int mount_file_entry_initialize(
 
 			goto on_error;
 		}
-		if( system_string_copy(
-		     ( *file_entry )->name,
-		     name,
-		     name_length ) == NULL )
+		if( name_length > 0 )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy name.",
-			 function );
+			if( system_string_copy(
+			     ( *file_entry )->name,
+			     name,
+			     name_length ) == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+				 "%s: unable to copy name.",
+				 function );
 
-			goto on_error;
+				goto on_error;
+			}
 		}
 		( *file_entry )->name[ name_length ] = 0;
 
@@ -500,8 +511,8 @@ int mount_file_entry_get_file_mode(
      uint16_t *file_mode,
      libcerror_error_t **error )
 {
-	static char *function   = "mount_file_entry_get_file_mode";
-	int number_of_sub_items = 0;
+	static char *function = "mount_file_entry_get_file_mode";
+	uint8_t item_type     = 0;
 
 	if( file_entry == NULL )
 	{
@@ -525,21 +536,22 @@ int mount_file_entry_get_file_mode(
 
 		return( -1 );
 	}
-	if( libolecf_item_get_number_of_sub_items(
+	if( libolecf_item_get_type(
 	     file_entry->item,
-	     &number_of_sub_items,
+	     &item_type,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of sub items.",
+		 "%s: unable to retrieve type from item.",
 		 function );
 
 		return( -1 );
 	}
-	if( number_of_sub_items > 0 )
+	if( ( item_type == LIBOLECF_ITEM_TYPE_STORAGE )
+	 || ( item_type == LIBOLECF_ITEM_TYPE_ROOT_STORAGE ) )
 	{
 		*file_mode = S_IFDIR | 0555;
 	}
@@ -704,7 +716,7 @@ int mount_file_entry_get_number_of_sub_file_entries(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of items.",
+		 "%s: unable to retrieve number of sub items.",
 		 function );
 
 		return( -1 );
@@ -721,13 +733,10 @@ int mount_file_entry_get_sub_file_entry_by_index(
      mount_file_entry_t **sub_file_entry,
      libcerror_error_t **error )
 {
-	libolecf_item_t *sub_item         = NULL;
-	system_character_t *name          = NULL;
-	system_character_t *sub_item_name = NULL;
-	static char *function             = "mount_file_entry_get_sub_file_entry_by_index";
-	size_t name_size                  = 0; 
-	size_t sub_item_name_size         = 0; 
-	int result                        = 0;
+	libolecf_item_t *sub_item    = NULL;
+	system_character_t *filename = NULL;
+	static char *function        = "mount_file_entry_get_sub_file_entry_by_index";
+	size_t filename_size         = 0;
 
 	if( file_entry == NULL )
 	{
@@ -779,92 +788,28 @@ int mount_file_entry_get_sub_file_entry_by_index(
 
 		goto on_error;
 	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	result = libolecf_item_get_utf16_name_size(
-	          sub_item,
-	          &sub_item_name_size,
-	          error );
-#else
-	result = libolecf_item_get_utf8_name_size(
-	          sub_item,
-	          &sub_item_name_size,
-	          error );
-#endif
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve sub item name size.",
-		 function );
-
-		goto on_error;
-	}
-	sub_item_name = system_string_allocate(
-	                 sub_item_name_size );
-
-	if( sub_item_name == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_MEMORY,
-		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create sub item name string.",
-		 function );
-
-		goto on_error;
-	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	result = libolecf_item_get_utf16_name(
-	          sub_item,
-	          (uint16_t *) sub_item_name,
-	          sub_item_name_size,
-	          error );
-#else
-	result = libolecf_item_get_utf8_name(
-	          sub_item,
-	          (uint8_t *) sub_item_name,
-	          sub_item_name_size,
-	          error );
-#endif
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve sub item name.",
-		 function );
-
-		goto on_error;
-	}
-	if( mount_file_system_get_sanitized_filename(
+	if( mount_file_system_get_filename_from_item(
 	     file_entry->file_system,
-	     sub_item_name,
-	     sub_item_name_size - 1,
-	     &name,
-	     &name_size,
+	     sub_item,
+	     &filename,
+	     &filename_size,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve sub file entry name.",
-		 function );
+		 "%s: unable to retrieve filename of sub file entry: %d.",
+		 function,
+		 sub_file_entry_index );
 
 		goto on_error;
 	}
-	memory_free(
-	 sub_item_name );
-
-	sub_item_name = NULL;
-
 	if( mount_file_entry_initialize(
 	     sub_file_entry,
 	     file_entry->file_system,
-	     name,
+	     filename,
+	     filename_size - 1,
 	     sub_item,
 	     error ) != 1 )
 	{
@@ -878,21 +823,18 @@ int mount_file_entry_get_sub_file_entry_by_index(
 
 		goto on_error;
 	}
-	memory_free(
-	 name );
-
+	if( filename != NULL )
+	{
+		memory_free(
+		 filename );
+	}
 	return( 1 );
 
 on_error:
-	if( sub_item_name != NULL )
+	if( filename != NULL )
 	{
 		memory_free(
-		 sub_item_name );
-	}
-	if( name != NULL )
-	{
-		memory_free(
-		 name );
+		 filename );
 	}
 	if( sub_item != NULL )
 	{

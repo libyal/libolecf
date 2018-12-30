@@ -164,7 +164,7 @@ int main( int argc, char * const argv[] )
 	 1 );
 
 	if( libclocale_initialize(
-             "olecftools",
+	     "olecftools",
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -174,8 +174,8 @@ int main( int argc, char * const argv[] )
 		goto on_error;
 	}
 	if( olecftools_output_initialize(
-             _IONBF,
-             &error ) != 1 )
+	     _IONBF,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -289,7 +289,7 @@ int main( int argc, char * const argv[] )
 		{
 			fprintf(
 			 stderr,
-			 "Unable to set codepage in mount handle.\n" );
+			 "Unable to set ASCII codepage in mount handle.\n" );
 
 			goto on_error;
 		}
@@ -297,7 +297,7 @@ int main( int argc, char * const argv[] )
 		{
 			fprintf(
 			 stderr,
-			 "Unsupported codepage defaulting to: windows-1252.\n" );
+			 "Unsupported ASCII codepage defaulting to: windows-1252.\n" );
 		}
 	}
 	if( mount_handle_open(
@@ -385,7 +385,7 @@ int main( int argc, char * const argv[] )
 	                          &olecfmount_fuse_operations,
 	                          sizeof( struct fuse_operations ),
 	                          olecfmount_mount_handle );
-	
+
 	if( olecfmount_fuse_handle == NULL )
 	{
 		fprintf(
