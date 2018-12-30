@@ -43,7 +43,7 @@ struct mount_handle
 	 */
 	mount_file_system_t *file_system;
 
-	/* The ascii codepage
+	/* The ASCII codepage
 	 */
 	int ascii_codepage;
 

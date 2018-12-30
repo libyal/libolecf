@@ -41,6 +41,7 @@
 
 #include "mount_file_system.h"
 #include "olecftools_libcerror.h"
+#include "olecftools_libcpath.h"
 #include "olecftools_libolecf.h"
 
 /* Creates a file system
@@ -52,6 +53,7 @@ int mount_file_system_initialize(
      libcerror_error_t **error )
 {
 #if defined( WINAPI )
+	FILETIME filetime;
 	SYSTEMTIME systemtime;
 #elif defined( HAVE_CLOCK_GETTIME )
 	struct timespec time_structure;
@@ -61,7 +63,6 @@ int mount_file_system_initialize(
 
 #if defined( WINAPI )
 	DWORD error_code      = 0;
-	uint64_t timestamp    = 0;
 #else
 	int64_t timestamp     = 0;
 #endif
@@ -141,7 +142,7 @@ int mount_file_system_initialize(
 
 	if( SystemTimeToFileTime(
 	     &systemtime,
-	     &timestamp ) == 0 )
+	     &filetime ) == 0 )
 	{
 		error_code = GetLastError();
 
@@ -155,6 +156,8 @@ int mount_file_system_initialize(
 
 		goto on_error;
 	}
+	( *file_system )->mounted_timestamp = ( (uint64_t) filetime.dwHighDateTime << 32 ) | filetime.dwLowDateTime;
+
 #elif defined( HAVE_CLOCK_GETTIME )
 	if( clock_gettime(
 	     CLOCK_REALTIME,
@@ -170,6 +173,8 @@ int mount_file_system_initialize(
 		goto on_error;
 	}
 	timestamp = ( (int64_t) time_structure.tv_sec * 1000000000 ) + time_structure.tv_nsec;
+
+	( *file_system )->mounted_timestamp = (uint64_t) timestamp;
 
 #else
 	timestamp = (int64_t) time( NULL );
@@ -187,9 +192,9 @@ int mount_file_system_initialize(
 	}
 	timestamp *= 1000000000;
 
-#endif /* defined( HAVE_CLOCK_GETTIME ) */
-
 	( *file_system )->mounted_timestamp = (uint64_t) timestamp;
+
+#endif /* defined( HAVE_CLOCK_GETTIME ) */
 
 	return( 1 );
 
@@ -238,26 +243,26 @@ int mount_file_system_free(
  * Returns 1 if successful or -1 on error
  */
 int mount_file_system_signal_abort(
-     mount_file_system_t *mount_file_system,
+     mount_file_system_t *file_system,
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_system_signal_abort";
 
-	if( mount_file_system == NULL )
+	if( file_system == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid mount file system.",
+		 "%s: invalid file system.",
 		 function );
 
 		return( -1 );
 	}
-	if( mount_file_system->file != NULL )
+	if( file_system->file != NULL )
 	{
 		if( libolecf_file_signal_abort(
-		     mount_file_system->file,
+		     file_system->file,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -270,6 +275,32 @@ int mount_file_system_signal_abort(
 			return( -1 );
 		}
 	}
+	return( 1 );
+}
+
+/* Sets the file
+ * Returns 1 if successful or -1 on error
+ */
+int mount_file_system_set_file(
+     mount_file_system_t *file_system,
+     libolecf_file_t *file,
+     libcerror_error_t **error )
+{
+	static char *function = "mount_file_system_set_file";
+
+	if( file_system == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid file system.",
+		 function );
+
+		return( -1 );
+	}
+	file_system->file = file;
+
 	return( 1 );
 }
 
@@ -306,32 +337,6 @@ int mount_file_system_get_file(
 		return( -1 );
 	}
 	*file = file_system->file;
-
-	return( 1 );
-}
-
-/* Sets the file
- * Returns 1 if successful or -1 on error
- */
-int mount_file_system_set_file(
-     mount_file_system_t *file_system,
-     libolecf_file_t *file,
-     libcerror_error_t **error )
-{
-	static char *function = "mount_file_system_set_file";
-
-	if( file_system == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid file system.",
-		 function );
-
-		return( -1 );
-	}
-	file_system->file = file;
 
 	return( 1 );
 }
@@ -436,12 +441,7 @@ int mount_file_system_get_item_by_path(
 
 		return( -1 );
 	}
-/* TODO replace by libcpath */
-#if defined( WINAPI )
-	if( path[ 0 ] != '\\' )
-#else
-	if( path[ 0 ] != '/' )
-#endif
+	if( path[ 0 ] != LIBCPATH_SEPARATOR )
 	{
 		libcerror_error_set(
 		 error,
@@ -622,7 +622,7 @@ int mount_file_system_get_item_path(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid item_path size value exceeds maximum.",
+		 "%s: invalid item path size value exceeds maximum.",
 		 function );
 
 		goto on_error;
@@ -891,7 +891,7 @@ int mount_file_system_get_item_path(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid item_path size value exceeds maximum.",
+		 "%s: invalid item path size value exceeds maximum.",
 		 function );
 
 		goto on_error;

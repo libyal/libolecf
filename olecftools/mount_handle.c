@@ -270,6 +270,7 @@ int mount_handle_open(
 {
 	libolecf_file_t *file = NULL;
 	static char *function = "mount_handle_open";
+	int result            = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -278,6 +279,17 @@ int mount_handle_open(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid mount handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( filename == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid filename.",
 		 function );
 
 		return( -1 );
@@ -296,18 +308,19 @@ int mount_handle_open(
 		goto on_error;
 	}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libolecf_file_open_wide(
-	     file,
-	     filename,
-	     LIBOLECF_OPEN_READ,
-	     error ) != 1 )
+	result = libolecf_file_open_wide(
+	          file,
+	          filename,
+	          LIBOLECF_OPEN_READ,
+	          error );
 #else
-	if( libolecf_file_open(
-	     file,
-	     filename,
-	     LIBOLECF_OPEN_READ,
-	     error ) != 1 )
+	result = libolecf_file_open(
+	          file,
+	          filename,
+	          LIBOLECF_OPEN_READ,
+	          error );
 #endif
+	if( result != 1 )
 	{
 		libcerror_error_set(
 		 error,

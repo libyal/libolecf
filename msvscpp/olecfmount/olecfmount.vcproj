@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\olecftools\olecftools_libcpath.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\olecftools\olecftools_libfdatetime.h"
 				>
 			</File>

@@ -1,5 +1,5 @@
 /*
- * Mounts an OLECF file
+ * Mounts an Object Linking and Embedding (OLE) Compound File (CF)
  *
  * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -27,18 +27,23 @@
 
 #include <stdio.h>
 
-#if defined( HAVE_UNISTD_H )
-#include <unistd.h>
+#if defined( HAVE_IO_H ) || defined( WINAPI )
+#include <io.h>
 #endif
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
+#if defined( HAVE_UNISTD_H )
+#include <unistd.h>
+#endif
+
 #include "mount_dokan.h"
 #include "mount_fuse.h"
 #include "mount_handle.h"
 #include "olecftools_getopt.h"
+#include "olecftools_i18n.h"
 #include "olecftools_libcerror.h"
 #include "olecftools_libclocale.h"
 #include "olecftools_libcnotify.h"
@@ -50,7 +55,7 @@
 mount_handle_t *olecfmount_mount_handle = NULL;
 int olecfmount_abort                    = 0;
 
-/* Prints the executable usage information
+/* Prints usage information
  */
 void usage_fprint(
       FILE *stream )
@@ -59,23 +64,21 @@ void usage_fprint(
 	{
 		return;
 	}
-	fprintf( stream, "Use olecfmount to mount an OLE Compound File.\n\n" );
+	fprintf( stream, "Use olecfmount to mount an Object Linking and Embedding (OLE) Compound File (CF)\n\n" );
 
-	fprintf( stream, "Usage: olecfmount [ -c codepage ] [ -X extended_options ]\n"
-	                 "                  [ -hvV ] source mount_point\n\n" );
+	fprintf( stream, "Usage: olecfmount [ -c codepage ] [ -X extended_options ] [ -hvV ] file\n"
+	                 "                  mount_point\n\n" );
 
-	fprintf( stream, "\tsource:      the source OLECF file\n\n" );
+	fprintf( stream, "\tfile:        an Object Linking and Embedding (OLE) Compound File (CF)\n\n" );
 	fprintf( stream, "\tmount_point: the directory to serve as mount point\n\n" );
 
-	fprintf( stream, "\t-c:          codepage of ASCII strings, options: ascii,\n"
-	                 "\t             windows-874, windows-932, windows-936,\n"
-	                 "\t             windows-949, windows-950, windows-1250,\n"
-	                 "\t             windows-1251, windows-1252 (default),\n"
-	                 "\t             windows-1253, windows-1254, windows-1255,\n"
+	fprintf( stream, "\t-c:          codepage of ASCII strings, options: ascii, windows-874, windows-932,\n"
+	                 "\t             windows-936, windows-949, windows-950, windows-1250, windows-1251,\n"
+	                 "\t             windows-1252 (default), windows-1253, windows-1254, windows-1255,\n"
 	                 "\t             windows-1256, windows-1257 or windows-1258\n" );
 	fprintf( stream, "\t-h:          shows this help\n" );
-	fprintf( stream, "\t-v:          verbose output to stderr\n"
-	                 "\t             olecfmount will remain running in the foregroud\n" );
+	fprintf( stream, "\t-v:          verbose output to stderr, while olecfmount will remain running in the\n"
+	                 "\t             foreground\n" );
 	fprintf( stream, "\t-V:          print version\n" );
 	fprintf( stream, "\t-X:          extended options to pass to sub system\n" );
 }
@@ -134,7 +137,7 @@ int main( int argc, char * const argv[] )
 {
 	libolecf_error_t *error                     = NULL;
 	system_character_t *mount_point             = NULL;
-	system_character_t *option_ascii_codepage   = NULL;
+	system_character_t *option_codepage         = NULL;
 	system_character_t *option_extended_options = NULL;
 	system_character_t *source                  = NULL;
 	char *program                               = "olecfmount";
@@ -145,9 +148,9 @@ int main( int argc, char * const argv[] )
 #if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE )
 	struct fuse_operations olecfmount_fuse_operations;
 
-	struct fuse_args olecfmount_fuse_arguments  = FUSE_ARGS_INIT(0, NULL);
-	struct fuse_chan *olecfmount_fuse_channel   = NULL;
-	struct fuse *olecfmount_fuse_handle         = NULL;
+	struct fuse_args olecfmount_fuse_arguments = FUSE_ARGS_INIT(0, NULL);
+	struct fuse_chan *olecfmount_fuse_channel  = NULL;
+	struct fuse *olecfmount_fuse_handle        = NULL;
 
 #elif defined( HAVE_LIBDOKAN )
 	DOKAN_OPERATIONS olecfmount_dokan_operations;
@@ -161,7 +164,7 @@ int main( int argc, char * const argv[] )
 	 1 );
 
 	if( libclocale_initialize(
-	     "olecftools",
+             "olecftools",
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -170,7 +173,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-        if( olecftools_output_initialize(
+	if( olecftools_output_initialize(
              _IONBF,
              &error ) != 1 )
 	{
@@ -204,7 +207,7 @@ int main( int argc, char * const argv[] )
 				return( EXIT_FAILURE );
 
 			case (system_integer_t) 'c':
-				option_ascii_codepage = optarg;
+				option_codepage = optarg;
 
 				break;
 
@@ -275,18 +278,18 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( option_ascii_codepage != NULL )
+	if( option_codepage != NULL )
 	{
 		result = mount_handle_set_ascii_codepage(
 		          olecfmount_mount_handle,
-		          option_ascii_codepage,
+		          option_codepage,
 		          &error );
 
 		if( result == -1 )
 		{
 			fprintf(
 			 stderr,
-			 "Unable to set ASCII codepage in mount handle.\n" );
+			 "Unable to set codepage in mount handle.\n" );
 
 			goto on_error;
 		}
@@ -294,7 +297,7 @@ int main( int argc, char * const argv[] )
 		{
 			fprintf(
 			 stderr,
-			 "Unsupported ASCII codepage defaulting to: windows-1252.\n" );
+			 "Unsupported codepage defaulting to: windows-1252.\n" );
 		}
 	}
 	if( mount_handle_open(
@@ -304,7 +307,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to open OLECF file.\n" );
+		 "Unable to open source file\n" );
 
 		goto on_error;
 	}

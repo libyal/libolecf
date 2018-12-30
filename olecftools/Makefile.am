@@ -95,6 +95,7 @@ olecfmount_SOURCES = \
 	olecftools_libcerror.h \
 	olecftools_libclocale.h \
 	olecftools_libcnotify.h \
+	olecftools_libcpath.h \
 	olecftools_libfdatetime.h \
 	olecftools_libolecf.h \
 	olecftools_output.c olecftools_output.h \
@@ -103,8 +104,12 @@ olecfmount_SOURCES = \
 
 olecfmount_LDADD = \
 	@LIBFUSE_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
 	../libolecf/libolecf.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
