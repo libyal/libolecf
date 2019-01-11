@@ -1,7 +1,7 @@
 /*
  * Mount file system
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -56,6 +56,7 @@ int mount_file_system_initialize(
 #if defined( WINAPI )
 	FILETIME filetime;
 	SYSTEMTIME systemtime;
+
 #elif defined( HAVE_CLOCK_GETTIME )
 	struct timespec time_structure;
 #endif
@@ -218,6 +219,7 @@ int mount_file_system_free(
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_system_free";
+	int result            = 1;
 
 	if( file_system == NULL )
 	{
@@ -237,7 +239,7 @@ int mount_file_system_free(
 
 		*file_system = NULL;
 	}
-	return( 1 );
+	return( result );
 }
 
 /* Signals the mount file system to abort
@@ -260,10 +262,10 @@ int mount_file_system_signal_abort(
 
 		return( -1 );
 	}
-	if( file_system->file != NULL )
+	if( file_system->olecf_file != NULL )
 	{
 		if( libolecf_file_signal_abort(
-		     file_system->file,
+		     file_system->olecf_file,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -284,7 +286,7 @@ int mount_file_system_signal_abort(
  */
 int mount_file_system_set_file(
      mount_file_system_t *file_system,
-     libolecf_file_t *file,
+     libolecf_file_t *olecf_file,
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_system_set_file";
@@ -300,7 +302,7 @@ int mount_file_system_set_file(
 
 		return( -1 );
 	}
-	file_system->file = file;
+	file_system->olecf_file = olecf_file;
 
 	return( 1 );
 }
@@ -310,7 +312,7 @@ int mount_file_system_set_file(
  */
 int mount_file_system_get_file(
      mount_file_system_t *file_system,
-     libolecf_file_t **file,
+     libolecf_file_t **olecf_file,
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_system_get_file";
@@ -326,7 +328,7 @@ int mount_file_system_get_file(
 
 		return( -1 );
 	}
-	if( file == NULL )
+	if( olecf_file == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -337,7 +339,7 @@ int mount_file_system_get_file(
 
 		return( -1 );
 	}
-	*file = file_system->file;
+	*olecf_file = file_system->olecf_file;
 
 	return( 1 );
 }
@@ -718,7 +720,7 @@ int mount_file_system_get_item_path_from_path(
 			}
 		}
 #if !defined( WINAPI )
-		else if( unicode_character == (system_character_t) '/' )
+		else if( unicode_character == (system_character_t) '\\' )
 		{
 			if( ( item_path_index + 1 ) > safe_item_path_size )
 			{
@@ -790,7 +792,6 @@ on_error:
 	}
 	return( -1 );
 }
-
 /* Retrieves the item of a specific path
  * Returns 1 if successful, 0 if no such item or -1 on error
  */
@@ -798,7 +799,7 @@ int mount_file_system_get_item_by_path(
      mount_file_system_t *file_system,
      const system_character_t *path,
      size_t path_length,
-     libolecf_item_t **item,
+     libolecf_item_t **olecf_item,
      libcerror_error_t **error )
 {
 	system_character_t *item_path = NULL;
@@ -846,22 +847,24 @@ int mount_file_system_get_item_by_path(
 
 		goto on_error;
 	}
+	/* Need to determine length here since size is based on the worst case
+	 */
 	item_path_length = system_string_length(
 	                    item_path );
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_file_get_item_by_utf16_path(
-	          file_system->file,
+	          file_system->olecf_file,
 	          (uint16_t *) item_path,
 	          item_path_length,
-	          item,
+	          olecf_item,
 	          error );
 #else
 	result = libolecf_file_get_item_by_utf8_path(
-	          file_system->file,
+	          file_system->olecf_file,
 	          (uint8_t *) item_path,
 	          item_path_length,
-	          item,
+	          olecf_item,
 	          error );
 #endif
 	if( result == -1 )
@@ -1166,7 +1169,7 @@ on_error:
  */
 int mount_file_system_get_filename_from_item(
      mount_file_system_t *file_system,
-     libolecf_item_t *item,
+     libolecf_item_t *olecf_item,
      system_character_t **filename,
      size_t *filename_size,
      libcerror_error_t **error )
@@ -1189,12 +1192,12 @@ int mount_file_system_get_filename_from_item(
 	}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_item_get_utf16_name_size(
-	          item,
+	          olecf_item,
 	          &item_name_size,
 	          error );
 #else
 	result = libolecf_item_get_utf8_name_size(
-	          item,
+	          olecf_item,
 	          &item_name_size,
 	          error );
 #endif
@@ -1237,13 +1240,13 @@ int mount_file_system_get_filename_from_item(
 	}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_item_get_utf16_name(
-	          item,
+	          olecf_item,
 	          (uint16_t *) item_name,
 	          item_name_size,
 	          error );
 #else
 	result = libolecf_item_get_utf8_name(
-	          item,
+	          olecf_item,
 	          (uint8_t *) item_name,
 	          item_name_size,
 	          error );

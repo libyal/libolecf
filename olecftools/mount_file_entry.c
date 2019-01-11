@@ -1,7 +1,7 @@
 /*
  * Mount file entry
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -52,7 +52,7 @@ int mount_file_entry_initialize(
      mount_file_system_t *file_system,
      const system_character_t *name,
      size_t name_length,
-     libolecf_item_t *item,
+     libolecf_item_t *olecf_item,
      libcerror_error_t **error )
 {
 	static char *function = "mount_file_entry_initialize";
@@ -173,7 +173,7 @@ int mount_file_entry_initialize(
 
 		( *file_entry )->name_size = name_length + 1;
 	}
-	( *file_entry )->item = item;
+	( *file_entry )->olecf_item = olecf_item;
 
 	return( 1 );
 
@@ -222,7 +222,7 @@ int mount_file_entry_free(
 			 ( *file_entry )->name );
 		}
 		if( libolecf_item_free(
-		     &( ( *file_entry )->item ),
+		     &( ( *file_entry )->olecf_item ),
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -329,7 +329,7 @@ int mount_file_entry_get_creation_time(
 		return( -1 );
 	}
 	if( libolecf_item_get_creation_time(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     &filetime,
 	     error ) != 1 )
 	{
@@ -436,7 +436,7 @@ int mount_file_entry_get_modification_time(
 		return( -1 );
 	}
 	if( libolecf_item_get_modification_time(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     &filetime,
 	     error ) != 1 )
 	{
@@ -537,7 +537,7 @@ int mount_file_entry_get_file_mode(
 		return( -1 );
 	}
 	if( libolecf_item_get_type(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     &item_type,
 	     error ) != 1 )
 	{
@@ -708,7 +708,7 @@ int mount_file_entry_get_number_of_sub_file_entries(
 		return( -1 );
 	}
 	if( libolecf_item_get_number_of_sub_items(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     number_of_sub_file_entries,
 	     error ) != 1 )
 	{
@@ -733,10 +733,10 @@ int mount_file_entry_get_sub_file_entry_by_index(
      mount_file_entry_t **sub_file_entry,
      libcerror_error_t **error )
 {
-	libolecf_item_t *sub_item    = NULL;
-	system_character_t *filename = NULL;
-	static char *function        = "mount_file_entry_get_sub_file_entry_by_index";
-	size_t filename_size         = 0;
+	libolecf_item_t *sub_olecf_item = NULL;
+	system_character_t *filename    = NULL;
+	static char *function           = "mount_file_entry_get_sub_file_entry_by_index";
+	size_t filename_size            = 0;
 
 	if( file_entry == NULL )
 	{
@@ -773,9 +773,9 @@ int mount_file_entry_get_sub_file_entry_by_index(
 	}
 /* TODO refactor to libolecf_item_get_sub_item_by_index */
 	if( libolecf_item_get_sub_item(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     sub_file_entry_index,
-	     &sub_item,
+	     &sub_olecf_item,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -790,7 +790,7 @@ int mount_file_entry_get_sub_file_entry_by_index(
 	}
 	if( mount_file_system_get_filename_from_item(
 	     file_entry->file_system,
-	     sub_item,
+	     sub_olecf_item,
 	     &filename,
 	     &filename_size,
 	     error ) != 1 )
@@ -810,7 +810,7 @@ int mount_file_entry_get_sub_file_entry_by_index(
 	     file_entry->file_system,
 	     filename,
 	     filename_size - 1,
-	     sub_item,
+	     sub_olecf_item,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -836,10 +836,10 @@ on_error:
 		memory_free(
 		 filename );
 	}
-	if( sub_item != NULL )
+	if( sub_olecf_item != NULL )
 	{
 		libolecf_item_free(
-		 &sub_item,
+		 &sub_olecf_item,
 		 NULL );
 	}
 	return( -1 );
@@ -871,7 +871,7 @@ ssize_t mount_file_entry_read_buffer_at_offset(
 		return( -1 );
 	}
 	if( libolecf_item_get_type(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     &item_type,
 	     error ) != 1 )
 	{
@@ -896,7 +896,7 @@ ssize_t mount_file_entry_read_buffer_at_offset(
 		return( -1 );
 	}
 	read_count = libolecf_stream_read_buffer_at_offset(
-	              file_entry->item,
+	              file_entry->olecf_item,
 	              buffer,
 	              buffer_size,
 	              offset,
@@ -952,7 +952,7 @@ int mount_file_entry_get_size(
 		return( -1 );
 	}
 	if( libolecf_item_get_size(
-	     file_entry->item,
+	     file_entry->olecf_item,
 	     &item_size,
 	     error ) != 1 )
 	{

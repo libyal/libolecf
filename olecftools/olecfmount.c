@@ -1,7 +1,7 @@
 /*
  * Mounts an Object Linking and Embedding (OLE) Compound File (CF)
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -581,7 +581,8 @@ int main( int argc, char * const argv[] )
 	 "No sub system to mount OLECF format.\n" );
 
 	return( EXIT_FAILURE );
-#endif
+
+#endif /* defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE ) */
 
 on_error:
 	if( error != NULL )

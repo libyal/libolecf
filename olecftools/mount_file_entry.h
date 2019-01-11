@@ -1,7 +1,7 @@
 /*
  * Mount file entry
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -51,7 +51,7 @@ struct mount_file_entry
 
 	/* The item
 	 */
-	libolecf_item_t *item;
+	libolecf_item_t *olecf_item;
 };
 
 int mount_file_entry_initialize(
@@ -59,7 +59,7 @@ int mount_file_entry_initialize(
      mount_file_system_t *file_system,
      const system_character_t *name,
      size_t name_length,
-     libolecf_item_t *item,
+     libolecf_item_t *olecf_item,
      libcerror_error_t **error );
 
 int mount_file_entry_free(

@@ -1,7 +1,7 @@
 /*
  * Mount handle
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -262,16 +262,16 @@ int mount_handle_set_ascii_codepage(
 }
 
 /* Opens the mount handle
- * Returns 1 if successful or -1 on error
+ * Returns 1 if successful, 0 if not or -1 on error
  */
 int mount_handle_open(
      mount_handle_t *mount_handle,
      const system_character_t *filename,
      libcerror_error_t **error )
 {
-	libolecf_file_t *file = NULL;
-	static char *function = "mount_handle_open";
-	int result            = 0;
+	libolecf_file_t *olecf_file = NULL;
+	static char *function       = "mount_handle_open";
+	int result                  = 0;
 
 	if( mount_handle == NULL )
 	{
@@ -296,7 +296,7 @@ int mount_handle_open(
 		return( -1 );
 	}
 	if( libolecf_file_initialize(
-	     &file,
+	     &olecf_file,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -310,18 +310,18 @@ int mount_handle_open(
 	}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libolecf_file_open_wide(
-	          file,
+	          olecf_file,
 	          filename,
 	          LIBOLECF_OPEN_READ,
 	          error );
 #else
 	result = libolecf_file_open(
-	          file,
+	          olecf_file,
 	          filename,
 	          LIBOLECF_OPEN_READ,
 	          error );
 #endif
-	if( result != 1 )
+	if( result == -1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -334,7 +334,7 @@ int mount_handle_open(
 	}
 	if( mount_file_system_set_file(
 	     mount_handle->file_system,
-	     file,
+	     olecf_file,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -349,10 +349,10 @@ int mount_handle_open(
 	return( 1 );
 
 on_error:
-	if( file != NULL )
+	if( olecf_file != NULL )
 	{
 		libolecf_file_free(
-		 &file,
+		 &olecf_file,
 		 NULL );
 	}
 	return( -1 );
@@ -365,8 +365,8 @@ int mount_handle_close(
      mount_handle_t *mount_handle,
      libcerror_error_t **error )
 {
-	libolecf_file_t *file = NULL;
-	static char *function = "mount_handle_close";
+	libolecf_file_t *olecf_file = NULL;
+	static char *function       = "mount_handle_close";
 
 	if( mount_handle == NULL )
 	{
@@ -381,7 +381,7 @@ int mount_handle_close(
 	}
 	if( mount_file_system_get_file(
 	     mount_handle->file_system,
-	     &file,
+	     &olecf_file,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -405,12 +405,12 @@ int mount_handle_close(
 		 "%s: unable to set file in file system.",
 		 function );
 
-		file = NULL;
+		olecf_file = NULL;
 
 		goto on_error;
 	}
 	if( libolecf_file_close(
-	     file,
+	     olecf_file,
 	     error ) != 0 )
 	{
 		libcerror_error_set(
@@ -423,7 +423,7 @@ int mount_handle_close(
 		goto on_error;
 	}
 	if( libolecf_file_free(
-	     &file,
+	     &olecf_file,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -438,10 +438,10 @@ int mount_handle_close(
 	return( 0 );
 
 on_error:
-	if( file != NULL )
+	if( olecf_file != NULL )
 	{
 		libolecf_file_free(
-		 &file,
+		 &olecf_file,
 		 NULL );
 	}
 	return( -1 );
@@ -456,7 +456,7 @@ int mount_handle_get_file_entry_by_path(
      mount_file_entry_t **file_entry,
      libcerror_error_t **error )
 {
-	libolecf_item_t *item              = NULL;
+	libolecf_item_t *olecf_item        = NULL;
 	const system_character_t *filename = NULL;
 	static char *function              = "mount_handle_get_file_entry_by_path";
 	size_t filename_length             = 0;
@@ -531,7 +531,7 @@ int mount_handle_get_file_entry_by_path(
 	          mount_handle->file_system,
 	          path,
 	          path_length,
-	          &item,
+	          &olecf_item,
 	          error );
 
 	if( result == -1 )
@@ -552,14 +552,14 @@ int mount_handle_get_file_entry_by_path(
 		     mount_handle->file_system,
 		     filename,
 		     filename_length,
-		     item,
+		     olecf_item,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to initialize file entry for item.",
+			 "%s: unable to initialize file entry.",
 			 function );
 
 			goto on_error;
@@ -568,10 +568,10 @@ int mount_handle_get_file_entry_by_path(
 	return( result );
 
 on_error:
-	if( item != NULL )
+	if( olecf_item != NULL )
 	{
 		libolecf_item_free(
-		 &item,
+		 &olecf_item,
 		 NULL );
 	}
 	return( -1 );

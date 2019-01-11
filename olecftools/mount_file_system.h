@@ -1,7 +1,7 @@
 /*
  * Mount file system
  *
- * Copyright (C) 2008-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -42,7 +42,7 @@ struct mount_file_system
 
 	/* The file
 	 */
-	libolecf_file_t *file;
+	libolecf_file_t *olecf_file;
 };
 
 int mount_file_system_initialize(
@@ -59,12 +59,12 @@ int mount_file_system_signal_abort(
 
 int mount_file_system_set_file(
      mount_file_system_t *file_system,
-     libolecf_file_t *file,
+     libolecf_file_t *olecf_file,
      libcerror_error_t **error );
 
 int mount_file_system_get_file(
      mount_file_system_t *file_system,
-     libolecf_file_t **file,
+     libolecf_file_t **olecf_file,
      libcerror_error_t **error );
 
 int mount_file_system_get_mounted_timestamp(
@@ -84,7 +84,7 @@ int mount_file_system_get_item_by_path(
      mount_file_system_t *file_system,
      const system_character_t *path,
      size_t path_length,
-     libolecf_item_t **item,
+     libolecf_item_t **olecf_item,
      libcerror_error_t **error );
 
 int mount_file_system_get_filename_from_name(
@@ -97,7 +97,7 @@ int mount_file_system_get_filename_from_name(
 
 int mount_file_system_get_filename_from_item(
      mount_file_system_t *file_system,
-     libolecf_item_t *item,
+     libolecf_item_t *olecf_item,
      system_character_t **filename,
      size_t *filename_size,
      libcerror_error_t **error );
