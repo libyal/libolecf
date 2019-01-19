@@ -1340,14 +1340,16 @@ int libolecf_io_handle_read_directory_entries(
 			 "\n" );
 		}
 #endif
-		if( libcdata_range_list_insert_range(
-		     read_directory_sector_list,
-		     (uint64_t) directory_sector_identifier,
-		     (uint64_t) 1,
-		     NULL,
-		     NULL,
-		     NULL,
-		     error ) != 1 )
+		result = libcdata_range_list_insert_range(
+		          read_directory_sector_list,
+		          (uint64_t) directory_sector_identifier,
+		          (uint64_t) 1,
+		          NULL,
+		          NULL,
+		          NULL,
+		          error );
+
+		if( result == -1 )
 		{
 			libcerror_error_set(
 			 error,
