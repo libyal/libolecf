@@ -1,4 +1,4 @@
-.Dd October 12, 2013
+.Dd April 25, 2019
 .Dt olecfinfo
 .Os libolecf
 .Sh NAME
@@ -8,7 +8,7 @@
 .Nm olecfinfo
 .Op Fl c Ar codepage
 .Op Fl ahvV
-.Va Ar source
+.Ar source
 .Sh DESCRIPTION
 .Nm olecfinfo
 is a utility to determine information about a Object Linking and Embedding (OLE) Compound File (CF)
@@ -44,23 +44,23 @@ None
 .Bd -literal
 # olecfinfo WordDocument.doc
 olecfinfo 20131012
-
+.sp
 OLE Compound File information:
 	Version			: 3.62
 	Sector size		: 512
 	Short sector size	: 64
-
+.sp
 Storage and stream items:
 Root Entry (768 bytes)
   1Table (42656 bytes)
   WordDocument (4096 bytes)
-  \x05SummaryInformation (4096 bytes)
-  \x05DocumentSummaryInformation (4096 bytes)
-  \x01CompObj (114 bytes)
-
+  \\x05SummaryInformation (4096 bytes)
+  \\x05DocumentSummaryInformation (4096 bytes)
+  \\x01CompObj (114 bytes)
+.sp
 Summary information:
 .Dl        ...
-
+.sp
 .Ed
 .Sh DIAGNOSTICS
 Errors, verbose and debug output are printed to stderr when verbose output \-v is enabled.
