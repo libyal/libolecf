@@ -34,6 +34,7 @@ check_SCRIPTS = \
 	pyolecf_test_file.py \
 	pyolecf_test_support.py \
 	test_library.sh \
+	test_manpage.sh \
 	test_olecfexport.sh \
 	test_olecfinfo.sh \
 	test_python_module.sh \
