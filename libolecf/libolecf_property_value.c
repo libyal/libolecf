@@ -639,19 +639,17 @@ int libolecf_property_value_read_data(
 			}
 			read_size = value_data_size + aligment_padding_size;
 
-#if SIZEOF_SIZE_T <= 4
-			if( read_size > (uint32_t) SSIZE_MAX )
+			if( read_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid value data size value exceeds maximum.",
+				 "%s: invalid value data size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
 			}
-#endif
 			data = (uint8_t *) memory_allocate(
 			                    sizeof( uint8_t ) * read_size );
 
@@ -780,19 +778,17 @@ int libolecf_property_value_read_data(
 			{
 				value_data_size *= 2;
 			}
-#if SIZEOF_SIZE_T <= 4
-			if( value_data_size > (uint32_t) SSIZE_MAX )
+			if( value_data_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid value data size value exceeds maximum.",
+				 "%s: invalid value data size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
 			}
-#endif
 			data = (uint8_t *) memory_allocate(
 			                    sizeof( uint8_t ) * value_data_size );
 

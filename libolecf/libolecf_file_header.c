@@ -355,9 +355,6 @@ int libolecf_file_header_read_data(
 		 ( (olecf_file_header_t *) data )->number_of_msat_sectors,
 		 file_header->number_of_msat_sectors );
 	}
-	file_header->sector_size       = 1 << sector_size;
-	file_header->short_sector_size = 1 << short_sector_size;
-
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -404,16 +401,16 @@ int libolecf_file_header_read_data(
 		 ( (olecf_file_header_t *) data )->byte_order[ 1 ] );
 
 		libcnotify_printf(
-		 "%s: sector size\t\t\t\t: 0x%04" PRIx16 " (%" PRIzd ")\n",
+		 "%s: sector size\t\t\t\t: %" PRIu16 " (%" PRIzd ")\n",
 		 function,
 		 sector_size,
-		 file_header->sector_size );
+		 1 << sector_size );
 
 		libcnotify_printf(
-		 "%s: short sector size\t\t\t: 0x%04" PRIx16 " (%" PRIzd ")\n",
+		 "%s: short sector size\t\t\t: %" PRIu16 " (%" PRIzd ")\n",
 		 function,
 		 short_sector_size,
-		 file_header->short_sector_size );
+		 1 << short_sector_size );
 
 		libcnotify_printf(
 		 "%s: reserved:\n",
@@ -468,7 +465,7 @@ int libolecf_file_header_read_data(
 	}
 #endif /* defined( HAVE_DEBUG_OUTPUT ) */
 
-	if( file_header->sector_size > (ssize_t) SSIZE_MAX )
+	if( sector_size > 15 )
 	{
 		libcerror_error_set(
 		 error,
@@ -479,7 +476,7 @@ int libolecf_file_header_read_data(
 
 		return( -1 );
 	}
-	if( file_header->short_sector_size > (ssize_t) SSIZE_MAX )
+	if( short_sector_size > 15 )
 	{
 		libcerror_error_set(
 		 error,
@@ -490,6 +487,9 @@ int libolecf_file_header_read_data(
 
 		return( -1 );
 	}
+	file_header->sector_size       = 1 << sector_size;
+	file_header->short_sector_size = 1 << short_sector_size;
+
 #if SIZEOF_SIZE_T <= 4
 	if( file_header->sector_stream_minimum_data_size > (uint32_t) SSIZE_MAX )
 	{

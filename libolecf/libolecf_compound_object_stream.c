@@ -225,19 +225,17 @@ int libolecf_compound_object_stream_read(
 		 user_type_string_size );
 	}
 #endif
-#if SIZEOF_SIZE_T <= 4
-	if( user_type_string_size > (uint32_t) SSIZE_MAX )
+	if( user_type_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid user type string size value exceeds maximum.",
+		 "%s: invalid user type string size value exceeds maximum allocation size.",
 		 function );
 
 		goto on_error;
 	}
-#endif
 	user_type_string = (uint8_t *) memory_allocate(
 	                                sizeof( uint8_t ) * user_type_string_size );
 
@@ -357,19 +355,17 @@ int libolecf_compound_object_stream_read(
 	}
 	else if( clipboard_data_size > 0 )
 	{
-#if SIZEOF_SIZE_T <= 4
-		if( clipboard_data_size > (uint32_t) SSIZE_MAX )
+		if( clipboard_data_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid clipboard data size value exceeds maximum.",
+			 "%s: invalid clipboard data size value exceeds maximum allocation size.",
 			 function );
 
 			goto on_error;
 		}
-#endif
 		clipboard_data = (uint8_t *) memory_allocate(
 					      sizeof( uint8_t ) * clipboard_data_size );
 
@@ -470,19 +466,17 @@ int libolecf_compound_object_stream_read(
 #endif
 	if( reserved_string_size > 0 )
 	{
-#if SIZEOF_SIZE_T <= 4
-		if( reserved_string_size > (uint32_t) SSIZE_MAX )
+		if( reserved_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid reserved string size value exceeds maximum.",
+			 "%s: invalid reserved string size value exceeds maximum allocation size.",
 			 function );
 
 			goto on_error;
 		}
-#endif
 		reserved_string = (uint8_t *) memory_allocate(
 					       sizeof( uint8_t ) * reserved_string_size );
 
@@ -557,7 +551,7 @@ int libolecf_compound_object_stream_read(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read unicode marker.",
+			 "%s: unable to read Unicode marker.",
 			 function );
 
 			goto on_error;
@@ -578,7 +572,7 @@ int libolecf_compound_object_stream_read(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: compound object unicode marker\t\t\t: 0x%08" PRIx32 "\n",
+			 "%s: compound object Unicode marker\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 unicode_marker );
 		}
@@ -606,7 +600,7 @@ int libolecf_compound_object_stream_read(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read unicode user type string size.",
+			 "%s: unable to read Unicode user type string size.",
 			 function );
 
 			goto on_error;
@@ -627,26 +621,24 @@ int libolecf_compound_object_stream_read(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: compound object unicode user type string size\t: %" PRIu32 "\n",
+			 "%s: compound object Unicode user type string size\t: %" PRIu32 "\n",
 			 function,
 			 user_type_string_size );
 		}
 #endif
 		if( user_type_string_size > 0 )
 		{
-#if SIZEOF_SIZE_T <= 4
-			if( user_type_string_size > (uint32_t) SSIZE_MAX )
+			if( user_type_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid user type string size value exceeds maximum.",
+				 "%s: invalid user type string size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
 			}
-#endif
 			user_type_string = (uint8_t *) memory_allocate(
 							sizeof( uint8_t ) * user_type_string_size );
 
@@ -656,7 +648,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_MEMORY,
 				 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-				 "%s: unable to create unicode user type string.",
+				 "%s: unable to create Unicode user type string.",
 				 function );
 
 				goto on_error;
@@ -678,7 +670,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_IO,
 				 LIBCERROR_IO_ERROR_READ_FAILED,
-				 "%s: unable to read unicode user type string.",
+				 "%s: unable to read Unicode user type string.",
 				 function );
 
 				goto on_error;
@@ -689,7 +681,7 @@ int libolecf_compound_object_stream_read(
 			if( libcnotify_verbose != 0 )
 			{
 				libcnotify_printf(
-				 "%s: compound object unicode user type string\t: %s\n",
+				 "%s: compound object Unicode user type string\t: %s\n",
 				 function,
 				 user_type_string );
 			}
@@ -718,7 +710,7 @@ int libolecf_compound_object_stream_read(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read unicode clipboard data size.",
+			 "%s: unable to read Unicode clipboard data size.",
 			 function );
 
 			goto on_error;
@@ -739,7 +731,7 @@ int libolecf_compound_object_stream_read(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: compound object unicode clipboard data size\t: 0x%08" PRIx32 " (%" PRIi32 ")\n",
+			 "%s: compound object Unicode clipboard data size\t: 0x%08" PRIx32 " (%" PRIi32 ")\n",
 			 function,
 			 clipboard_data_size,
 			 clipboard_data_size );
@@ -758,7 +750,7 @@ int libolecf_compound_object_stream_read(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported unicode clipboard data size: 0x%08" PRIx32 ".",
+			 "%s: unsupported Unicode clipboard data size: 0x%08" PRIx32 ".",
 			 function,
 			 clipboard_data_size );
 
@@ -766,19 +758,17 @@ int libolecf_compound_object_stream_read(
 		}
 		else if( clipboard_data_size > 0 )
 		{
-#if SIZEOF_SIZE_T <= 4
-			if( clipboard_data_size > (uint32_t) SSIZE_MAX )
+			if( clipboard_data_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid clipboard data size value exceeds maximum.",
+				 "%s: invalid clipboard data size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
 			}
-#endif
 			clipboard_data = (uint8_t *) memory_allocate(
 						      sizeof( uint8_t ) * clipboard_data_size );
 
@@ -788,7 +778,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_MEMORY,
 				 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-				 "%s: unable to create unicode clipboard data.",
+				 "%s: unable to create Unicode clipboard data.",
 				 function );
 
 				goto on_error;
@@ -810,7 +800,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_IO,
 				 LIBCERROR_IO_ERROR_READ_FAILED,
-				 "%s: unable to read unicode clipboard data.",
+				 "%s: unable to read Unicode clipboard data.",
 				 function );
 
 				goto on_error;
@@ -819,7 +809,7 @@ int libolecf_compound_object_stream_read(
 			if( libcnotify_verbose != 0 )
 			{
 				libcnotify_printf(
-				 "%s: compound object unicode clipboard data:\n",
+				 "%s: compound object Unicode clipboard data:\n",
 				 function );
 				libcnotify_print_data(
 				 clipboard_data,
@@ -872,26 +862,24 @@ int libolecf_compound_object_stream_read(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: compound object unicode reserved string size\t: %" PRIu32 "\n",
+			 "%s: compound object Unicode reserved string size\t: %" PRIu32 "\n",
 			 function,
 			 reserved_string_size );
 		}
 #endif
 		if( reserved_string_size > 0 )
 		{
-#if SIZEOF_SIZE_T <= 4
-			if( reserved_string_size > (uint32_t) SSIZE_MAX )
+			if( reserved_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid reserved string size value exceeds maximum.",
+				 "%s: invalid reserved string size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
 			}
-#endif
 			reserved_string = (uint8_t *) memory_allocate(
 						       sizeof( uint8_t ) * reserved_string_size );
 
@@ -953,13 +941,13 @@ int libolecf_compound_object_stream_read(
 	{
 		trailing_data_size = internal_item->directory_entry->size - internal_item->offset;
 
-		if( trailing_data_size > (size_t) SSIZE_MAX )
+		if( trailing_data_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid trailing data size value exceeds maximum.",
+			 "%s: invalid trailing data size value exceeds maximum allocation size.",
 			 function );
 
 			goto on_error;

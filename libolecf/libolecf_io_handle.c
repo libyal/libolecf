@@ -1027,7 +1027,7 @@ int libolecf_io_handle_read_ssat(
 	return( 1 );
 
 on_error:
-	if( ssat_sector == NULL )
+	if( ssat_sector != NULL )
 	{
 		memory_free(
 		 ssat_sector );

@@ -119,13 +119,13 @@ int libolecf_allocation_table_initialize(
 	{
 		sector_identifiers_size = number_of_sector_identifiers * sizeof( uint32_t );
 
-		if( sector_identifiers_size > (size_t) SSIZE_MAX )
+		if( sector_identifiers_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid sector identifiers size value exceeds maximum.",
+			 "%s: invalid sector identifiers size value exceeds maximum allocation size.",
 			 function );
 
 			goto on_error;
@@ -251,13 +251,13 @@ int libolecf_allocation_table_resize(
 	{
 		sector_identifiers_size = sizeof( uint32_t ) * number_of_sector_identifiers;
 
-		if( sector_identifiers_size > (size_t) SSIZE_MAX )
+		if( sector_identifiers_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid sector identifiers size value exceeds maximum.",
+			 "%s: invalid sector identifiers size value exceeds maximum allocation size.",
 			 function );
 
 			return( -1 );
