@@ -254,7 +254,6 @@ PyTypeObject pyolecf_property_value_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_value_new(
-           PyTypeObject *type_object,
            libolecf_property_value_t *property_value,
            PyObject *parent_object )
 {
@@ -270,21 +269,13 @@ PyObject *pyolecf_property_value_new(
 
 		return( NULL );
 	}
+	/* PyObject_New does not invoke tp_init
+	 */
 	pyolecf_property_value = PyObject_New(
 	                          struct pyolecf_property_value,
-	                          type_object );
+	                          &pyolecf_property_value_type_object );
 
 	if( pyolecf_property_value == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize property value.",
-		 function );
-
-		goto on_error;
-	}
-	if( pyolecf_property_value_init(
-	     pyolecf_property_value ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
@@ -296,9 +287,11 @@ PyObject *pyolecf_property_value_new(
 	pyolecf_property_value->property_value = property_value;
 	pyolecf_property_value->parent_object  = parent_object;
 
-	Py_IncRef(
-	 (PyObject *) pyolecf_property_value->parent_object );
-
+	if( pyolecf_property_value->parent_object != NULL )
+	{
+		Py_IncRef(
+		 pyolecf_property_value->parent_object );
+	}
 	return( (PyObject *) pyolecf_property_value );
 
 on_error:
@@ -331,7 +324,12 @@ int pyolecf_property_value_init(
 	 */
 	pyolecf_property_value->property_value = NULL;
 
-	return( 0 );
+	PyErr_Format(
+	 PyExc_NotImplementedError,
+	 "%s: initialize of property value not supported.",
+	 function );
+
+	return( -1 );
 }
 
 /* Frees a property value object
@@ -349,15 +347,6 @@ void pyolecf_property_value_free(
 		PyErr_Format(
 		 PyExc_ValueError,
 		 "%s: invalid property value.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_property_value->property_value == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid property value - missing libolecf property value.",
 		 function );
 
 		return;
@@ -383,29 +372,32 @@ void pyolecf_property_value_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_property_value_free(
-	          &( pyolecf_property_value->property_value ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyolecf_property_value->property_value != NULL )
 	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to free libolecf property value.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libolecf_property_value_free(
+		          &( pyolecf_property_value->property_value ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyolecf_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libolecf property value.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	if( pyolecf_property_value->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_value->parent_object );
+		 pyolecf_property_value->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_value );

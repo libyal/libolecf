@@ -59,7 +59,7 @@ PyTypeObject pyolecf_property_values_type_object = {
 	PyVarObject_HEAD_INIT( NULL, 0 )
 
 	/* tp_name */
-	"pyolecf._property_values",
+	"pyolecf.property_values",
 	/* tp_basicsize */
 	sizeof( pyolecf_property_values_t ),
 	/* tp_itemsize */
@@ -97,7 +97,7 @@ PyTypeObject pyolecf_property_values_type_object = {
 	/* tp_flags */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_ITER,
 	/* tp_doc */
-	"pyolecf internal sequence and iterator object of property values",
+	"pyolecf sequence and iterator object of property values",
 	/* tp_traverse */
 	0,
 	/* tp_clear */
@@ -150,7 +150,7 @@ PyTypeObject pyolecf_property_values_type_object = {
 	0
 };
 
-/* Creates a new property values object
+/* Creates a new property values sequence and iterator object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_values_new(
@@ -160,8 +160,8 @@ PyObject *pyolecf_property_values_new(
                         int index ),
            int number_of_items )
 {
-	pyolecf_property_values_t *property_values_object = NULL;
-	static char *function                             = "pyolecf_property_values_new";
+	pyolecf_property_values_t *sequence_object = NULL;
+	static char *function                      = "pyolecf_property_values_new";
 
 	if( parent_object == NULL )
 	{
@@ -183,93 +183,89 @@ PyObject *pyolecf_property_values_new(
 	}
 	/* Make sure the property values values are initialized
 	 */
-	property_values_object = PyObject_New(
-	                          struct pyolecf_property_values,
-	                          &pyolecf_property_values_type_object );
+	sequence_object = PyObject_New(
+	                   struct pyolecf_property_values,
+	                   &pyolecf_property_values_type_object );
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to create property values object.",
+		 "%s: unable to create sequence object.",
 		 function );
 
 		goto on_error;
 	}
-	if( pyolecf_property_values_init(
-	     property_values_object ) != 0 )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize property values object.",
-		 function );
-
-		goto on_error;
-	}
-	property_values_object->parent_object     = parent_object;
-	property_values_object->get_item_by_index = get_item_by_index;
-	property_values_object->number_of_items   = number_of_items;
+	sequence_object->parent_object     = parent_object;
+	sequence_object->get_item_by_index = get_item_by_index;
+	sequence_object->current_index     = 0;
+	sequence_object->number_of_items   = number_of_items;
 
 	Py_IncRef(
-	 (PyObject *) property_values_object->parent_object );
+	 (PyObject *) sequence_object->parent_object );
 
-	return( (PyObject *) property_values_object );
+	return( (PyObject *) sequence_object );
 
 on_error:
-	if( property_values_object != NULL )
+	if( sequence_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) property_values_object );
+		 (PyObject *) sequence_object );
 	}
 	return( NULL );
 }
 
-/* Intializes a property values object
+/* Intializes a property values sequence and iterator object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_values_init(
-     pyolecf_property_values_t *property_values_object )
+     pyolecf_property_values_t *sequence_object )
 {
 	static char *function = "pyolecf_property_values_init";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( -1 );
 	}
 	/* Make sure the property values values are initialized
 	 */
-	property_values_object->parent_object     = NULL;
-	property_values_object->get_item_by_index = NULL;
-	property_values_object->current_index     = 0;
-	property_values_object->number_of_items   = 0;
+	sequence_object->parent_object     = NULL;
+	sequence_object->get_item_by_index = NULL;
+	sequence_object->current_index     = 0;
+	sequence_object->number_of_items   = 0;
 
-	return( 0 );
+	PyErr_Format(
+	 PyExc_NotImplementedError,
+	 "%s: initialize of property values not supported.",
+	 function );
+
+	return( -1 );
 }
 
-/* Frees a property values object
+/* Frees a property values sequence object
  */
 void pyolecf_property_values_free(
-      pyolecf_property_values_t *property_values_object )
+      pyolecf_property_values_t *sequence_object )
 {
 	struct _typeobject *ob_type = NULL;
 	static char *function       = "pyolecf_property_values_free";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return;
 	}
 	ob_type = Py_TYPE(
-	           property_values_object );
+	           sequence_object );
 
 	if( ob_type == NULL )
 	{
@@ -289,72 +285,72 @@ void pyolecf_property_values_free(
 
 		return;
 	}
-	if( property_values_object->parent_object != NULL )
+	if( sequence_object->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) property_values_object->parent_object );
+		 (PyObject *) sequence_object->parent_object );
 	}
 	ob_type->tp_free(
-	 (PyObject*) property_values_object );
+	 (PyObject*) sequence_object );
 }
 
 /* The property values len() function
  */
 Py_ssize_t pyolecf_property_values_len(
-            pyolecf_property_values_t *property_values_object )
+            pyolecf_property_values_t *sequence_object )
 {
 	static char *function = "pyolecf_property_values_len";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) property_values_object->number_of_items );
+	return( (Py_ssize_t) sequence_object->number_of_items );
 }
 
 /* The property values getitem() function
  */
 PyObject *pyolecf_property_values_getitem(
-           pyolecf_property_values_t *property_values_object,
+           pyolecf_property_values_t *sequence_object,
            Py_ssize_t item_index )
 {
 	PyObject *property_value_object = NULL;
 	static char *function           = "pyolecf_property_values_getitem";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->get_item_by_index == NULL )
+	if( sequence_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object - missing get item by index function.",
+		 "%s: invalid sequence object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->number_of_items < 0 )
+	if( sequence_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object - invalid number of items.",
+		 "%s: invalid sequence object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) property_values_object->number_of_items ) )
+	 || ( item_index >= (Py_ssize_t) sequence_object->number_of_items ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,8 +359,8 @@ PyObject *pyolecf_property_values_getitem(
 
 		return( NULL );
 	}
-	property_value_object = property_values_object->get_item_by_index(
-	                         property_values_object->parent_object,
+	property_value_object = sequence_object->get_item_by_index(
+	                         sequence_object->parent_object,
 	                         (int) item_index );
 
 	return( property_value_object );
@@ -373,83 +369,83 @@ PyObject *pyolecf_property_values_getitem(
 /* The property values iter() function
  */
 PyObject *pyolecf_property_values_iter(
-           pyolecf_property_values_t *property_values_object )
+           pyolecf_property_values_t *sequence_object )
 {
 	static char *function = "pyolecf_property_values_iter";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
 	Py_IncRef(
-	 (PyObject *) property_values_object );
+	 (PyObject *) sequence_object );
 
-	return( (PyObject *) property_values_object );
+	return( (PyObject *) sequence_object );
 }
 
 /* The property values iternext() function
  */
 PyObject *pyolecf_property_values_iternext(
-           pyolecf_property_values_t *property_values_object )
+           pyolecf_property_values_t *sequence_object )
 {
 	PyObject *property_value_object = NULL;
 	static char *function           = "pyolecf_property_values_iternext";
 
-	if( property_values_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->get_item_by_index == NULL )
+	if( sequence_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object - missing get item by index function.",
+		 "%s: invalid sequence object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->current_index < 0 )
+	if( sequence_object->current_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object - invalid current index.",
+		 "%s: invalid sequence object - invalid current index.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->number_of_items < 0 )
+	if( sequence_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid property values object - invalid number of items.",
+		 "%s: invalid sequence object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
-	if( property_values_object->current_index >= property_values_object->number_of_items )
+	if( sequence_object->current_index >= sequence_object->number_of_items )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	property_value_object = property_values_object->get_item_by_index(
-	                         property_values_object->parent_object,
-	                         property_values_object->current_index );
+	property_value_object = sequence_object->get_item_by_index(
+	                         sequence_object->parent_object,
+	                         sequence_object->current_index );
 
 	if( property_value_object != NULL )
 	{
-		property_values_object->current_index++;
+		sequence_object->current_index++;
 	}
 	return( property_value_object );
 }

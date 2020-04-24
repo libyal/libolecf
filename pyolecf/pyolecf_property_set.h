@@ -53,7 +53,6 @@ extern PyMethodDef pyolecf_property_set_object_methods[];
 extern PyTypeObject pyolecf_property_set_type_object;
 
 PyObject *pyolecf_property_set_new(
-           PyTypeObject *type_object,
            libolecf_property_set_t *property_set,
            PyObject *parent_object );
 

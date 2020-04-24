@@ -53,7 +53,6 @@ extern PyMethodDef pyolecf_property_value_object_methods[];
 extern PyTypeObject pyolecf_property_value_type_object;
 
 PyObject *pyolecf_property_value_new(
-           PyTypeObject *type_object,
            libolecf_property_value_t *property_value,
            PyObject *parent_object );
 

@@ -266,93 +266,6 @@ PyTypeObject pyolecf_file_type_object = {
 	0
 };
 
-/* Creates a new file object
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyolecf_file_new(
-           void )
-{
-	pyolecf_file_t *pyolecf_file = NULL;
-	static char *function        = "pyolecf_file_new";
-
-	pyolecf_file = PyObject_New(
-	                struct pyolecf_file,
-	                &pyolecf_file_type_object );
-
-	if( pyolecf_file == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize file.",
-		 function );
-
-		goto on_error;
-	}
-	if( pyolecf_file_init(
-	     pyolecf_file ) != 0 )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize file.",
-		 function );
-
-		goto on_error;
-	}
-	return( (PyObject *) pyolecf_file );
-
-on_error:
-	if( pyolecf_file != NULL )
-	{
-		Py_DecRef(
-		 (PyObject *) pyolecf_file );
-	}
-	return( NULL );
-}
-
-/* Creates a new file object and opens it
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyolecf_file_new_open(
-           PyObject *self PYOLECF_ATTRIBUTE_UNUSED,
-           PyObject *arguments,
-           PyObject *keywords )
-{
-	PyObject *pyolecf_file = NULL;
-
-	PYOLECF_UNREFERENCED_PARAMETER( self )
-
-	pyolecf_file = pyolecf_file_new();
-
-	pyolecf_file_open(
-	 (pyolecf_file_t *) pyolecf_file,
-	 arguments,
-	 keywords );
-
-	return( pyolecf_file );
-}
-
-/* Creates a new file object and opens it using a file-like object
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyolecf_file_new_open_file_object(
-           PyObject *self PYOLECF_ATTRIBUTE_UNUSED,
-           PyObject *arguments,
-           PyObject *keywords )
-{
-	PyObject *pyolecf_file = NULL;
-
-	PYOLECF_UNREFERENCED_PARAMETER( self )
-
-	pyolecf_file = pyolecf_file_new();
-
-	pyolecf_file_open_file_object(
-	 (pyolecf_file_t *) pyolecf_file,
-	 arguments,
-	 keywords );
-
-	return( pyolecf_file );
-}
-
 /* Intializes a file object
  * Returns 0 if successful or -1 on error
  */
@@ -371,6 +284,8 @@ int pyolecf_file_init(
 
 		return( -1 );
 	}
+	/* Make sure libolecf file is set to NULL
+	 */
 	pyolecf_file->file           = NULL;
 	pyolecf_file->file_io_handle = NULL;
 
@@ -411,15 +326,6 @@ void pyolecf_file_free(
 
 		return;
 	}
-	if( pyolecf_file->file == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - missing libolecf file.",
-		 function );
-
-		return;
-	}
 	ob_type = Py_TYPE(
 	           pyolecf_file );
 
@@ -441,24 +347,27 @@ void pyolecf_file_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_file_free(
-	          &( pyolecf_file->file ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyolecf_file->file != NULL )
 	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_MemoryError,
-		 "%s: unable to free libolecf file.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libolecf_file_free(
+		          &( pyolecf_file->file ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyolecf_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libolecf file.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_file );

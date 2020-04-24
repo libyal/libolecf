@@ -69,23 +69,23 @@ PyObject *pyolecf_items_new(
            int number_of_items );
 
 int pyolecf_items_init(
-     pyolecf_items_t *items_object );
+     pyolecf_items_t *sequence_object );
 
 void pyolecf_items_free(
-      pyolecf_items_t *items_object );
+      pyolecf_items_t *sequence_object );
 
 Py_ssize_t pyolecf_items_len(
-            pyolecf_items_t *items_object );
+            pyolecf_items_t *sequence_object );
 
 PyObject *pyolecf_items_getitem(
-           pyolecf_items_t *items_object,
+           pyolecf_items_t *sequence_object,
            Py_ssize_t item_index );
 
 PyObject *pyolecf_items_iter(
-           pyolecf_items_t *items_object );
+           pyolecf_items_t *sequence_object );
 
 PyObject *pyolecf_items_iternext(
-           pyolecf_items_t *items_object );
+           pyolecf_items_t *sequence_object );
 
 #if defined( __cplusplus )
 }

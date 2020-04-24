@@ -69,23 +69,23 @@ PyObject *pyolecf_property_sections_new(
            int number_of_items );
 
 int pyolecf_property_sections_init(
-     pyolecf_property_sections_t *property_sections_object );
+     pyolecf_property_sections_t *sequence_object );
 
 void pyolecf_property_sections_free(
-      pyolecf_property_sections_t *property_sections_object );
+      pyolecf_property_sections_t *sequence_object );
 
 Py_ssize_t pyolecf_property_sections_len(
-            pyolecf_property_sections_t *property_sections_object );
+            pyolecf_property_sections_t *sequence_object );
 
 PyObject *pyolecf_property_sections_getitem(
-           pyolecf_property_sections_t *property_sections_object,
+           pyolecf_property_sections_t *sequence_object,
            Py_ssize_t item_index );
 
 PyObject *pyolecf_property_sections_iter(
-           pyolecf_property_sections_t *property_sections_object );
+           pyolecf_property_sections_t *sequence_object );
 
 PyObject *pyolecf_property_sections_iternext(
-           pyolecf_property_sections_t *property_sections_object );
+           pyolecf_property_sections_t *sequence_object );
 
 #if defined( __cplusplus )
 }

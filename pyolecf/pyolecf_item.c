@@ -273,6 +273,8 @@ PyObject *pyolecf_item_new(
 
 		return( NULL );
 	}
+	/* PyObject_New does not invoke tp_init
+	 */
 	pyolecf_item = PyObject_New(
 	                struct pyolecf_item,
 	                type_object );
@@ -286,22 +288,14 @@ PyObject *pyolecf_item_new(
 
 		goto on_error;
 	}
-	if( pyolecf_item_init(
-	     pyolecf_item ) != 0 )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize item.",
-		 function );
-
-		goto on_error;
-	}
 	pyolecf_item->item          = item;
 	pyolecf_item->parent_object = parent_object;
 
-	Py_IncRef(
-	 (PyObject *) pyolecf_item->parent_object );
-
+	if( pyolecf_item->parent_object != NULL )
+	{
+		Py_IncRef(
+		 pyolecf_item->parent_object );
+	}
 	return( (PyObject *) pyolecf_item );
 
 on_error:
@@ -334,7 +328,12 @@ int pyolecf_item_init(
 	 */
 	pyolecf_item->item = NULL;
 
-	return( 0 );
+	PyErr_Format(
+	 PyExc_NotImplementedError,
+	 "%s: initialize of item not supported.",
+	 function );
+
+	return( -1 );
 }
 
 /* Frees an item object
@@ -352,15 +351,6 @@ void pyolecf_item_free(
 		PyErr_Format(
 		 PyExc_ValueError,
 		 "%s: invalid item.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_item->item == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid item - missing libolecf item.",
 		 function );
 
 		return;
@@ -386,29 +376,32 @@ void pyolecf_item_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_item_free(
-	          &( pyolecf_item->item ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyolecf_item->item != NULL )
 	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to free libolecf item.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libolecf_item_free(
+		          &( pyolecf_item->item ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyolecf_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libolecf item.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	if( pyolecf_item->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_item->parent_object );
+		 pyolecf_item->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_item );

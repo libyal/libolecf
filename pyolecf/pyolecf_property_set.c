@@ -186,7 +186,6 @@ PyTypeObject pyolecf_property_set_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_property_set_new(
-           PyTypeObject *type_object,
            libolecf_property_set_t *property_set,
            PyObject *parent_object )
 {
@@ -202,21 +201,13 @@ PyObject *pyolecf_property_set_new(
 
 		return( NULL );
 	}
+	/* PyObject_New does not invoke tp_init
+	 */
 	pyolecf_property_set = PyObject_New(
 	                        struct pyolecf_property_set,
-	                        type_object );
+	                        &pyolecf_property_set_type_object );
 
 	if( pyolecf_property_set == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize property set.",
-		 function );
-
-		goto on_error;
-	}
-	if( pyolecf_property_set_init(
-	     pyolecf_property_set ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
@@ -228,9 +219,11 @@ PyObject *pyolecf_property_set_new(
 	pyolecf_property_set->property_set  = property_set;
 	pyolecf_property_set->parent_object = parent_object;
 
-	Py_IncRef(
-	 (PyObject *) pyolecf_property_set->parent_object );
-
+	if( pyolecf_property_set->parent_object != NULL )
+	{
+		Py_IncRef(
+		 pyolecf_property_set->parent_object );
+	}
 	return( (PyObject *) pyolecf_property_set );
 
 on_error:
@@ -263,7 +256,12 @@ int pyolecf_property_set_init(
 	 */
 	pyolecf_property_set->property_set = NULL;
 
-	return( 0 );
+	PyErr_Format(
+	 PyExc_NotImplementedError,
+	 "%s: initialize of property set not supported.",
+	 function );
+
+	return( -1 );
 }
 
 /* Frees a property set object
@@ -281,15 +279,6 @@ void pyolecf_property_set_free(
 		PyErr_Format(
 		 PyExc_ValueError,
 		 "%s: invalid property set.",
-		 function );
-
-		return;
-	}
-	if( pyolecf_property_set->property_set == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid property set - missing libolecf property set.",
 		 function );
 
 		return;
@@ -315,29 +304,32 @@ void pyolecf_property_set_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libolecf_property_set_free(
-	          &( pyolecf_property_set->property_set ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyolecf_property_set->property_set != NULL )
 	{
-		pyolecf_error_raise(
-		 error,
-		 PyExc_IOError,
-		 "%s: unable to free libolecf property set.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libolecf_property_set_free(
+		          &( pyolecf_property_set->property_set ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyolecf_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libolecf property set.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	if( pyolecf_property_set->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyolecf_property_set->parent_object );
+		 pyolecf_property_set->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyolecf_property_set );
@@ -461,17 +453,6 @@ PyObject *pyolecf_property_set_get_number_of_sections(
 	return( integer_object );
 }
 
-/* Retrieves the property section type object
- * Returns a Python type object if successful or NULL on error
- */
-PyTypeObject *pyolecf_property_set_get_property_section_type_object(
-               libolecf_property_section_t *property_section PYOLECF_ATTRIBUTE_UNUSED )
-{
-	PYOLECF_UNREFERENCED_PARAMETER( property_section )
-
-	return( &pyolecf_property_section_type_object );
-}
-
 /* Retrieves a specific section by index
  * Returns a Python object if successful or NULL on error
  */
@@ -480,7 +461,6 @@ PyObject *pyolecf_property_set_get_section_by_index(
            int section_index )
 {
 	PyObject *section_object             = NULL;
-	PyTypeObject *type_object            = NULL;
 	libcerror_error_t *error             = NULL;
 	libolecf_property_section_t *section = NULL;
 	static char *function                = "pyolecf_property_set_get_section_by_index";
@@ -519,20 +499,7 @@ PyObject *pyolecf_property_set_get_section_by_index(
 
 		goto on_error;
 	}
-	type_object = pyolecf_property_set_get_property_section_type_object(
-	               section );
-
-	if( type_object == NULL )
-	{
-		PyErr_Format(
-		 PyExc_IOError,
-		 "%s: unable to retrieve property section type object.",
-		 function );
-
-		goto on_error;
-	}
 	section_object = pyolecf_property_section_new(
-	                  type_object,
 	                  section,
 	                  (PyObject *) pyolecf_property_set );
 

@@ -53,19 +53,6 @@ struct pyolecf_file
 extern PyMethodDef pyolecf_file_object_methods[];
 extern PyTypeObject pyolecf_file_type_object;
 
-PyObject *pyolecf_file_new(
-           void );
-
-PyObject *pyolecf_file_new_open(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
-PyObject *pyolecf_file_new_open_file_object(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
 int pyolecf_file_init(
      pyolecf_file_t *pyolecf_file );
 

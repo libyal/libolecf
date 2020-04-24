@@ -34,6 +34,7 @@
 #include "pyolecf_item.h"
 #include "pyolecf_item_types.h"
 #include "pyolecf_items.h"
+#include "pyolecf_libbfio.h"
 #include "pyolecf_libcerror.h"
 #include "pyolecf_libolecf.h"
 #include "pyolecf_property_section.h"
@@ -48,11 +49,13 @@
 #include "pyolecf_value_types.h"
 
 #if !defined( LIBOLECF_HAVE_BFIO )
+
 LIBOLECF_EXTERN \
 int libolecf_check_file_signature_file_io_handle(
      libbfio_handle_t *file_io_handle,
      libolecf_error_t **error );
-#endif
+
+#endif /* !defined( LIBOLECF_HAVE_BFIO ) */
 
 /* The pyolecf module methods
  */
@@ -79,14 +82,14 @@ PyMethodDef pyolecf_module_methods[] = {
 	  "Checks if a file has an Object Linking and Embedding (OLE) Compound File (CF) signature using a file-like object." },
 
 	{ "open",
-	  (PyCFunction) pyolecf_file_new_open,
+	  (PyCFunction) pyolecf_open_new_file,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "open(filename, mode='r') -> Object\n"
 	  "\n"
 	  "Opens a file." },
 
 	{ "open_file_object",
-	  (PyCFunction) pyolecf_file_new_open_file_object,
+	  (PyCFunction) pyolecf_open_new_file_with_file_object,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "open_file_object(file_object, mode='r') -> Object\n"
 	  "\n"
@@ -129,7 +132,7 @@ PyObject *pyolecf_get_version(
 	         errors ) );
 }
 
-/* Checks if the file has an Object Linking and Embedding (OLE) Compound File (CF) signature
+/* Checks if a file has an Object Linking and Embedding (OLE) Compound File (CF) signature
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_check_file_signature(
@@ -160,7 +163,7 @@ PyObject *pyolecf_check_file_signature(
 	if( PyArg_ParseTupleAndKeywords(
 	     arguments,
 	     keywords,
-	     "|O",
+	     "O|",
 	     keyword_list,
 	     &string_object ) == 0 )
 	{
@@ -176,7 +179,7 @@ PyObject *pyolecf_check_file_signature(
 	{
 		pyolecf_error_fetch_and_raise(
 	         PyExc_RuntimeError,
-		 "%s: unable to determine if string object is of type unicode.",
+		 "%s: unable to determine if string object is of type Unicode.",
 		 function );
 
 		return( NULL );
@@ -203,7 +206,7 @@ PyObject *pyolecf_check_file_signature(
 		{
 			pyolecf_error_fetch_and_raise(
 			 PyExc_RuntimeError,
-			 "%s: unable to convert unicode string to UTF-8.",
+			 "%s: unable to convert Unicode string to UTF-8.",
 			 function );
 
 			return( NULL );
@@ -225,7 +228,9 @@ PyObject *pyolecf_check_file_signature(
 
 		Py_DecRef(
 		 utf8_string_object );
-#endif
+
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
+
 		if( result == -1 )
 		{
 			pyolecf_error_raise(
@@ -323,7 +328,7 @@ PyObject *pyolecf_check_file_signature(
 	return( NULL );
 }
 
-/* Checks if the file has a Object Linking and Embedding (OLE) Compound File (CF) signature using a file-like object
+/* Checks if a file has an Object Linking and Embedding (OLE) Compound File (CF) signature using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyolecf_check_file_signature_file_object(
@@ -423,6 +428,52 @@ on_error:
 	return( NULL );
 }
 
+/* Creates a new file object and opens it
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_open_new_file(
+           PyObject *self PYOLECF_ATTRIBUTE_UNUSED,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *pyolecf_file = NULL;
+
+	PYOLECF_UNREFERENCED_PARAMETER( self )
+
+	pyolecf_file_init(
+	 (pyolecf_file_t *) pyolecf_file );
+
+	pyolecf_file_open(
+	 (pyolecf_file_t *) pyolecf_file,
+	 arguments,
+	 keywords );
+
+	return( pyolecf_file );
+}
+
+/* Creates a new file object and opens it using a file-like object
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyolecf_open_new_file_with_file_object(
+           PyObject *self PYOLECF_ATTRIBUTE_UNUSED,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *pyolecf_file = NULL;
+
+	PYOLECF_UNREFERENCED_PARAMETER( self )
+
+	pyolecf_file_init(
+	 (pyolecf_file_t *) pyolecf_file );
+
+	pyolecf_file_open_file_object(
+	 (pyolecf_file_t *) pyolecf_file,
+	 arguments,
+	 keywords );
+
+	return( pyolecf_file );
+}
+
 #if PY_MAJOR_VERSION >= 3
 
 /* The pyolecf module definition
@@ -460,20 +511,8 @@ PyMODINIT_FUNC initpyolecf(
                 void )
 #endif
 {
-	PyObject *module                              = NULL;
-	PyTypeObject *file_type_object                = NULL;
-	PyTypeObject *item_type_object                = NULL;
-	PyTypeObject *item_types_type_object          = NULL;
-	PyTypeObject *items_type_object               = NULL;
-	PyTypeObject *stream_type_object              = NULL;
-	PyTypeObject *property_section_type_object    = NULL;
-	PyTypeObject *property_sections_type_object   = NULL;
-	PyTypeObject *property_set_type_object        = NULL;
-	PyTypeObject *property_set_stream_type_object = NULL;
-	PyTypeObject *property_value_type_object      = NULL;
-	PyTypeObject *property_values_type_object     = NULL;
-	PyTypeObject *value_types_type_object         = NULL;
-	PyGILState_STATE gil_state                    = 0;
+	PyObject *module           = NULL;
+	PyGILState_STATE gil_state = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	libolecf_notify_set_stream(
@@ -520,31 +559,10 @@ PyMODINIT_FUNC initpyolecf(
 	Py_IncRef(
 	 (PyObject *) &pyolecf_file_type_object );
 
-	file_type_object = &pyolecf_file_type_object;
-
 	PyModule_AddObject(
 	 module,
 	 "file",
-	 (PyObject *) file_type_object );
-
-	/* Setup the items type object
-	 */
-	pyolecf_items_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_items_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_items_type_object );
-
-	items_type_object = &pyolecf_items_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "_items",
-	 (PyObject *) items_type_object );
+	 (PyObject *) &pyolecf_file_type_object );
 
 	/* Setup the item type object
 	 */
@@ -558,147 +576,12 @@ PyMODINIT_FUNC initpyolecf(
 	Py_IncRef(
 	 (PyObject *) &pyolecf_item_type_object );
 
-	item_type_object = &pyolecf_item_type_object;
-
 	PyModule_AddObject(
 	 module,
 	 "item",
-	 (PyObject *) item_type_object );
+	 (PyObject *) &pyolecf_item_type_object );
 
-	/* Setup the stream type object
-	 */
-	pyolecf_stream_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_stream_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_stream_type_object );
-
-	stream_type_object = &pyolecf_stream_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "stream",
-	 (PyObject *) stream_type_object );
-
-	/* Setup the property set stream type object
-	 */
-	pyolecf_property_set_stream_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_set_stream_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_set_stream_type_object );
-
-	property_set_stream_type_object = &pyolecf_property_set_stream_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "property_set_stream",
-	 (PyObject *) property_set_stream_type_object );
-
-	/* Setup the property set type object
-	 */
-	pyolecf_property_set_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_set_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_set_type_object );
-
-	property_set_type_object = &pyolecf_property_set_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "property_set",
-	 (PyObject *) property_set_type_object );
-
-	/* Setup the property sections type object
-	 */
-	pyolecf_property_sections_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_sections_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_sections_type_object );
-
-	property_sections_type_object = &pyolecf_property_sections_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "_property_sections",
-	 (PyObject *) property_sections_type_object );
-
-	/* Setup the property section type object
-	 */
-	pyolecf_property_section_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_section_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_section_type_object );
-
-	property_section_type_object = &pyolecf_property_section_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "property_section",
-	 (PyObject *) property_section_type_object );
-
-	/* Setup the property values type object
-	 */
-	pyolecf_property_values_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_values_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_values_type_object );
-
-	property_values_type_object = &pyolecf_property_values_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "_property_values",
-	 (PyObject *) property_values_type_object );
-
-	/* Setup the property value type object
-	 */
-	pyolecf_property_value_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_property_value_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_property_value_type_object );
-
-	property_value_type_object = &pyolecf_property_value_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "property_value",
-	 (PyObject *) property_value_type_object );
-
-	/* Setup the item types type object
+	/* Setup the item_types type object
 	 */
 	pyolecf_item_types_type_object.tp_new = PyType_GenericNew;
 
@@ -715,14 +598,148 @@ PyMODINIT_FUNC initpyolecf(
 	Py_IncRef(
 	 (PyObject *) &pyolecf_item_types_type_object );
 
-	item_types_type_object = &pyolecf_item_types_type_object;
-
 	PyModule_AddObject(
 	 module,
 	 "item_types",
-	 (PyObject *) item_types_type_object );
+	 (PyObject *) &pyolecf_item_types_type_object );
 
-	/* Setup the value types type object
+	/* Setup the items type object
+	 */
+	pyolecf_items_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_items_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_items_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "items",
+	 (PyObject *) &pyolecf_items_type_object );
+
+	/* Setup the property_section type object
+	 */
+	pyolecf_property_section_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_section_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_section_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_section",
+	 (PyObject *) &pyolecf_property_section_type_object );
+
+	/* Setup the property_sections type object
+	 */
+	pyolecf_property_sections_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_sections_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_sections_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_sections",
+	 (PyObject *) &pyolecf_property_sections_type_object );
+
+	/* Setup the property_set type object
+	 */
+	pyolecf_property_set_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_set_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_set_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_set",
+	 (PyObject *) &pyolecf_property_set_type_object );
+
+	/* Setup the property_set_stream type object
+	 */
+	pyolecf_property_set_stream_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_set_stream_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_set_stream_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_set_stream",
+	 (PyObject *) &pyolecf_property_set_stream_type_object );
+
+	/* Setup the property_value type object
+	 */
+	pyolecf_property_value_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_value_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_value_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_value",
+	 (PyObject *) &pyolecf_property_value_type_object );
+
+	/* Setup the property_values type object
+	 */
+	pyolecf_property_values_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_property_values_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_property_values_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "property_values",
+	 (PyObject *) &pyolecf_property_values_type_object );
+
+	/* Setup the stream type object
+	 */
+	pyolecf_stream_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_stream_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_stream_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "stream",
+	 (PyObject *) &pyolecf_stream_type_object );
+
+	/* Setup the value_types type object
 	 */
 	pyolecf_value_types_type_object.tp_new = PyType_GenericNew;
 
@@ -739,12 +756,10 @@ PyMODINIT_FUNC initpyolecf(
 	Py_IncRef(
 	 (PyObject *) &pyolecf_value_types_type_object );
 
-	value_types_type_object = &pyolecf_value_types_type_object;
-
 	PyModule_AddObject(
 	 module,
 	 "value_types",
-	 (PyObject *) value_types_type_object );
+	 (PyObject *) &pyolecf_value_types_type_object );
 
 	PyGILState_Release(
 	 gil_state );

@@ -204,7 +204,6 @@ PyObject *pyolecf_property_set_stream_get_set(
 		goto on_error;
 	}
 	property_set_object = pyolecf_property_set_new(
-	                       &pyolecf_property_set_type_object,
 	                       property_set,
 	                       (PyObject *) pyolecf_item );
 
