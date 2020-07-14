@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #endif
 
-#include "olecf_test_libcerror.h"
 #include "olecf_test_libolecf.h"
 #include "olecf_test_macros.h"
 #include "olecf_test_unused.h"

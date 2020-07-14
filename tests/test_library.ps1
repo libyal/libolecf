@@ -1,6 +1,6 @@
 # Tests library functions and types.
 #
-# Version: 20200413
+# Version: 20200427
 
 $ExitSuccess = 0
 $ExitFailure = 1
@@ -8,7 +8,7 @@ $ExitIgnore = 77
 
 $LibraryTests = "allocation_table directory_entry error file_header io_handle item notify property_section property_set property_value"
 $LibraryTestsWithInput = "file support"
-$OptionSets = "";
+$OptionSets = ""
 
 $InputGlob = "*"
 

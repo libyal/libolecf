@@ -140,12 +140,12 @@ PyObject *pyolecf_check_file_signature(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *string_object      = NULL;
-	libcerror_error_t *error     = NULL;
-	static char *function        = "pyolecf_check_file_signature";
-	static char *keyword_list[]  = { "filename", NULL };
-	const char *filename_narrow  = NULL;
-	int result                   = 0;
+	PyObject *string_object     = NULL;
+	libcerror_error_t *error    = NULL;
+	const char *filename_narrow = NULL;
+	static char *function       = "pyolecf_check_file_signature";
+	static char *keyword_list[] = { "filename", NULL };
+	int result                  = 0;
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	const wchar_t *filename_wide = NULL;
@@ -178,7 +178,7 @@ PyObject *pyolecf_check_file_signature(
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type Unicode.",
 		 function );
 
@@ -213,10 +213,10 @@ PyObject *pyolecf_check_file_signature(
 		}
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
@@ -260,17 +260,17 @@ PyObject *pyolecf_check_file_signature(
 
 #if PY_MAJOR_VERSION >= 3
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyBytes_Type );
+	          string_object,
+	          (PyObject *) &PyBytes_Type );
 #else
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyString_Type );
+	          string_object,
+	          (PyObject *) &PyString_Type );
 #endif
 	if( result == -1 )
 	{
 		pyolecf_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type string.",
 		 function );
 
@@ -282,10 +282,10 @@ PyObject *pyolecf_check_file_signature(
 
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   string_object );
+		                   string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   string_object );
+		                   string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
@@ -336,9 +336,9 @@ PyObject *pyolecf_check_file_signature_file_object(
            PyObject *arguments,
            PyObject *keywords )
 {
-	libcerror_error_t *error         = NULL;
-	libbfio_handle_t *file_io_handle = NULL;
 	PyObject *file_object            = NULL;
+	libbfio_handle_t *file_io_handle = NULL;
+	libcerror_error_t *error         = NULL;
 	static char *function            = "pyolecf_check_file_signature_file_object";
 	static char *keyword_list[]      = { "file_object", NULL };
 	int result                       = 0;
@@ -436,19 +436,47 @@ PyObject *pyolecf_open_new_file(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *pyolecf_file = NULL;
+	pyolecf_file_t *pyolecf_file = NULL;
+	static char *function        = "pyolecf_open_new_file";
 
 	PYOLECF_UNREFERENCED_PARAMETER( self )
 
-	pyolecf_file_init(
-	 (pyolecf_file_t *) pyolecf_file );
+	/* PyObject_New does not invoke tp_init
+	 */
+	pyolecf_file = PyObject_New(
+	                struct pyolecf_file,
+	                &pyolecf_file_type_object );
 
-	pyolecf_file_open(
-	 (pyolecf_file_t *) pyolecf_file,
-	 arguments,
-	 keywords );
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create file.",
+		 function );
 
-	return( pyolecf_file );
+		goto on_error;
+	}
+	if( pyolecf_file_init(
+	     pyolecf_file ) != 0 )
+	{
+		goto on_error;
+	}
+	if( pyolecf_file_open(
+	     pyolecf_file,
+	     arguments,
+	     keywords ) == NULL )
+	{
+		goto on_error;
+	}
+	return( (PyObject *) pyolecf_file );
+
+on_error:
+	if( pyolecf_file != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyolecf_file );
+	}
+	return( NULL );
 }
 
 /* Creates a new file object and opens it using a file-like object
@@ -459,19 +487,47 @@ PyObject *pyolecf_open_new_file_with_file_object(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *pyolecf_file = NULL;
+	pyolecf_file_t *pyolecf_file = NULL;
+	static char *function        = "pyolecf_open_new_file_with_file_object";
 
 	PYOLECF_UNREFERENCED_PARAMETER( self )
 
-	pyolecf_file_init(
-	 (pyolecf_file_t *) pyolecf_file );
+	/* PyObject_New does not invoke tp_init
+	 */
+	pyolecf_file = PyObject_New(
+	                struct pyolecf_file,
+	                &pyolecf_file_type_object );
 
-	pyolecf_file_open_file_object(
-	 (pyolecf_file_t *) pyolecf_file,
-	 arguments,
-	 keywords );
+	if( pyolecf_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create file.",
+		 function );
 
-	return( pyolecf_file );
+		goto on_error;
+	}
+	if( pyolecf_file_init(
+	     pyolecf_file ) != 0 )
+	{
+		goto on_error;
+	}
+	if( pyolecf_file_open_file_object(
+	     pyolecf_file,
+	     arguments,
+	     keywords ) == NULL )
+	{
+		goto on_error;
+	}
+	return( (PyObject *) pyolecf_file );
+
+on_error:
+	if( pyolecf_file != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyolecf_file );
+	}
+	return( NULL );
 }
 
 #if PY_MAJOR_VERSION >= 3
@@ -688,6 +744,23 @@ PyMODINIT_FUNC initpyolecf(
 	 "property_set_stream",
 	 (PyObject *) &pyolecf_property_set_stream_type_object );
 
+	/* Setup the stream type object
+	 */
+	pyolecf_stream_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyolecf_stream_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject *) &pyolecf_stream_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "stream",
+	 (PyObject *) &pyolecf_stream_type_object );
+
 	/* Setup the property_value type object
 	 */
 	pyolecf_property_value_type_object.tp_new = PyType_GenericNew;
@@ -721,23 +794,6 @@ PyMODINIT_FUNC initpyolecf(
 	 module,
 	 "property_values",
 	 (PyObject *) &pyolecf_property_values_type_object );
-
-	/* Setup the stream type object
-	 */
-	pyolecf_stream_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyolecf_stream_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyolecf_stream_type_object );
-
-	PyModule_AddObject(
-	 module,
-	 "stream",
-	 (PyObject *) &pyolecf_stream_type_object );
 
 	/* Setup the value_types type object
 	 */
