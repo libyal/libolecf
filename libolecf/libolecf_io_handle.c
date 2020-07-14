@@ -227,24 +227,14 @@ int libolecf_io_handle_read_msat(
 
 		return( -1 );
 	}
-	if( io_handle->sector_size == 0 )
+	if( ( io_handle->sector_size == 0 )
+	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid IO handle - missing sector size.",
-		 function );
-
-		return( -1 );
-	}
-	if( io_handle->sector_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid IO handle - sector size value exceeds maximum.",
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid IO handle - sector size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -531,24 +521,14 @@ int libolecf_io_handle_read_sat(
 
 		return( -1 );
 	}
-	if( io_handle->sector_size == 0 )
+	if( ( io_handle->sector_size == 0 )
+	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid IO handle - missing sector size.",
-		 function );
-
-		return( -1 );
-	}
-	if( io_handle->sector_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid IO handle - sector size value exceeds maximum.",
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid IO handle - sector size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -785,24 +765,14 @@ int libolecf_io_handle_read_ssat(
 
 		return( -1 );
 	}
-	if( io_handle->sector_size == 0 )
+	if( ( io_handle->sector_size == 0 )
+	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid IO handle - missing sector size.",
-		 function );
-
-		return( -1 );
-	}
-	if( io_handle->sector_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid IO handle - sector size value exceeds maximum.",
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid IO handle - sector size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -1071,24 +1041,14 @@ int libolecf_io_handle_read_directory_entries(
 
 		return( -1 );
 	}
-	if( io_handle->sector_size == 0 )
+	if( ( io_handle->sector_size == 0 )
+	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid IO handle - missing sector size.",
-		 function );
-
-		return( -1 );
-	}
-	if( io_handle->sector_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid IO handle - sector size value exceeds maximum.",
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid IO handle - sector size value out of bounds.",
 		 function );
 
 		return( -1 );

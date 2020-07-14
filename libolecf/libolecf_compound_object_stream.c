@@ -205,17 +205,6 @@ int libolecf_compound_object_stream_read(
 		 size_data,
 		 user_type_string_size );
 	}
-	if( user_type_string_size == 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: missing user type string size.",
-		 function );
-
-		goto on_error;
-	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -225,13 +214,14 @@ int libolecf_compound_object_stream_read(
 		 user_type_string_size );
 	}
 #endif
-	if( user_type_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
+	if( ( user_type_string_size == 0 )
+	 || ( user_type_string_size > (uint32_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid user type string size value exceeds maximum allocation size.",
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid user type string size value out of bounds.",
 		 function );
 
 		goto on_error;
@@ -634,7 +624,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid user type string size value exceeds maximum allocation size.",
+				 "%s: invalid Unicode user type string size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
@@ -764,7 +754,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid clipboard data size value exceeds maximum allocation size.",
+				 "%s: invalid Unicode clipboard data size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
@@ -875,7 +865,7 @@ int libolecf_compound_object_stream_read(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-				 "%s: invalid reserved string size value exceeds maximum allocation size.",
+				 "%s: invalid Unicode reserved string size value exceeds maximum allocation size.",
 				 function );
 
 				goto on_error;
