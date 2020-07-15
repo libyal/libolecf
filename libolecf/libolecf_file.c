@@ -1123,27 +1123,9 @@ int libolecf_file_open_read(
 
 		goto on_error;
 	}
-	if( result == 0 )
-	{
-		/* Free the empty root directory entry
-		 */
-		result = libcdata_list_free(
-		          &directory_entry_list,
-		          (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
-		          error );
-	}
-	else
-	{
-		/* The directory entries are no longer managed by the list but by the tree
-		 */
-		result = libcdata_list_free(
-		          &directory_entry_list,
-		          NULL,
-		          error );
-	}
 	if( libcdata_list_free(
 	     &directory_entry_list,
-	     NULL,
+	     (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free_not_in_tree,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1169,14 +1151,14 @@ on_error:
 	{
 		libcdata_tree_node_free(
 		 &( internal_file->directory_tree_root_node ),
-		 (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
+		 NULL,
 		 NULL );
 	}
 	if( directory_entry_list != NULL )
 	{
 		libcdata_list_free(
 		 &directory_entry_list,
-	         (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &libolecf_directory_entry_free,
 		 NULL );
 	}
 	if( internal_file->ssat != NULL )

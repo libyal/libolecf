@@ -36,9 +36,10 @@ int libolecf_directory_list_get_element_by_identifier(
      libolecf_directory_entry_t **directory_entry,
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *list_element = NULL;
-	static char *function                 = "libolecf_directory_list_get_element_by_identifier";
-	int element_index                     = 0;
+	libcdata_list_element_t *list_element            = NULL;
+	libolecf_directory_entry_t *safe_directory_entry = NULL;
+	static char *function                            = "libolecf_directory_list_get_element_by_identifier";
+	int element_index                                = 0;
 
 	if( directory_entry == NULL )
 	{
@@ -51,6 +52,8 @@ int libolecf_directory_list_get_element_by_identifier(
 
 		return( -1 );
 	}
+	*directory_entry = NULL;
+
 	if( libcdata_list_get_first_element(
 	     directory_entry_list,
 	     &list_element,
@@ -63,13 +66,13 @@ int libolecf_directory_list_get_element_by_identifier(
 		 "%s: unable to retrieve first element of directory entry list.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 	while( list_element != NULL )
 	{
 		if( libcdata_list_element_get_value(
 		     list_element,
-		     (intptr_t **) directory_entry,
+		     (intptr_t **) &safe_directory_entry,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -80,9 +83,9 @@ int libolecf_directory_list_get_element_by_identifier(
 			 function,
 			 element_index );
 
-			goto on_error;
+			return( -1 );
 		}
-		if( *directory_entry == NULL )
+		if( safe_directory_entry == NULL )
 		{
 			libcerror_error_set(
 			 error,
@@ -92,9 +95,9 @@ int libolecf_directory_list_get_element_by_identifier(
 			 function,
 			 element_index );
 
-			goto on_error;
+			return( -1 );
 		}
-		if( ( *directory_entry )->directory_identifier == directory_entry_identifier )
+		if( safe_directory_entry->directory_identifier == directory_entry_identifier )
 		{
 			break;
 		}
@@ -111,19 +114,16 @@ int libolecf_directory_list_get_element_by_identifier(
 			 function,
 			 element_index );
 
-			goto on_error;
+			return( -1 );
 		}
 		element_index++;
 	}
-	if( list_element == NULL )
+	if( list_element != NULL )
 	{
-		return( 0 );
+		*directory_entry = safe_directory_entry;
+
+		return( 1 );
 	}
-	return( 1 );
-
-on_error:
-	*directory_entry = NULL;
-
-	return( -1 );
+	return( 0 );
 }
 

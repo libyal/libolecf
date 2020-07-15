@@ -84,20 +84,6 @@ int libolecf_directory_tree_create(
 
 		return( -1 );
 	}
-	if( libcdata_list_get_first_element(
-	     directory_entry_list,
-	     &list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve first element of directory entry list.",
-		 function );
-
-		goto on_error;
-	}
 	if( libcdata_list_get_number_of_elements(
 	     directory_entry_list,
 	     &number_of_elements,
@@ -115,6 +101,20 @@ int libolecf_directory_tree_create(
 	if( number_of_elements == 0 )
 	{
 		return( 0 );
+	}
+	if( libcdata_list_get_first_element(
+	     directory_entry_list,
+	     &list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve first element of directory entry list.",
+		 function );
+
+		goto on_error;
 	}
 	for( element_index = 0;
 	     element_index < number_of_elements;
@@ -253,6 +253,8 @@ int libolecf_directory_tree_create(
 
 		goto on_error;
 	}
+	directory_entry->set_in_tree = 1;
+
 	return( 1 );
 
 on_error:
@@ -281,11 +283,11 @@ int libolecf_directory_tree_create_process_entry(
      uint8_t byte_order,
      libcerror_error_t **error )
 {
-	libcdata_tree_node_t *parent_node                 = NULL;
-	libolecf_directory_entry_t *directory_entry_value = NULL;
-	libcdata_tree_node_t *tree_node                   = NULL;
-	static char *function                             = "libolecf_directory_tree_create_process_entry";
-	int result                                        = 0;
+	libcdata_tree_node_t *parent_node               = NULL;
+	libolecf_directory_entry_t *sub_directory_entry = NULL;
+	libcdata_tree_node_t *tree_node                 = NULL;
+	static char *function                           = "libolecf_directory_tree_create_process_entry";
+	int result                                      = 0;
 
 	if( directory_tree_node == NULL )
 	{
@@ -392,7 +394,7 @@ int libolecf_directory_tree_create_process_entry(
 		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
 		          directory_entry->sub_directory_identifier,
-		          &directory_entry_value,
+		          &sub_directory_entry,
 		          error );
 
 		if( result == -1 )
@@ -409,7 +411,7 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( directory_entry_value == NULL )
+			if( sub_directory_entry == NULL )
 			{
 				libcerror_error_set(
 				 error,
@@ -421,7 +423,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			if( directory_entry_value->set_in_tree != 0 )
+			if( sub_directory_entry->set_in_tree != 0 )
 			{
 				libcerror_error_set(
 				 error,
@@ -447,7 +449,7 @@ int libolecf_directory_tree_create_process_entry(
 			}
 			if( libcdata_tree_node_set_value(
 			     tree_node,
-			     (intptr_t *) directory_entry_value,
+			     (intptr_t *) sub_directory_entry,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
@@ -475,7 +477,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			directory_entry_value->set_in_tree = 1;
+			sub_directory_entry->set_in_tree = 1;
 
 			if( libolecf_directory_tree_create_process_entry(
 			     tree_node,
@@ -483,7 +485,7 @@ int libolecf_directory_tree_create_process_entry(
 			     document_summary_information_directory_entry,
 			     summary_information_directory_entry,
 			     directory_entry_list,
-			     directory_entry_value,
+			     sub_directory_entry,
 			     byte_order,
 			     error ) != 1 )
 			{
@@ -508,7 +510,7 @@ int libolecf_directory_tree_create_process_entry(
 		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
 		          (int) directory_entry->previous_directory_identifier,
-		          &directory_entry_value,
+		          &sub_directory_entry,
 		          error );
 
 		if( result == -1 )
@@ -525,7 +527,7 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( directory_entry_value == NULL )
+			if( sub_directory_entry == NULL )
 			{
 				libcerror_error_set(
 				 error,
@@ -537,7 +539,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			if( directory_entry_value->set_in_tree != 0 )
+			if( sub_directory_entry->set_in_tree != 0 )
 			{
 				libcerror_error_set(
 				 error,
@@ -563,7 +565,7 @@ int libolecf_directory_tree_create_process_entry(
 			}
 			if( libcdata_tree_node_set_value(
 			     tree_node,
-			     (intptr_t *) directory_entry_value,
+			     (intptr_t *) sub_directory_entry,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
@@ -605,7 +607,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			directory_entry_value->set_in_tree = 1;
+			sub_directory_entry->set_in_tree = 1;
 
 			if( libolecf_directory_tree_create_process_entry(
 			     tree_node,
@@ -613,7 +615,7 @@ int libolecf_directory_tree_create_process_entry(
 			     document_summary_information_directory_entry,
 			     summary_information_directory_entry,
 			     directory_entry_list,
-			     directory_entry_value,
+			     sub_directory_entry,
 			     byte_order,
 			     error ) != 1 )
 			{
@@ -638,7 +640,7 @@ int libolecf_directory_tree_create_process_entry(
 		result = libolecf_directory_list_get_element_by_identifier(
 		          directory_entry_list,
 		          (int) directory_entry->next_directory_identifier,
-		          &directory_entry_value,
+		          &sub_directory_entry,
 		          error );
 
 		if( result != 1 )
@@ -655,7 +657,7 @@ int libolecf_directory_tree_create_process_entry(
 		}
 		else if( result != 0 )
 		{
-			if( directory_entry_value == NULL )
+			if( sub_directory_entry == NULL )
 			{
 				libcerror_error_set(
 				 error,
@@ -667,7 +669,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			if( directory_entry_value->set_in_tree != 0 )
+			if( sub_directory_entry->set_in_tree != 0 )
 			{
 				libcerror_error_set(
 				 error,
@@ -693,7 +695,7 @@ int libolecf_directory_tree_create_process_entry(
 			}
 			if( libcdata_tree_node_set_value(
 			     tree_node,
-			     (intptr_t *) directory_entry_value,
+			     (intptr_t *) sub_directory_entry,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
@@ -735,7 +737,7 @@ int libolecf_directory_tree_create_process_entry(
 
 				goto on_error;
 			}
-			directory_entry_value->set_in_tree = 1;
+			sub_directory_entry->set_in_tree = 1;
 
 			if( libolecf_directory_tree_create_process_entry(
 			     tree_node,
@@ -743,7 +745,7 @@ int libolecf_directory_tree_create_process_entry(
 			     document_summary_information_directory_entry,
 			     summary_information_directory_entry,
 			     directory_entry_list,
-			     directory_entry_value,
+			     sub_directory_entry,
 			     byte_order,
 			     error ) != 1 )
 			{

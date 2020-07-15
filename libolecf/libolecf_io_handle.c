@@ -215,6 +215,7 @@ int libolecf_io_handle_read_msat(
 	int number_of_msat_entries           = 0;
 	int msat_index                       = 109;
 	int msat_sector_index                = 0;
+	int recursion_depth                  = 0;
 
 	if( io_handle == NULL )
 	{
@@ -343,6 +344,19 @@ int libolecf_io_handle_read_msat(
 	}
 	while( msat_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	{
+		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid recursion depth value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
+		recursion_depth++;
+
 		if( msat_index >= msat->number_of_sector_identifiers )
 		{
 			break;
@@ -751,6 +765,7 @@ int libolecf_io_handle_read_ssat(
 	ssize_t read_count                   = 0;
 	uint32_t ssat_sector_index           = 0;
 	int number_of_ssat_entries           = 0;
+	int recursion_depth                  = 0;
 	int ssat_index                       = 0;
 	int ssat_sector_entry_index          = 0;
 
@@ -835,6 +850,19 @@ int libolecf_io_handle_read_ssat(
 	}
 	while( ssat_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	{
+		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid recursion depth value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
+		recursion_depth++;
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -1022,12 +1050,13 @@ int libolecf_io_handle_read_directory_entries(
 	uint8_t *directory_entry_data                     = NULL;
 	uint8_t *directory_sector                         = NULL;
 	static char *function                             = "libolecf_io_handle_read_directory_entries";
-	off64_t directory_sector_offset                   = 0;
 	size_t number_of_directory_sector_entries         = 0;
 	ssize_t read_count                                = 0;
+	off64_t directory_sector_offset                   = 0;
 	uint32_t directory_sector_identifier              = 0;
 	int directory_entry_index                         = 0;
 	int directory_sector_index                        = 0;
+	int recursion_depth                               = 0;
 	int result                                        = 0;
 
 	if( io_handle == NULL )
@@ -1120,6 +1149,19 @@ int libolecf_io_handle_read_directory_entries(
 	while( ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	    && ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_UNUSED ) )
 	{
+		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid recursion depth value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
+		recursion_depth++;
+
 		result = libcdata_range_list_range_is_present(
 		          read_directory_sector_list,
 		          (uint64_t) directory_sector_identifier,

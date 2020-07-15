@@ -92,6 +92,10 @@ int libolecf_directory_entry_free(
      libolecf_directory_entry_t **directory_entry,
      libcerror_error_t **error );
 
+int libolecf_directory_entry_free_not_in_tree(
+     libolecf_directory_entry_t **directory_entry,
+     libcerror_error_t **error );
+
 int libolecf_directory_entry_compare(
      libolecf_directory_entry_t *first_directory_entry,
      libolecf_directory_entry_t *second_directory_entry,

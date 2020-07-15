@@ -118,7 +118,7 @@ int libolecf_directory_entry_free(
 {
 	static char *function = "libolecf_directory_entry_free";
 
-        if( directory_entry == NULL )
+	if( directory_entry == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -131,7 +131,7 @@ int libolecf_directory_entry_free(
 	}
 	if( *directory_entry != NULL )
 	{
-        	if( ( *directory_entry )->name != NULL )
+		if( ( *directory_entry )->name != NULL )
 		{
 			memory_free(
 			 ( *directory_entry )->name );
@@ -141,7 +141,43 @@ int libolecf_directory_entry_free(
 
 		*directory_entry = NULL;
 	}
-        return( 1 );
+	return( 1 );
+}
+
+/* Frees a directory entry that is not part of the directory tree
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_directory_entry_free_not_in_tree(
+     libolecf_directory_entry_t **directory_entry,
+     libcerror_error_t **error )
+{
+	static char *function = "libolecf_directory_entry_free_not_in_tree";
+
+	if( directory_entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid directory entry.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( *directory_entry != NULL )
+	 && ( ( *directory_entry )->set_in_tree == 0 ) )
+	{
+		if( ( *directory_entry )->name != NULL )
+		{
+			memory_free(
+			 ( *directory_entry )->name );
+		}
+		memory_free(
+		 *directory_entry );
+
+		*directory_entry = NULL;
+	}
+	return( 1 );
 }
 
 /* Compares two directory entries
@@ -533,11 +569,12 @@ int libolecf_directory_entry_read_data(
 		 4,
 		 0 );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	return( 1 );
 
 on_error:
-       	if( directory_entry->name != NULL )
+	if( directory_entry->name != NULL )
 	{
 		memory_free(
 		 directory_entry->name );

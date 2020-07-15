@@ -312,7 +312,7 @@ int libolecf_property_set_read_header_data(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: byte order\t\t\t0x%02" PRIx8 " 0x%02" PRIx8 "\n",
+		 "%s: byte order\t\t\t: 0x%02" PRIx8 " 0x%02" PRIx8 "\n",
 		 function,
 		 ( (olecf_property_set_header_t *) data )->byte_order[ 0 ],
 		 ( (olecf_property_set_header_t *) data )->byte_order[ 1 ] );
