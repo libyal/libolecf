@@ -121,6 +121,8 @@ int olecf_test_property_set_initialize(
 	          &property_set,
 	          &error );
 
+	property_set = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -132,8 +134,6 @@ int olecf_test_property_set_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	property_set = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 

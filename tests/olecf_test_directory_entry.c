@@ -114,6 +114,8 @@ int olecf_test_directory_entry_initialize(
 	          &directory_entry,
 	          &error );
 
+	directory_entry = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -125,8 +127,6 @@ int olecf_test_directory_entry_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	directory_entry = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -455,6 +455,8 @@ int main(
 	OLECF_TEST_RUN(
 	 "libolecf_directory_entry_free",
 	 olecf_test_directory_entry_free );
+
+	/* TODO: add tests for libolecf_directory_entry_free_not_in_tree */
 
 	OLECF_TEST_RUN(
 	 "libolecf_directory_entry_compare",

@@ -440,13 +440,13 @@ int libolecf_io_handle_read_msat(
 			{
 				byte_stream_copy_to_uint32_little_endian(
 				 msat_entry,
-				 msat->sector_identifier[ msat_index ] );
+				 msat->sector_identifiers[ msat_index ] );
 			}
 			else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
 			{
 				byte_stream_copy_to_uint32_big_endian(
 				 msat_entry,
-				 msat->sector_identifier[ msat_index ] );
+				 msat->sector_identifiers[ msat_index ] );
 			}
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
@@ -455,7 +455,7 @@ int libolecf_io_handle_read_msat(
 				 "%s: MSAT entry: %03d sector identifier\t: 0x%08" PRIx32 "\n",
 				 function,
 				 msat_index,
-				 msat->sector_identifier[ msat_index ] );
+				 msat->sector_identifiers[ msat_index ] );
 			}
 #endif
 			msat_entry += 4;
@@ -614,12 +614,12 @@ int libolecf_io_handle_read_sat(
 			 "%s: MSAT entry: %03d sector identifier\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 msat_index,
-			 msat->sector_identifier[ msat_index ] );
+			 msat->sector_identifiers[ msat_index ] );
 		}
 #endif
 		/* Skip empty sector identifiers
 		 */
-		if( msat->sector_identifier[ msat_index ] == LIBOLECF_SECTOR_IDENTIFIER_UNUSED )
+		if( msat->sector_identifiers[ msat_index ] == LIBOLECF_SECTOR_IDENTIFIER_UNUSED )
 		{
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
@@ -634,7 +634,7 @@ int libolecf_io_handle_read_sat(
 		{
 			break;
 		}
-		sat_sector_offset = ( msat->sector_identifier[ msat_index ] + 1 ) * io_handle->sector_size;
+		sat_sector_offset = ( msat->sector_identifiers[ msat_index ] + 1 ) * io_handle->sector_size;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -700,13 +700,13 @@ int libolecf_io_handle_read_sat(
 			{
 				byte_stream_copy_to_uint32_little_endian(
 				 sat_entry,
-				 sat->sector_identifier[ sat_index ] );
+				 sat->sector_identifiers[ sat_index ] );
 			}
 			else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
 			{
 				byte_stream_copy_to_uint32_big_endian(
 				 sat_entry,
-				 sat->sector_identifier[ sat_index ] );
+				 sat->sector_identifiers[ sat_index ] );
 			}
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
@@ -715,7 +715,7 @@ int libolecf_io_handle_read_sat(
 				 "%s: SAT entry: %04d sector identifier\t\t: 0x%08" PRIx32 "\n",
 				 function,
 				 sat_index,
-				 sat->sector_identifier[ sat_index ] );
+				 sat->sector_identifiers[ sat_index ] );
 			}
 #endif
 			sat_entry += 4;
@@ -970,13 +970,13 @@ int libolecf_io_handle_read_ssat(
 			{
 				byte_stream_copy_to_uint32_little_endian(
 				 ssat_entry,
-				 ssat->sector_identifier[ ssat_index ] );
+				 ssat->sector_identifiers[ ssat_index ] );
 			}
 			else if( io_handle->byte_order == LIBOLECF_ENDIAN_BIG )
 			{
 				byte_stream_copy_to_uint32_big_endian(
 				 ssat_entry,
-				 ssat->sector_identifier[ ssat_index ] );
+				 ssat->sector_identifiers[ ssat_index ] );
 			}
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
@@ -985,7 +985,7 @@ int libolecf_io_handle_read_ssat(
 				 "%s: SSAT entry: %04d sector identifier\t: 0x%08" PRIx32 "\n",
 				 function,
 				 ssat_index,
-				 ssat->sector_identifier[ ssat_index ] );
+				 ssat->sector_identifiers[ ssat_index ] );
 			}
 #endif
 			ssat_entry += 4;
@@ -1000,23 +1000,35 @@ int libolecf_io_handle_read_ssat(
 		}
 #endif
 #if SIZE_OF_INT <= 4
-		if( ssat_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
-#else
-		if( (int) ssat_sector_identifier >= sat->number_of_sector_identifiers )
-#endif
+		if( ssat_sector_identifier > (uint32_t) INT_MAX )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-			 "%s: invalid short sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 "%s: invalid SSAT sector identifier: 0x%08" PRIx32 " value out of bounds.",
 			 function,
 			 ssat_sector_identifier );
 
 			goto on_error;
 		}
-		ssat_sector_identifier = sat->sector_identifier[ ssat_sector_identifier ];
+#endif
+		if( libolecf_allocation_table_get_sector_identifier_by_index(
+		     sat,
+		     (int) ssat_sector_identifier,
+		     &ssat_sector_identifier,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sector identifier: %" PRIu32 " from SAT.",
+			 function,
+			 ssat_sector_identifier );
 
+			goto on_error;
+		}
 		ssat_sector_index++;
 	}
 	memory_free(
@@ -1071,7 +1083,8 @@ int libolecf_io_handle_read_directory_entries(
 		return( -1 );
 	}
 	if( ( io_handle->sector_size == 0 )
-	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
+	 || ( io_handle->sector_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
+	 || ( ( io_handle->sector_size % sizeof( olecf_directory_entry_t ) ) != 0 ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -1363,10 +1376,7 @@ int libolecf_io_handle_read_directory_entries(
 			goto on_error;
 		}
 #if SIZE_OF_INT <= 4
-		if( directory_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
-#else
-		if( (int) directory_sector_identifier >= sat->number_of_sector_identifiers )
-#endif
+		if( directory_sector_identifier > (uint32_t) INT_MAX )
 		{
 			libcerror_error_set(
 			 error,
@@ -1378,7 +1388,23 @@ int libolecf_io_handle_read_directory_entries(
 
 			goto on_error;
 		}
-		directory_sector_identifier = sat->sector_identifier[ directory_sector_identifier ];
+#endif
+		if( libolecf_allocation_table_get_sector_identifier_by_index(
+		     sat,
+		     (int) directory_sector_identifier,
+		     &directory_sector_identifier,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sector identifier: %" PRIu32 " from SAT.",
+			 function,
+			 directory_sector_identifier );
+
+			goto on_error;
+		}
 	}
 	if( libcdata_range_list_free(
 	     &read_directory_sector_list,
@@ -1587,10 +1613,7 @@ ssize_t libolecf_io_handle_read_stream(
 			return( -1 );
 		}
 #if SIZE_OF_INT <= 4
-		if( sector_identifier >= (uint32_t) allocation_table->number_of_sector_identifiers )
-#else
-		if( (int) sector_identifier >= allocation_table->number_of_sector_identifiers )
-#endif
+		if( sector_identifier > (uint32_t) INT_MAX )
 		{
 			libcerror_error_set(
 			 error,
@@ -1602,7 +1625,23 @@ ssize_t libolecf_io_handle_read_stream(
 
 			return( -1 );
 		}
-		sector_identifier = allocation_table->sector_identifier[ sector_identifier ];
+#endif
+		if( libolecf_allocation_table_get_sector_identifier_by_index(
+		     allocation_table,
+		     (int) sector_identifier,
+		     &sector_identifier,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sector identifier: %" PRIu32 " from allocation table.",
+			 function,
+			 sector_identifier );
+
+			return( -1 );
+		}
 	}
 	while( size > 0 )
 	{
@@ -1630,10 +1669,7 @@ ssize_t libolecf_io_handle_read_stream(
 			while( read_offset >= (off64_t) io_handle->sector_size )
 			{
 #if SIZE_OF_INT <= 4
-				if( short_sector_stream_sector_identifier >= (uint32_t) sat->number_of_sector_identifiers )
-#else
-				if( (int) short_sector_stream_sector_identifier >= sat->number_of_sector_identifiers )
-#endif
+				if( short_sector_stream_sector_identifier > (uint32_t) INT_MAX )
 				{
 					libcerror_error_set(
 					 error,
@@ -1645,8 +1681,23 @@ ssize_t libolecf_io_handle_read_stream(
 
 					return( -1 );
 				}
-				short_sector_stream_sector_identifier = sat->sector_identifier[ short_sector_stream_sector_identifier ];
+#endif
+				if( libolecf_allocation_table_get_sector_identifier_by_index(
+				     sat,
+				     (int) short_sector_stream_sector_identifier,
+				     &short_sector_stream_sector_identifier,
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+					 "%s: unable to retrieve sector identifier: %" PRIu32 " from SAT.",
+					 function,
+					 short_sector_stream_sector_identifier );
 
+					return( -1 );
+				}
 				read_offset -= io_handle->sector_size;
 			}
 			read_offset += ( short_sector_stream_sector_identifier + 1 ) * io_handle->sector_size;
@@ -1707,10 +1758,7 @@ ssize_t libolecf_io_handle_read_stream(
 		size          -= read_size;
 
 #if SIZE_OF_INT <= 4
-		if( sector_identifier >= (uint32_t) allocation_table->number_of_sector_identifiers )
-#else
-		if( (int) sector_identifier >= allocation_table->number_of_sector_identifiers )
-#endif
+		if( sector_identifier > (uint32_t) INT_MAX )
 		{
 			libcerror_error_set(
 			 error,
@@ -1722,10 +1770,24 @@ ssize_t libolecf_io_handle_read_stream(
 
 			return( -1 );
 		}
-		sector_identifier = allocation_table->sector_identifier[ sector_identifier ];
+#endif
+		if( libolecf_allocation_table_get_sector_identifier_by_index(
+		     allocation_table,
+		     (int) sector_identifier,
+		     &sector_identifier,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sector identifier: %" PRIu32 " from allocation table.",
+			 function,
+			 sector_identifier );
 
+			return( -1 );
+		}
 		sector_identifier_index++;
-
 	}
 	return( (ssize_t) buffer_offset );
 }

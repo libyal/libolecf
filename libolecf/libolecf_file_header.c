@@ -530,13 +530,13 @@ int libolecf_file_header_read_data(
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 msat_entry,
-			 msat->sector_identifier[ msat_index ] );
+			 msat->sector_identifiers[ msat_index ] );
 		}
 		else if( file_header->byte_order == LIBOLECF_ENDIAN_BIG )
 		{
 			byte_stream_copy_to_uint32_big_endian(
 			 msat_entry,
-			 msat->sector_identifier[ msat_index ] );
+			 msat->sector_identifiers[ msat_index ] );
 		}
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -545,7 +545,7 @@ int libolecf_file_header_read_data(
 			 "%s: MSAT entry: %03d sector identifier\t: 0x%08" PRIx32 "\n",
 			 function,
 			 msat_index,
-			 msat->sector_identifier[ msat_index ] );
+			 msat->sector_identifiers[ msat_index ] );
 		}
 #endif
 		msat_entry += 4;

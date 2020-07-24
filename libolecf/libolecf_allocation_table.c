@@ -60,27 +60,17 @@ int libolecf_allocation_table_initialize(
 
 		return( -1 );
 	}
-	if( number_of_sector_identifiers < 0 )
+	if( ( number_of_sector_identifiers < 0 )
+	 || ( (size_t) number_of_sector_identifiers > (size_t) ( MEMORY_MAXIMUM_ALLOCATION_SIZE / sizeof( uint32_t ) ) ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_LESS_THAN_ZERO,
-		 "%s: invalid number of sector identifiers value less than zero.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid number of sector identifiers value out of bounds.",
 		 function );
 
 		return( -1 );
-	}
-	if( (size_t) number_of_sector_identifiers > (size_t) ( SSIZE_MAX / sizeof( uint32_t ) ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid number of sector identifers value exceeds maximum.",
-		 function );
-
-		goto on_error;
 	}
 	*allocation_table = memory_allocate_structure(
 	                     libolecf_allocation_table_t );
@@ -119,21 +109,10 @@ int libolecf_allocation_table_initialize(
 	{
 		sector_identifiers_size = number_of_sector_identifiers * sizeof( uint32_t );
 
-		if( sector_identifiers_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid sector identifiers size value exceeds maximum allocation size.",
-			 function );
+		( *allocation_table )->sector_identifiers = (uint32_t *) memory_allocate(
+		                                                          sector_identifiers_size );
 
-			goto on_error;
-		}
-		( *allocation_table )->sector_identifier = (uint32_t *) memory_allocate(
-									 sector_identifiers_size );
-
-		if( ( *allocation_table )->sector_identifier == NULL )
+		if( ( *allocation_table )->sector_identifiers == NULL )
 		{
 			libcerror_error_set(
 			 error,
@@ -145,7 +124,7 @@ int libolecf_allocation_table_initialize(
 			goto on_error;
 		}
 		if( memory_set(
-		     ( *allocation_table )->sector_identifier,
+		     ( *allocation_table )->sector_identifiers,
 		     0,
 		     sector_identifiers_size ) == NULL )
 		{
@@ -165,10 +144,10 @@ int libolecf_allocation_table_initialize(
 on_error:
 	if( *allocation_table != NULL )
 	{
-		if( ( *allocation_table )->sector_identifier != NULL )
+		if( ( *allocation_table )->sector_identifiers != NULL )
 		{
 			memory_free(
-			 ( *allocation_table )->sector_identifier );
+			 ( *allocation_table )->sector_identifiers );
 		}
 		memory_free(
 		 *allocation_table );
@@ -193,17 +172,17 @@ int libolecf_allocation_table_free(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid allocation_table.",
+		 "%s: invalid allocation table.",
 		 function );
 
 		return( -1 );
 	}
 	if( *allocation_table != NULL )
 	{
-		if( ( *allocation_table )->sector_identifier != NULL )
+		if( ( *allocation_table )->sector_identifiers != NULL )
 		{
 			memory_free(
-			 ( *allocation_table )->sector_identifier );
+			 ( *allocation_table )->sector_identifiers );
 		}
 		memory_free(
 		 *allocation_table );
@@ -213,7 +192,7 @@ int libolecf_allocation_table_free(
 	return( 1 );
 }
 
-/* Resizes an allocation_table
+/* Resizes an allocation table
  * Returns 1 if successful or -1 on error
  */
 int libolecf_allocation_table_resize(
@@ -231,18 +210,19 @@ int libolecf_allocation_table_resize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid allocation_table.",
+		 "%s: invalid allocation table.",
 		 function );
 
 		return( -1 );
 	}
-	if( number_of_sector_identifiers < 0 )
+	if( ( number_of_sector_identifiers < 0 )
+	 || ( (size_t) number_of_sector_identifiers > (size_t) ( MEMORY_MAXIMUM_ALLOCATION_SIZE / sizeof( uint32_t ) ) ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_LESS_THAN_ZERO,
-		 "%s: invalid number of sector identifiers value less than zero.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid number of sector identifiers value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -251,19 +231,8 @@ int libolecf_allocation_table_resize(
 	{
 		sector_identifiers_size = sizeof( uint32_t ) * number_of_sector_identifiers;
 
-		if( sector_identifiers_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-			 "%s: invalid sector identifiers size value exceeds maximum allocation size.",
-			 function );
-
-			return( -1 );
-		}
 		reallocation = memory_reallocate(
-		                allocation_table->sector_identifier,
+		                allocation_table->sector_identifiers,
 		                sector_identifiers_size );
 
 		if( reallocation == NULL )
@@ -277,12 +246,10 @@ int libolecf_allocation_table_resize(
 
 			return( -1 );
 		}
-		allocation_table->sector_identifier = (uint32_t *) reallocation;
-
-		allocation_table->number_of_sector_identifiers = number_of_sector_identifiers;
+		allocation_table->sector_identifiers = (uint32_t *) reallocation;
 
 		if( memory_set(
-		     allocation_table->sector_identifier,
+		     &( allocation_table->sector_identifiers[ allocation_table->number_of_sector_identifiers ] ),
 		     0,
 		     sizeof( uint32_t ) * ( number_of_sector_identifiers - allocation_table->number_of_sector_identifiers ) ) == NULL )
 		{
@@ -295,7 +262,58 @@ int libolecf_allocation_table_resize(
 
 			return( -1 );
 		}
+		allocation_table->number_of_sector_identifiers = number_of_sector_identifiers;
 	}
+	return( 1 );
+}
+
+/* Retrieves a specific sector identifier from the allocation table
+ * Returns 1 if successful or -1 on error
+ */
+int libolecf_allocation_table_get_sector_identifier_by_index(
+     libolecf_allocation_table_t *allocation_table,
+     int entry_index,
+     uint32_t *sector_identifier,
+     libcerror_error_t **error )
+{
+	static char *function = "libolecf_allocation_table_resize";
+
+	if( allocation_table == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid allocation table.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( entry_index < 0 )
+	 || ( entry_index >= allocation_table->number_of_sector_identifiers ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid entry index value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( sector_identifier == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid sector identifier.",
+		 function );
+
+		return( -1 );
+	}
+	*sector_identifier = allocation_table->sector_identifiers[ entry_index ];
+
 	return( 1 );
 }
 

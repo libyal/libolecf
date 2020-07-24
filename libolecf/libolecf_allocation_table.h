@@ -41,7 +41,7 @@ struct libolecf_allocation_table
 
 	/* The sector identifiers
 	 */
-	uint32_t *sector_identifier;
+	uint32_t *sector_identifiers;
 };
 
 int libolecf_allocation_table_initialize(
@@ -56,6 +56,12 @@ int libolecf_allocation_table_free(
 int libolecf_allocation_table_resize(
      libolecf_allocation_table_t *allocation_table,
      int number_of_sector_identifiers,
+     libcerror_error_t **error );
+
+int libolecf_allocation_table_get_sector_identifier_by_index(
+     libolecf_allocation_table_t *allocation_table,
+     int entry_index,
+     uint32_t *sector_identifier,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

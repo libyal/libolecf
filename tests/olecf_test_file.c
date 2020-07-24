@@ -37,9 +37,16 @@
 #include "olecf_test_libolecf.h"
 #include "olecf_test_macros.h"
 #include "olecf_test_memory.h"
-#include "olecf_test_unused.h"
 
 #include "../libolecf/libolecf_file.h"
+
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#error Unsupported size of wchar_t
+#endif
+
+/* Define to make olecf_test_file generate verbose output
+#define OLECF_TEST_FILE_VERBOSE
+ */
 
 #if !defined( LIBOLECF_HAVE_BFIO )
 
@@ -56,14 +63,6 @@ int libolecf_file_open_file_io_handle(
      libolecf_error_t **error );
 
 #endif /* !defined( LIBOLECF_HAVE_BFIO ) */
-
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
-#error Unsupported size of wchar_t
-#endif
-
-/* Define to make olecf_test_file generate verbose output
-#define OLECF_TEST_FILE_VERBOSE
- */
 
 /* Creates and opens a source file
  * Returns 1 if successful or -1 on error
@@ -266,6 +265,8 @@ int olecf_test_file_initialize(
 	          &file,
 	          &error );
 
+	file = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -277,8 +278,6 @@ int olecf_test_file_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	file = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -800,13 +799,13 @@ int olecf_test_file_open_file_io_handle(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NOT_NULL(
-         "file_io_handle",
-         file_io_handle );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "file_io_handle",
+	 file_io_handle );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	string_length = system_string_length(
 	                 source );
@@ -829,9 +828,9 @@ int olecf_test_file_open_file_io_handle(
 	 result,
 	 1 );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libolecf_file_initialize(
 	          &file,
@@ -972,12 +971,12 @@ int olecf_test_file_open_file_io_handle(
 	 1 );
 
 	OLECF_TEST_ASSERT_IS_NULL(
-         "file_io_handle",
-         file_io_handle );
+	 "file_io_handle",
+	 file_io_handle );
 
-        OLECF_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	OLECF_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -1243,7 +1242,6 @@ int olecf_test_file_get_sector_size(
 	libcerror_error_t *error = NULL;
 	size32_t sector_size     = 0;
 	int result               = 0;
-	int sector_size_is_set   = 0;
 
 	/* Test regular cases
 	 */
@@ -1252,16 +1250,14 @@ int olecf_test_file_get_sector_size(
 	          &sector_size,
 	          &error );
 
-	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	OLECF_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	sector_size_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1282,25 +1278,23 @@ int olecf_test_file_get_sector_size(
 	libcerror_error_free(
 	 &error );
 
-	if( sector_size_is_set != 0 )
-	{
-		result = libolecf_file_get_sector_size(
-		          file,
-		          NULL,
-		          &error );
+	result = libolecf_file_get_sector_size(
+	          file,
+	          NULL,
+	          &error );
 
-		OLECF_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		OLECF_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -1318,10 +1312,9 @@ on_error:
 int olecf_test_file_get_short_sector_size(
      libolecf_file_t *file )
 {
-	libcerror_error_t *error     = NULL;
-	size32_t short_sector_size   = 0;
-	int result                   = 0;
-	int short_sector_size_is_set = 0;
+	libcerror_error_t *error   = NULL;
+	size32_t short_sector_size = 0;
+	int result                 = 0;
 
 	/* Test regular cases
 	 */
@@ -1330,16 +1323,14 @@ int olecf_test_file_get_short_sector_size(
 	          &short_sector_size,
 	          &error );
 
-	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	OLECF_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	short_sector_size_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1360,25 +1351,23 @@ int olecf_test_file_get_short_sector_size(
 	libcerror_error_free(
 	 &error );
 
-	if( short_sector_size_is_set != 0 )
-	{
-		result = libolecf_file_get_short_sector_size(
-		          file,
-		          NULL,
-		          &error );
+	result = libolecf_file_get_short_sector_size(
+	          file,
+	          NULL,
+	          &error );
 
-		OLECF_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		OLECF_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -1612,10 +1601,9 @@ on_error:
 int olecf_test_file_get_number_of_unallocated_blocks(
      libolecf_file_t *file )
 {
-	libcerror_error_t *error                = NULL;
-	int number_of_unallocated_blocks        = 0;
-	int number_of_unallocated_blocks_is_set = 0;
-	int result                              = 0;
+	libcerror_error_t *error         = NULL;
+	int number_of_unallocated_blocks = 0;
+	int result                       = 0;
 
 	/* Test regular cases
 	 */
@@ -1624,16 +1612,14 @@ int olecf_test_file_get_number_of_unallocated_blocks(
 	          &number_of_unallocated_blocks,
 	          &error );
 
-	OLECF_TEST_ASSERT_NOT_EQUAL_INT(
+	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	OLECF_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	number_of_unallocated_blocks_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1654,25 +1640,23 @@ int olecf_test_file_get_number_of_unallocated_blocks(
 	libcerror_error_free(
 	 &error );
 
-	if( number_of_unallocated_blocks_is_set != 0 )
-	{
-		result = libolecf_file_get_number_of_unallocated_blocks(
-		          file,
-		          NULL,
-		          &error );
+	result = libolecf_file_get_number_of_unallocated_blocks(
+	          file,
+	          NULL,
+	          &error );
 
-		OLECF_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	OLECF_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		OLECF_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	OLECF_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -1691,7 +1675,7 @@ int olecf_test_file_get_root_item(
      libolecf_file_t *file )
 {
 	libcerror_error_t *error   = NULL;
-	libolecf_item_t *root_item = 0;
+	libolecf_item_t *root_item = NULL;
 	int result                 = 0;
 	int root_item_is_set       = 0;
 
@@ -1785,6 +1769,12 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( root_item != NULL )
+	{
+		libolecf_item_free(
+		 &root_item,
+		 NULL );
 	}
 	return( 0 );
 }

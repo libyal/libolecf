@@ -28,6 +28,7 @@
 #endif
 
 #include "olecf_test_functions.h"
+#include "olecf_test_libbfio.h"
 #include "olecf_test_libcerror.h"
 #include "olecf_test_libolecf.h"
 #include "olecf_test_macros.h"
@@ -183,6 +184,8 @@ int olecf_test_file_header_initialize(
 	          &file_header,
 	          &error );
 
+	file_header = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -194,8 +197,6 @@ int olecf_test_file_header_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	file_header = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
@@ -347,8 +348,8 @@ int olecf_test_file_header_read_data(
      void )
 {
 	libcerror_error_t *error            = NULL;
-	libolecf_file_header_t *file_header = NULL;
 	libolecf_allocation_table_t *msat   = NULL;
+	libolecf_file_header_t *file_header = NULL;
 	int result                          = 0;
 
 	/* Initialize test

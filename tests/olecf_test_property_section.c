@@ -117,6 +117,8 @@ int olecf_test_property_section_initialize(
 	          &property_section,
 	          &error );
 
+	property_section = NULL;
+
 	OLECF_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -128,8 +130,6 @@ int olecf_test_property_section_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	property_section = NULL;
 
 #if defined( HAVE_OLECF_TEST_MEMORY )
 
