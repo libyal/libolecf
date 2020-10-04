@@ -303,7 +303,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a property value object
+/* Initializes a property value object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_value_init(

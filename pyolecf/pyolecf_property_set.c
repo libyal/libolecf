@@ -235,7 +235,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a property set object
+/* Initializes a property set object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_set_init(

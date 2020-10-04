@@ -215,7 +215,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a property values sequence and iterator object
+/* Initializes a property values sequence and iterator object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_values_init(

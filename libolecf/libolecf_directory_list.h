@@ -25,6 +25,7 @@
 #include <common.h>
 #include <types.h>
 
+#include "libolecf_directory_entry.h"
 #include "libolecf_libcdata.h"
 #include "libolecf_libcerror.h"
 

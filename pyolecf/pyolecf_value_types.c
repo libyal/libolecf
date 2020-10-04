@@ -791,7 +791,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a value types object
+/* Initializes a value types object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_value_types_init(

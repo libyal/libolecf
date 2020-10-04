@@ -344,7 +344,7 @@ int libolecf_io_handle_read_msat(
 	}
 	while( msat_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	{
-		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		if( recursion_depth > LIBOLECF_MAXIMUM_ALLOCATION_TABLE_RECURSION_DEPTH )
 		{
 			libcerror_error_set(
 			 error,
@@ -850,7 +850,7 @@ int libolecf_io_handle_read_ssat(
 	}
 	while( ssat_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	{
-		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		if( recursion_depth > LIBOLECF_MAXIMUM_ALLOCATION_TABLE_RECURSION_DEPTH )
 		{
 			libcerror_error_set(
 			 error,
@@ -1162,7 +1162,7 @@ int libolecf_io_handle_read_directory_entries(
 	while( ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 	    && ( directory_sector_identifier != LIBOLECF_SECTOR_IDENTIFIER_UNUSED ) )
 	{
-		if( recursion_depth > LIBOLECF_MAXIMUM_RECURSION_DEPTH )
+		if( recursion_depth > LIBOLECF_MAXIMUM_DIRECTORY_ENTRIES_RECURSION_DEPTH )
 		{
 			libcerror_error_set(
 			 error,

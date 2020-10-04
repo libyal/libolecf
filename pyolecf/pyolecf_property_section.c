@@ -235,7 +235,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes a property section object
+/* Initializes a property section object
  * Returns 0 if successful or -1 on error
  */
 int pyolecf_property_section_init(
