@@ -354,7 +354,7 @@ int libolecf_directory_tree_create_process_entry(
 
 			goto on_error;
 		}
-		else if( result == 1 )
+		else if( result == LIBUNA_COMPARE_EQUAL )
 		{
 			*document_summary_information_directory_entry = directory_entry;
 		}
@@ -380,7 +380,7 @@ int libolecf_directory_tree_create_process_entry(
 
 			goto on_error;
 		}
-		else if( result == 1 )
+		else if( result == LIBUNA_COMPARE_EQUAL )
 		{
 			*summary_information_directory_entry = directory_entry;
 		}
