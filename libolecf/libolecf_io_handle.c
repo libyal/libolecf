@@ -367,31 +367,17 @@ int libolecf_io_handle_read_msat(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: MSAT sector offset\t\t\t: %" PRIu64 "\n",
+			 "%s: MSAT sector offset\t\t\t: %" PRIi64 " (0x%08" PRIx64 ")\n",
 			 function,
+			 msat_sector_offset,
 			 msat_sector_offset );
 		}
 #endif
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     msat_sector_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek value offset: %" PRIu64 ".",
-			 function,
-			 msat_sector_offset );
-
-			 goto on_error;
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      msat_sector,
 			      io_handle->sector_size,
+			      msat_sector_offset,
 			      error );
 
 		if( read_count != (ssize_t) io_handle->sector_size )
@@ -400,8 +386,10 @@ int libolecf_io_handle_read_msat(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read MSAT sector.",
-			 function );
+			 "%s: unable to read MSAT sector at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+			 function,
+			 msat_sector_offset,
+			 msat_sector_offset );
 
 			goto on_error;
 		}
@@ -640,31 +628,17 @@ int libolecf_io_handle_read_sat(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: SAT sector offset\t\t\t\t: %" PRIu64 "\n",
+			 "%s: SAT sector offset\t\t\t\t: %" PRIi64 " (0x%08" PRIx64 ")\n",
 			 function,
+			 sat_sector_offset,
 			 sat_sector_offset );
 		}
 #endif
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     sat_sector_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek value offset: %" PRIu64 ".",
-			 function,
-			 sat_sector_offset );
-
-			 goto on_error;
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      sat_sector,
 			      io_handle->sector_size,
+			      sat_sector_offset,
 			      error );
 
 		if( read_count != (ssize_t) io_handle->sector_size )
@@ -673,8 +647,10 @@ int libolecf_io_handle_read_sat(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read SAT sector.",
-			 function );
+			 "%s: unable to read SAT sector at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+			 function,
+			 sat_sector_offset,
+			 sat_sector_offset );
 
 			goto on_error;
 		}
@@ -897,31 +873,17 @@ int libolecf_io_handle_read_ssat(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: SSAT sector offset\t\t\t: %" PRIu64 "\n",
+			 "%s: SSAT sector offset\t\t\t: %" PRIi64 " (0x%08" PRIx64 ")\n",
 			 function,
+			 ssat_sector_offset,
 			 ssat_sector_offset );
 		}
 #endif
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     ssat_sector_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek value offset: %" PRIu64 ".",
-			 function,
-			 ssat_sector_offset );
-
-			 goto on_error;
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      ssat_sector,
 			      io_handle->sector_size,
+			      ssat_sector_offset,
 			      error );
 
 		if( read_count != (ssize_t) io_handle->sector_size )
@@ -930,8 +892,10 @@ int libolecf_io_handle_read_ssat(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read SSAT sector.",
-			 function );
+			 "%s: unable to read SSAT sector at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+			 function,
+			 ssat_sector_offset,
+			 ssat_sector_offset );
 
 			goto on_error;
 		}
@@ -1211,31 +1175,17 @@ int libolecf_io_handle_read_directory_entries(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: directory sector offset\t: 0x%08" PRIx64 "\n",
+			 "%s: directory sector offset\t: %" PRIi64 " (0x%08" PRIx64 ")\n",
 			 function,
+			 directory_sector_offset,
 			 directory_sector_offset );
 		}
 #endif
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     directory_sector_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek value offset: %" PRIu64 ".",
-			 function,
-			 directory_sector_offset );
-
-			goto on_error;
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      directory_sector,
 			      io_handle->sector_size,
+			      directory_sector_offset,
 			      error );
 
 		if( read_count != (ssize_t) io_handle->sector_size )
@@ -1244,8 +1194,10 @@ int libolecf_io_handle_read_directory_entries(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read directory sector.",
-			 function );
+			 "%s: unable to read directory sector at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+			 function,
+			 directory_sector_offset,
+			 directory_sector_offset );
 
 			goto on_error;
 		}
@@ -1719,26 +1671,11 @@ ssize_t libolecf_io_handle_read_stream(
 		}
 		/* Read sector data into the buffer
 		 */
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     read_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek value offset: %" PRIu64 ".",
-			 function,
-			 read_offset );
-
-			 return( -1 );
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      &( buffer[ buffer_offset ] ),
 			      read_size,
+			      read_offset,
 			      error );
 
 		if( read_count != (ssize_t) read_size )
@@ -1747,9 +1684,11 @@ ssize_t libolecf_io_handle_read_stream(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read sector: %" PRIu32 ".",
+			 "%s: unable to read sector: %" PRIu32 " at offset: %" PRIi64 " (0x%08" PRIx64 ").",
 			 function,
-			 sector_identifier );
+			 sector_identifier,
+			 read_offset,
+			 read_offset );
 
 			return( -1 );
 		}
