@@ -1,3 +1,5 @@
+AUTOMAKE_OPTIONS = subdir-objects
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
@@ -26,6 +28,7 @@ endif
 
 TESTS = \
 	test_library.sh \
+	test_tools.sh \
 	test_olecfinfo.sh \
 	test_olecfexport.sh \
 	$(TESTS_PYOLECF)
@@ -38,7 +41,8 @@ check_SCRIPTS = \
 	test_olecfexport.sh \
 	test_olecfinfo.sh \
 	test_python_module.sh \
-	test_runner.sh
+	test_runner.sh \
+	test_tools.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
@@ -55,7 +59,10 @@ check_PROGRAMS = \
 	olecf_test_property_section \
 	olecf_test_property_set \
 	olecf_test_property_value \
-	olecf_test_support
+	olecf_test_support \
+	olecf_test_tools_info_handle \
+	olecf_test_tools_output \
+	olecf_test_tools_signal
 
 olecf_test_allocation_table_SOURCES = \
 	olecf_test_allocation_table.c \
@@ -236,6 +243,45 @@ olecf_test_support_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
+
+olecf_test_tools_info_handle_SOURCES = \
+	../olecftools/info_handle.c ../olecftools/info_handle.h \
+	olecf_test_libcerror.h \
+	olecf_test_macros.h \
+	olecf_test_memory.c olecf_test_memory.h \
+	olecf_test_tools_info_handle.c \
+	olecf_test_unused.h
+
+olecf_test_tools_info_handle_LDADD = \
+	@LIBFOLE_LIBADD@ \
+	@LIBFGUID_LIBADD@ \
+	@LIBFDATETIME_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
+
+olecf_test_tools_output_SOURCES = \
+	../olecftools/olecftools_output.c ../olecftools/olecftools_output.h \
+	olecf_test_libcerror.h \
+	olecf_test_macros.h \
+	olecf_test_tools_output.c \
+	olecf_test_unused.h
+
+olecf_test_tools_output_LDADD = \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
+
+olecf_test_tools_signal_SOURCES = \
+	../olecftools/olecftools_signal.c ../olecftools/olecftools_signal.h \
+	olecf_test_libcerror.h \
+	olecf_test_macros.h \
+	olecf_test_tools_signal.c \
+	olecf_test_unused.h
+
+olecf_test_tools_signal_LDADD = \
 	../libolecf/libolecf.la \
 	@LIBCERROR_LIBADD@
 
