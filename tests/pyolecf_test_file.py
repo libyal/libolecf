@@ -38,15 +38,16 @@ class FileTypeTests(unittest.TestCase):
 
   def test_open(self):
     """Tests the open function."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
 
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
 
     with self.assertRaises(IOError):
-      olecf_file.open(unittest.source)
+      olecf_file.open(test_source)
 
     olecf_file.close()
 
@@ -54,19 +55,20 @@ class FileTypeTests(unittest.TestCase):
       olecf_file.open(None)
 
     with self.assertRaises(ValueError):
-      olecf_file.open(unittest.source, mode="w")
+      olecf_file.open(test_source, mode="w")
 
   def test_open_file_object(self):
     """Tests the open_file_object function."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
-    if not os.path.isfile(unittest.source):
+    if not os.path.isfile(test_source):
       raise unittest.SkipTest("source not a regular file")
 
     olecf_file = pyolecf.file()
 
-    with open(unittest.source, "rb") as file_object:
+    with open(test_source, "rb") as file_object:
 
       olecf_file.open_file_object(file_object)
 
@@ -83,7 +85,8 @@ class FileTypeTests(unittest.TestCase):
 
   def test_close(self):
     """Tests the close function."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
@@ -93,21 +96,22 @@ class FileTypeTests(unittest.TestCase):
 
   def test_open_close(self):
     """Tests the open and close functions."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       return
 
     olecf_file = pyolecf.file()
 
     # Test open and close.
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
     olecf_file.close()
 
     # Test open and close a second time to validate clean up on close.
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
     olecf_file.close()
 
-    if os.path.isfile(unittest.source):
-      with open(unittest.source, "rb") as file_object:
+    if os.path.isfile(test_source):
+      with open(test_source, "rb") as file_object:
 
         # Test open_file_object and close.
         olecf_file.open_file_object(file_object)
@@ -146,12 +150,13 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_sector_size(self):
     """Tests the get_sector_size function and sector_size property."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
 
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
 
     sector_size = olecf_file.get_sector_size()
     self.assertIsNotNone(sector_size)
@@ -162,12 +167,13 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_short_sector_size(self):
     """Tests the get_short_sector_size function and short_sector_size property."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
 
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
 
     short_sector_size = olecf_file.get_short_sector_size()
     self.assertIsNotNone(short_sector_size)
@@ -178,12 +184,13 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_ascii_codepage(self):
     """Tests the get_ascii_codepage function and ascii_codepage property."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
 
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
 
     ascii_codepage = olecf_file.get_ascii_codepage()
     self.assertIsNotNone(ascii_codepage)
@@ -194,12 +201,13 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_root_item(self):
     """Tests the get_root_item function and root_item property."""
-    if not unittest.source:
+    test_source = unittest.source
+    if not test_source:
       raise unittest.SkipTest("missing source")
 
     olecf_file = pyolecf.file()
 
-    olecf_file.open(unittest.source)
+    olecf_file.open(test_source)
 
     _ = olecf_file.get_root_item()
 

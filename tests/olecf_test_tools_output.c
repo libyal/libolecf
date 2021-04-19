@@ -1,7 +1,7 @@
 /*
  * Tools output functions test program
  *
- * Copyright (C) 2014-2021, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2021, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -39,7 +39,7 @@
 
 #include "../olecftools/olecftools_output.h"
 
-/* Tests the olecftools_output_initialize and function
+/* Tests the olecftools_output_initialize function
  * Returns 1 if successful or 0 if not
  */
 int olecf_test_tools_output_initialize(
