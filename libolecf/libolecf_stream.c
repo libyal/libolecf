@@ -123,11 +123,12 @@ ssize_t libolecf_stream_read_buffer(
 
 		return( -1 );
 	}
-	if( internal_item->offset > (off64_t) internal_item->directory_entry->size )
+	if( internal_item->offset >= (off64_t) internal_item->directory_entry->size )
 	{
 		return( 0 );
 	}
-	if( ( (size64_t) internal_item->offset + size ) > (size64_t) internal_item->directory_entry->size )
+	if( ( size > (size64_t) internal_item->directory_entry->size )
+	 || ( (size64_t) internal_item->offset > ( (size64_t) internal_item->directory_entry->size - size ) ) )
 	{
 		size = (size_t)( (off64_t) internal_item->directory_entry->size - internal_item->offset );
 	}

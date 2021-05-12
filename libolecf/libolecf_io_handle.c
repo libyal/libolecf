@@ -1424,6 +1424,7 @@ ssize_t libolecf_io_handle_read_stream(
 	libolecf_allocation_table_t *allocation_table  = NULL;
 	static char *function                          = "libolecf_io_handle_read_stream";
 	off64_t read_offset                            = 0;
+	off64_t safe_offset                            = 0;
 	off64_t sector_boundary_offset                 = 0;
 	size_t buffer_offset                           = 0;
 	size_t read_size                               = 0;
@@ -1467,7 +1468,9 @@ ssize_t libolecf_io_handle_read_stream(
 
 		return( -1 );
 	}
-	if( *offset < 0 )
+	safe_offset = *offset;
+
+	if( safe_offset < 0 )
 	{
 		libcerror_error_set(
 		 error,
@@ -1533,7 +1536,7 @@ ssize_t libolecf_io_handle_read_stream(
 		allocation_table = sat;
 		sector_size      = io_handle->sector_size;
 	}
-	sector_identifier_index = (int) ( *offset / sector_size );
+	sector_identifier_index = (int) ( safe_offset / sector_size );
 
 	if( ( sector_identifier_index < 0 )
 	 || ( sector_identifier_index >= allocation_table->number_of_sector_identifiers ) )
@@ -1660,10 +1663,10 @@ ssize_t libolecf_io_handle_read_stream(
 		}
 		read_size = sector_size;
 
-		if( *offset > sector_boundary_offset )
+		if( safe_offset > sector_boundary_offset )
 		{
-			read_offset += *offset - sector_boundary_offset;
-			read_size   -= (size_t) ( *offset - sector_boundary_offset );
+			read_offset += safe_offset - sector_boundary_offset;
+			read_size   -= (size_t) ( safe_offset - sector_boundary_offset );
 		}
 		if( read_size > size )
 		{
@@ -1693,7 +1696,7 @@ ssize_t libolecf_io_handle_read_stream(
 			return( -1 );
 		}
 		buffer_offset += read_size;
-		*offset       += read_size;
+		safe_offset   += read_size;
 		size          -= read_size;
 
 #if SIZE_OF_INT <= 4
@@ -1728,6 +1731,8 @@ ssize_t libolecf_io_handle_read_stream(
 		}
 		sector_identifier_index++;
 	}
+	*offset = safe_offset;
+
 	return( (ssize_t) buffer_offset );
 }
 
