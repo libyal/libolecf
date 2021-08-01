@@ -77,23 +77,23 @@ struct olecf_file_header
 	 */
 	uint8_t short_sector_size [ 2 ];
 
-	/* Reserved
+	/* Unknown (Reserved)
 	 * Consists of 2 bytes
 	 * Should contain 0 bytes
 	 */
-	uint8_t reserved1[ 2 ];
+	uint8_t unknown1[ 2 ];
 
-	/* Reserved
+	/* Unknown (Reserved)
 	 * Consists of 4 bytes
 	 * Should contain 0 bytes
 	 */
-	uint8_t reserved2[ 4 ];
+	uint8_t unknown2[ 4 ];
 
-	/* Reserved
+	/* Unknown (Reserved)
 	 * Consists of 4 bytes
 	 * Should contain 0 bytes
 	 */
-	uint8_t reserved3[ 4 ];
+	uint8_t unknown3[ 4 ];
 
 	/* The number of SAT sectors
 	 * Consists of 4 bytes

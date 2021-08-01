@@ -413,10 +413,10 @@ int libolecf_file_header_read_data(
 		 1 << short_sector_size );
 
 		libcnotify_printf(
-		 "%s: reserved:\n",
+		 "%s: unknown:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (olecf_file_header_t *) data )->reserved1,
+		 ( (olecf_file_header_t *) data )->unknown1,
 		 10,
 		 0 );
 
