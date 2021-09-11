@@ -347,6 +347,15 @@ void pyolecf_file_free(
 
 		return;
 	}
+	if( pyolecf_file->file_io_handle != NULL )
+	{
+		if( pyolecf_file_close(
+		     pyolecf_file,
+		     NULL ) == NULL )
+		{
+			return;
+		}
+	}
 	if( pyolecf_file->file != NULL )
 	{
 		Py_BEGIN_ALLOW_THREADS
