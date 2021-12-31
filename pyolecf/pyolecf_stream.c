@@ -44,14 +44,14 @@ PyMethodDef pyolecf_stream_object_methods[] = {
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read_buffer(size) -> String\n"
 	  "\n"
-	  "Reads a buffer of stream data from the file(s)." },
+	  "Reads a buffer of stream data." },
 
 	{ "read_buffer_at_offset",
 	  (PyCFunction) pyolecf_stream_read_buffer_at_offset,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read_buffer_at_offset(size, offset) -> String\n"
 	  "\n"
-	  "Reads a buffer of stream data at a specific offset from the file(s)." },
+	  "Reads a buffer of stream data at a specific offset." },
 
 	{ "seek_offset",
 	  (PyCFunction) pyolecf_stream_seek_offset,
@@ -74,7 +74,7 @@ PyMethodDef pyolecf_stream_object_methods[] = {
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read(size) -> String\n"
 	  "\n"
-	  "Reads a buffer of stream data from the file(s)." },
+	  "Reads a buffer of stream data." },
 
 	{ "seek",
 	  (PyCFunction) pyolecf_stream_seek_offset,

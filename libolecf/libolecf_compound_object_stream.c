@@ -113,7 +113,7 @@ int libolecf_compound_object_stream_read(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 	              internal_item->directory_entry,
-	              &( internal_item->offset ),
+	              &( internal_item->current_offset ),
 	              (uint8_t *) &compound_object_header,
 	              sizeof( olecf_compound_object_header_t ),
 	              error );
@@ -177,7 +177,7 @@ int libolecf_compound_object_stream_read(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 	              internal_item->directory_entry,
-	              &( internal_item->offset ),
+	              &( internal_item->current_offset ),
 	              (uint8_t *) size_data,
 	              4,
 	              error );
@@ -246,7 +246,7 @@ int libolecf_compound_object_stream_read(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 	              internal_item->directory_entry,
-	              &( internal_item->offset ),
+	              &( internal_item->current_offset ),
 	              user_type_string,
 	              user_type_string_size,
 	              error );
@@ -286,7 +286,7 @@ int libolecf_compound_object_stream_read(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 	              internal_item->directory_entry,
-	              &( internal_item->offset ),
+	              &( internal_item->current_offset ),
 	              (uint8_t *) size_data,
 	              4,
 	              error );
@@ -376,7 +376,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      clipboard_data,
 			      clipboard_data_size,
 			      error );
@@ -417,7 +417,7 @@ int libolecf_compound_object_stream_read(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 		      internal_item->directory_entry,
-		      &( internal_item->offset ),
+		      &( internal_item->current_offset ),
 		      (uint8_t *) size_data,
 		      4,
 		      error );
@@ -487,7 +487,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      reserved_string,
 			      reserved_string_size,
 			      error );
@@ -520,7 +520,7 @@ int libolecf_compound_object_stream_read(
 
 		reserved_string = NULL;
 	}
-	if( internal_item->offset < (off64_t) internal_item->directory_entry->size )
+	if( internal_item->current_offset < (off64_t) internal_item->directory_entry->size )
 	{
 		/* Unicode user type string
 		 */
@@ -530,7 +530,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      (uint8_t *) size_data,
 			      4,
 			      error );
@@ -568,7 +568,7 @@ int libolecf_compound_object_stream_read(
 		}
 #endif
 	}
-	if( ( internal_item->offset < (off64_t) internal_item->directory_entry->size )
+	if( ( internal_item->current_offset < (off64_t) internal_item->directory_entry->size )
 	 && ( unicode_marker == 0x71b239f4 ) )
 	{
 		/* Unicode user type string
@@ -579,7 +579,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      (uint8_t *) size_data,
 			      4,
 			      error );
@@ -649,7 +649,7 @@ int libolecf_compound_object_stream_read(
 			              internal_item->file->sat,
 			              internal_item->file->ssat,
 				      internal_item->directory_entry,
-				      &( internal_item->offset ),
+				      &( internal_item->current_offset ),
 				      user_type_string,
 				      user_type_string_size,
 				      error );
@@ -689,7 +689,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      (uint8_t *) size_data,
 			      4,
 			      error );
@@ -779,7 +779,7 @@ int libolecf_compound_object_stream_read(
 			              internal_item->file->sat,
 			              internal_item->file->ssat,
 				      internal_item->directory_entry,
-				      &( internal_item->offset ),
+				      &( internal_item->current_offset ),
 				      clipboard_data,
 				      clipboard_data_size,
 				      error );
@@ -820,7 +820,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      (uint8_t *) size_data,
 			      4,
 			      error );
@@ -890,7 +890,7 @@ int libolecf_compound_object_stream_read(
 			              internal_item->file->sat,
 			              internal_item->file->ssat,
 				      internal_item->directory_entry,
-				      &( internal_item->offset ),
+				      &( internal_item->current_offset ),
 				      reserved_string,
 				      reserved_string_size,
 				      error );
@@ -927,9 +927,9 @@ int libolecf_compound_object_stream_read(
 #if defined( HAVE_DEBUG_OUTPUT )
 	/* Check if there is more data in the stream
 	 */
-	if( internal_item->offset < (off64_t) internal_item->directory_entry->size )
+	if( internal_item->current_offset < (off64_t) internal_item->directory_entry->size )
 	{
-		trailing_data_size = internal_item->directory_entry->size - internal_item->offset;
+		trailing_data_size = internal_item->directory_entry->size - internal_item->current_offset;
 
 		if( trailing_data_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE )
 		{
@@ -962,7 +962,7 @@ int libolecf_compound_object_stream_read(
 		              internal_item->file->sat,
 		              internal_item->file->ssat,
 			      internal_item->directory_entry,
-			      &( internal_item->offset ),
+			      &( internal_item->current_offset ),
 			      trailing_data,
 			      trailing_data_size,
 			      error );

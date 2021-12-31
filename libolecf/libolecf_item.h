@@ -64,7 +64,7 @@ struct libolecf_internal_item
 
 	/* The current stream offset
 	 */
-	off64_t offset;
+	off64_t current_offset;
 };
 
 int libolecf_item_initialize(

@@ -90,13 +90,13 @@ ssize_t libolecf_stream_read_buffer(
 
 		return( -1 );
 	}
-	if( internal_item->offset < 0 )
+	if( internal_item->current_offset < 0 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid item - offset value out of bounds.",
+		 "%s: invalid item - current offset value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -123,14 +123,14 @@ ssize_t libolecf_stream_read_buffer(
 
 		return( -1 );
 	}
-	if( internal_item->offset >= (off64_t) internal_item->directory_entry->size )
+	if( internal_item->current_offset >= (off64_t) internal_item->directory_entry->size )
 	{
 		return( 0 );
 	}
 	if( ( size > (size64_t) internal_item->directory_entry->size )
-	 || ( (size64_t) internal_item->offset > ( (size64_t) internal_item->directory_entry->size - size ) ) )
+	 || ( (size64_t) internal_item->current_offset > ( (size64_t) internal_item->directory_entry->size - size ) ) )
 	{
-		size = (size_t)( (off64_t) internal_item->directory_entry->size - internal_item->offset );
+		size = (size_t)( (off64_t) internal_item->directory_entry->size - internal_item->current_offset );
 	}
 	read_count = libolecf_io_handle_read_stream(
 	              internal_item->io_handle,
@@ -138,7 +138,7 @@ ssize_t libolecf_stream_read_buffer(
 	              internal_item->file->sat,
 	              internal_item->file->ssat,
 	              internal_item->directory_entry,
-	              &( internal_item->offset ),
+	              &( internal_item->current_offset ),
 	              buffer,
 	              size,
 	              error );
@@ -253,24 +253,13 @@ off64_t libolecf_stream_seek_offset(
 
 		return( -1 );
 	}
-	if( internal_item->offset < 0 )
+	if( internal_item->current_offset < 0 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid item - offset value out of bounds.",
-		 function );
-
-		return( -1 );
-	}
-	if( offset > (off64_t) INT64_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid offset value exceeds maximum.",
+		 "%s: invalid item - current offset value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -290,7 +279,7 @@ off64_t libolecf_stream_seek_offset(
 	}
 	if( whence == SEEK_CUR )
 	{
-		offset += internal_item->offset;
+		offset += internal_item->current_offset;
 	}
 	else if( whence == SEEK_END )
 	{
@@ -307,23 +296,12 @@ off64_t libolecf_stream_seek_offset(
 
 		return( -1 );
 	}
-	if( offset > (off64_t) INT64_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid offset value exceeds maximum.",
-		 function );
-
-		return( -1 );
-	}
-	internal_item->offset = offset;
+	internal_item->current_offset = offset;
 
 	return( offset );
 }
 
-/* Retrievs the current offset in the stream data
+/* Retrieves the current offset in the stream data
  * Returns 1 if successful or -1 on error
  */
 int libolecf_stream_get_offset(
@@ -381,7 +359,7 @@ int libolecf_stream_get_offset(
 
 		return( -1 );
 	}
-	*offset = internal_item->offset;
+	*offset = internal_item->current_offset;
 
 	return( 1 );
 }

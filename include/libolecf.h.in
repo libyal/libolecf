@@ -551,7 +551,7 @@ off64_t libolecf_stream_seek_offset(
          int whence,
          libolecf_error_t **error );
 
-/* Retrievs the current offset in the stream data
+/* Retrieves the current offset in the stream data
  * Returns 1 if successful or -1 on error
  */
 LIBOLECF_EXTERN \
