@@ -38,7 +38,6 @@ DPKG_FILES = \
 	dpkg/rules \
 	dpkg/libolecf.install \
 	dpkg/libolecf-dev.install \
-	dpkg/libolecf-python.install \
 	dpkg/libolecf-python3.install \
 	dpkg/libolecf-tools.install \
 	dpkg/source/format
