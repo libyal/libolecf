@@ -304,11 +304,17 @@ int main(
 
 	/* TODO: add tests for libolecf_allocation_table_resize */
 
+	/* TODO: add tests for libolecf_allocation_table_get_sector_identifier_by_index */
+
 #endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 
+#if defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT )
+
 on_error:
 	return( EXIT_FAILURE );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBOLECF_DLL_IMPORT ) */
 }
 
