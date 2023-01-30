@@ -362,6 +362,7 @@ int libolecf_property_set_read_header_data(
 		 "\n" );
 	}
 #endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	return( 1 );
 }
 

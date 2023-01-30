@@ -30,9 +30,10 @@
 
 #include <libfwps_definitions.h>
 #include <libfwps_format_class_identifier.h>
-#include <libfwps_storage.h>
 #include <libfwps_property_identifier.h>
-#include <libfwps_value.h>
+#include <libfwps_record.h>
+#include <libfwps_set.h>
+#include <libfwps_store.h>
 #include <libfwps_types.h>
 
 #else
@@ -46,7 +47,7 @@
 
 #include <libfwps.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBFWPS ) */
 
-#endif
+#endif /* !defined( _LIBOLECF_LIBFWPS_H ) */
 

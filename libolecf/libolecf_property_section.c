@@ -720,7 +720,8 @@ int libolecf_property_section_read(
 			libcnotify_printf(
 			 "\n" );
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 		if( libcdata_array_append_entry(
 		     internal_property_section->properties,
 		     &properties_entry,

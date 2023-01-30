@@ -113,11 +113,11 @@ enum LIBOLECF_VALUE_TYPES
 	LIBOLECF_VALUE_TYPE_MULTI_VALUE_STRING_UNICODE		= 0x0000101fUL,
 };
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBOLECF_INTERNAL_OLE_H ) */
 
