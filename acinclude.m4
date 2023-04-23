@@ -1,6 +1,6 @@
 dnl Checks for required headers and functions
 dnl
-dnl Version: 20230222
+dnl Version: 20200713
 
 dnl Function to detect if libolecf dependencies are available
 AC_DEFUN([AX_LIBOLECF_CHECK_LOCAL],
