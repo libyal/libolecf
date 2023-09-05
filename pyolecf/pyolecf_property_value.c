@@ -975,7 +975,6 @@ PyObject *pyolecf_property_value_get_data_as_string(
 {
 	PyObject *string_object  = NULL;
 	libcerror_error_t *error = NULL;
-	const char *errors       = NULL;
 	static char *function    = "pyolecf_value_get_data_as_string";
 	char *utf8_string        = NULL;
 	size_t utf8_string_size  = 0;
@@ -1063,7 +1062,7 @@ PyObject *pyolecf_property_value_get_data_as_string(
 	string_object = PyUnicode_DecodeUTF8(
 	                 utf8_string,
 	                 (Py_ssize_t) utf8_string_size - 1,
-	                 errors );
+	                 NULL );
 
 	if( string_object == NULL )
 	{
