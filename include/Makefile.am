@@ -20,9 +20,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libolecf.h
-	/bin/rm -f libolecf/definitions.h
-	/bin/rm -f libolecf/features.h
-	/bin/rm -f libolecf/types.h
-	/bin/rm -f Makefile
+	-rm -f libolecf.h
+	-rm -f libolecf/definitions.h
+	-rm -f libolecf/features.h
+	-rm -f libolecf/types.h
+	-rm -f Makefile
 

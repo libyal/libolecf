@@ -92,11 +92,13 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libolecf_definitions.h
-	/bin/rm -f libolecf.rc
-	/bin/rm -f Makefile
+	-rm -f libolecf_definitions.h
+	-rm -f libolecf.rc
+	-rm -f Makefile
 
-splint:
+sources-local: $(BUILT_SOURCES)
+
+splint-local:
 	@echo "Running splint on libolecf ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(libolecf_la_SOURCES)
 

@@ -40,7 +40,7 @@ void (*olecftools_signal_signal_handler)( olecftools_signal_t ) = NULL;
 /* Signal handler for Ctrl+C or Ctrl+Break signals
  */
 BOOL WINAPI olecftools_signal_handler(
-             unsigned long signal )
+             olecftools_signal_t signal )
 {
 	static char *function = "olecftools_signal_handler";
 
@@ -112,7 +112,7 @@ int olecftools_signal_attach(
 	olecftools_signal_signal_handler = signal_handler;
 
 	if( SetConsoleCtrlHandler(
-	     olecftools_signal_handler,
+	     (PHANDLER_ROUTINE) olecftools_signal_handler,
 	     TRUE ) == 0 )
 	{
 		libcerror_error_set(
@@ -179,7 +179,7 @@ int olecftools_signal_detach(
 	static char *function = "olecftools_signal_detach";
 
 	if( SetConsoleCtrlHandler(
-	     olecftools_signal_handler,
+	     (PHANDLER_ROUTINE) olecftools_signal_handler,
 	     FALSE ) == 0 )
 	{
 		libcerror_error_set(
