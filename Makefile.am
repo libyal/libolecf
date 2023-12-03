@@ -21,8 +21,6 @@ SUBDIRS = \
 	libolecf \
 	olecftools \
 	pyolecf \
-	pyolecf-python2 \
-	pyolecf-python3 \
 	po \
 	manuals \
 	tests \

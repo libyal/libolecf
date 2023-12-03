@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libolecf],
- [20231108],
+ [20231203],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -119,7 +119,7 @@ dnl Check if libolecf Python bindings (pyolecf) required headers and functions a
 AX_PYTHON_CHECK_ENABLE
 
 AS_IF(
-  [test "x${ac_cv_enable_python}" != xno || test "x${ac_cv_enable_python2}" != xno || test "x${ac_cv_enable_python3}" != xno],
+  [test "x${ac_cv_enable_python}" != xno],
   [dnl Headers included in pyolecf/pyolecf_error.c
   AC_CHECK_HEADERS([stdarg.h varargs.h])
 
@@ -193,8 +193,6 @@ AC_CONFIG_FILES([libfvalue/Makefile])
 AC_CONFIG_FILES([libfwps/Makefile])
 AC_CONFIG_FILES([libolecf/Makefile])
 AC_CONFIG_FILES([pyolecf/Makefile])
-AC_CONFIG_FILES([pyolecf-python2/Makefile])
-AC_CONFIG_FILES([pyolecf-python3/Makefile])
 AC_CONFIG_FILES([olecftools/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])

@@ -38,7 +38,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_open(self):
     """Tests the open function."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -59,7 +59,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_open_file_object(self):
     """Tests the open_file_object function."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -85,7 +85,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_close(self):
     """Tests the close function."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -96,7 +96,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_open_close(self):
     """Tests the open and close functions."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       return
 
@@ -150,7 +150,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_sector_size(self):
     """Tests the get_sector_size function and sector_size property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -167,7 +167,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_short_sector_size(self):
     """Tests the get_short_sector_size function and short_sector_size property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -184,7 +184,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_ascii_codepage(self):
     """Tests the get_ascii_codepage function and ascii_codepage property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
@@ -201,7 +201,7 @@ class FileTypeTests(unittest.TestCase):
 
   def test_get_root_item(self):
     """Tests the get_root_item function and root_item property."""
-    test_source = unittest.source
+    test_source = getattr(unittest, "source", None)
     if not test_source:
       raise unittest.SkipTest("missing source")
 
