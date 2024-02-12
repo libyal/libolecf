@@ -1,7 +1,7 @@
 /*
  * Library to access the Object Linking and Embedding (OLE) Compound File (CF) format
  *
- * Copyright (C) 2008-2023, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2024, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
