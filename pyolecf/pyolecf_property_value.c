@@ -63,7 +63,7 @@ PyMethodDef pyolecf_property_value_object_methods[] = {
 	{ "get_data",
 	  (PyCFunction) pyolecf_property_value_get_data,
 	  METH_NOARGS,
-	  "get_data() -> Binary string or None\n"
+	  "get_data()-> Bytes or None\n"
 	  "\n"
 	  "Retrieves the data." },
 
