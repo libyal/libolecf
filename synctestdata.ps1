@@ -4,7 +4,7 @@
 
 $TestSet = "public"
 $TestInputDirectory = "tests/input"
-$TestFiles = "1b4dd67f29cb1962.automaticDestinations-ms 9d1f905ce5044aee.automaticDestinations-ms Document.doc"
+$TestFiles = "1b4dd67f29cb1962.automaticDestinations-ms 9d1f905ce5044aee.automaticDestinations-ms"
 
 If (-Not (Test-Path ${TestInputDirectory}))
 {
@@ -16,7 +16,7 @@ If (-Not (Test-Path "${TestInputDirectory}\${TestSet}"))
 }
 ForEach ($TestFile in ${TestFiles} -split " ")
 {
-	$Url = "https://github.com/log2timeline/plaso/blob/main/test_data/${TestFile}?raw=true"
+	$Url = "https://github.com/log2timeline/plaso/blob/main/test_data/automatic_destinations/${TestFile}?raw=true"
 
 	Invoke-WebRequest -Uri ${Url} -OutFile "${TestInputDirectory}\${TestSet}\${TestFile}"
 }
