@@ -1,6 +1,6 @@
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/include \
-	-I$(top_srcdir)/common \
+	-I../include -I$(top_srcdir)/include \
+	-I../common -I$(top_srcdir)/common \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -88,13 +88,11 @@ EXTRA_DIST = \
 	libolecf.rc \
 	libolecf.rc.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libolecf_definitions.h \
+	libolecf.rc \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libolecf_definitions.h
-	-rm -f libolecf.rc
-	-rm -f Makefile
 
 sources-local: $(BUILT_SOURCES)
 

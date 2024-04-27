@@ -16,13 +16,11 @@ EXTRA_DIST = \
 	libolecf/features.h.in \
 	libolecf/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libolecf.h \
+	libolecf/definitions.h \
+	libolecf/features.h \
+	libolecf/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libolecf.h
-	-rm -f libolecf/definitions.h
-	-rm -f libolecf/features.h
-	-rm -f libolecf/types.h
-	-rm -f Makefile
 

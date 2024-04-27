@@ -8,9 +8,7 @@ EXTRA_DIST = \
 	olecfinfo.1 \
 	libolecf.3
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f Makefile
 
