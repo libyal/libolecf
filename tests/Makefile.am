@@ -61,6 +61,7 @@ check_PROGRAMS = \
 	olecf_test_property_value \
 	olecf_test_support \
 	olecf_test_tools_info_handle \
+	olecf_test_tools_mount_path_string \
 	olecf_test_tools_output \
 	olecf_test_tools_signal
 
@@ -260,6 +261,19 @@ olecf_test_tools_info_handle_LDADD = \
 	@LIBFDATETIME_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libolecf/libolecf.la \
+	@LIBCERROR_LIBADD@
+
+olecf_test_tools_mount_path_string_SOURCES = \
+	../olecftools/mount_path_string.c ../olecftools/mount_path_string.h \
+	olecf_test_libcerror.h \
+	olecf_test_libcpath.h \
+	olecf_test_macros.h \
+	olecf_test_tools_mount_path_string.c \
+	olecf_test_unused.h
+
+olecf_test_tools_mount_path_string_LDADD = \
+	@LIBUNA_LIBADD@ \
 	../libolecf/libolecf.la \
 	@LIBCERROR_LIBADD@
 

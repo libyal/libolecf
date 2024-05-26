@@ -89,6 +89,7 @@ olecfmount_SOURCES = \
 	mount_file_system.c mount_file_system.h \
 	mount_fuse.c mount_fuse.h \
 	mount_handle.c mount_handle.h \
+	mount_path_string.c mount_path_string.h \
 	olecfmount.c \
 	olecftools_getopt.c olecftools_getopt.h \
 	olecftools_i18n.h \

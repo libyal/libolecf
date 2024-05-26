@@ -1,5 +1,5 @@
 /*
- * Shows information obtained from an OLE Compound File
+ * Shows information obtained from an OLE Compound File.
  *
  * Copyright (C) 2008-2024, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -49,7 +49,7 @@
 info_handle_t *olecfinfo_info_handle = NULL;
 int olecfinfo_abort                  = 0;
 
-/* Prints the executable usage information
+/* Prints usage information
  */
 void usage_fprint(
       FILE *stream )
@@ -81,7 +81,7 @@ void olecfinfo_signal_handler(
       olecftools_signal_t signal OLECFTOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
-	static char *function   = "olecfinfo_signal_handler";
+	static char *function    = "olecfinfo_signal_handler";
 
 	OLECFTOOLS_UNREFERENCED_PARAMETER( signal )
 

@@ -28,6 +28,7 @@ MSVSCPP_FILES = \
 	olecf_test_property_value/olecf_test_property_value.vcproj \
 	olecf_test_support/olecf_test_support.vcproj \
 	olecf_test_tools_info_handle/olecf_test_tools_info_handle.vcproj \
+	olecf_test_tools_mount_path_string/olecf_test_tools_mount_path_string.vcproj \
 	olecf_test_tools_output/olecf_test_tools_output.vcproj \
 	olecf_test_tools_signal/olecf_test_tools_signal.vcproj \
 	olecfexport/olecfexport.vcproj \

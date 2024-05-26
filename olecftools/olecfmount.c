@@ -1,5 +1,5 @@
 /*
- * Mounts an Object Linking and Embedding (OLE) Compound File (CF)
+ * Mounts an Object Linking and Embedding (OLE) Compound File (CF).
  *
  * Copyright (C) 2008-2024, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -145,12 +145,20 @@ int main( int argc, char * const argv[] )
 	int result                                  = 0;
 	int verbose                                 = 0;
 
-#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE )
+#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBFUSE3 ) || defined( HAVE_LIBOSXFUSE )
 	struct fuse_operations olecfmount_fuse_operations;
 
-	struct fuse_args olecfmount_fuse_arguments = FUSE_ARGS_INIT(0, NULL);
-	struct fuse_chan *olecfmount_fuse_channel  = NULL;
-	struct fuse *olecfmount_fuse_handle        = NULL;
+#if defined( HAVE_LIBFUSE3 )
+	/* Need to set this to 1 even if there no arguments, otherwise this causes
+	 * fuse: empty argv passed to fuse_session_new()
+	 */
+	char *fuse_argv[ 2 ]                        = { program, NULL };
+	struct fuse_args olecfmount_fuse_arguments  = FUSE_ARGS_INIT(1, fuse_argv);
+#else
+	struct fuse_args olecfmount_fuse_arguments  = FUSE_ARGS_INIT(0, NULL);
+	struct fuse_chan *olecfmount_fuse_channel   = NULL;
+#endif
+	struct fuse *olecfmount_fuse_handle         = NULL;
 
 #elif defined( HAVE_LIBDOKAN )
 	DOKAN_OPERATIONS olecfmount_dokan_operations;
@@ -311,7 +319,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE )
+#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBFUSE3 ) || defined( HAVE_LIBOSXFUSE )
 	if( option_extended_options != NULL )
 	{
 		/* This argument is required but ignored
@@ -367,6 +375,34 @@ int main( int argc, char * const argv[] )
 	olecfmount_fuse_operations.getattr    = &mount_fuse_getattr;
 	olecfmount_fuse_operations.destroy    = &mount_fuse_destroy;
 
+#if defined( HAVE_LIBFUSE3 )
+	olecfmount_fuse_handle = fuse_new(
+	                          &olecfmount_fuse_arguments,
+	                          &olecfmount_fuse_operations,
+	                          sizeof( struct fuse_operations ),
+	                          olecfmount_mount_handle );
+
+	if( olecfmount_fuse_handle == NULL )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to create fuse handle.\n" );
+
+		goto on_error;
+	}
+	result = fuse_mount(
+	          olecfmount_fuse_handle,
+	          mount_point );
+
+	if( result != 0 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to fuse mount file system.\n" );
+
+		goto on_error;
+	}
+#else
 	olecfmount_fuse_channel = fuse_mount(
 	                           mount_point,
 	                           &olecfmount_fuse_arguments );
@@ -394,6 +430,8 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
+#endif /* defined( HAVE_LIBFUSE3 ) */
+
 	if( verbose == 0 )
 	{
 		if( fuse_daemonize(
@@ -448,10 +486,14 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	olecfmount_dokan_options.Version     = DOKAN_VERSION;
-	olecfmount_dokan_options.ThreadCount = 0;
-	olecfmount_dokan_options.MountPoint  = mount_point;
+	olecfmount_dokan_options.Version    = DOKAN_VERSION;
+	olecfmount_dokan_options.MountPoint = mount_point;
 
+#if DOKAN_MINIMUM_COMPATIBLE_VERSION >= 200
+	olecfmount_dokan_options.SingleThread = TRUE;
+#else
+	olecfmount_dokan_options.ThreadCount  = 0;
+#endif
 	if( verbose != 0 )
 	{
 		olecfmount_dokan_options.Options |= DOKAN_OPTION_STDERR;
@@ -521,10 +563,16 @@ int main( int argc, char * const argv[] )
 
 #endif /* ( DOKAN_VERSION >= 600 ) && ( DOKAN_VERSION < 800 ) */
 
+#if DOKAN_MINIMUM_COMPATIBLE_VERSION >= 200
+	DokanInit();
+#endif
 	result = DokanMain(
 	          &olecfmount_dokan_options,
 	          &olecfmount_dokan_operations );
 
+#if DOKAN_MINIMUM_COMPATIBLE_VERSION >= 200
+	DokanShutdown();
+#endif
 	switch( result )
 	{
 		case DOKAN_SUCCESS:
@@ -578,11 +626,11 @@ int main( int argc, char * const argv[] )
 #else
 	fprintf(
 	 stderr,
-	 "No sub system to mount OLECF format.\n" );
+	 "No sub system to mount Object Linking and Embedding (OLE) Compound File (CF) format.\n" );
 
 	return( EXIT_FAILURE );
 
-#endif /* defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE ) */
+#endif /* defined( HAVE_LIBFUSE ) || defined( HAVE_LIBFUSE3 ) || defined( HAVE_LIBOSXFUSE ) */
 
 on_error:
 	if( error != NULL )
@@ -592,7 +640,7 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBOSXFUSE )
+#if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBFUSE3 ) || defined( HAVE_LIBOSXFUSE )
 	if( olecfmount_fuse_handle != NULL )
 	{
 		fuse_destroy(

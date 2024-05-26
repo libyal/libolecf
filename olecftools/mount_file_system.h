@@ -72,27 +72,11 @@ int mount_file_system_get_mounted_timestamp(
      uint64_t *mounted_timestamp,
      libcerror_error_t **error );
 
-int mount_file_system_get_item_path_from_path(
-     mount_file_system_t *file_system,
-     const system_character_t *path,
-     size_t path_length,
-     system_character_t **item_path,
-     size_t *item_path_size,
-     libcerror_error_t **error );
-
 int mount_file_system_get_item_by_path(
      mount_file_system_t *file_system,
      const system_character_t *path,
      size_t path_length,
      libolecf_item_t **olecf_item,
-     libcerror_error_t **error );
-
-int mount_file_system_get_filename_from_name(
-     mount_file_system_t *file_system,
-     const system_character_t *name,
-     size_t name_length,
-     system_character_t **filename,
-     size_t *filename_size,
      libcerror_error_t **error );
 
 int mount_file_system_get_filename_from_item(
