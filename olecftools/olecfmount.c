@@ -1,7 +1,7 @@
 /*
  * Mounts an Object Linking and Embedding (OLE) Compound File (CF).
  *
- * Copyright (C) 2008-2024, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2008-2025, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -322,6 +322,11 @@ int main( int argc, char * const argv[] )
 #if defined( HAVE_LIBFUSE ) || defined( HAVE_LIBFUSE3 ) || defined( HAVE_LIBOSXFUSE )
 	if( option_extended_options != NULL )
 	{
+#if defined( HAVE_LIBFUSE3 )
+		// fuse_opt_add_arg: Assertion `!args->argv || args->allocated' failed.
+		olecfmount_fuse_arguments.argc = 0;
+		olecfmount_fuse_arguments.argv = NULL;
+#endif
 		/* This argument is required but ignored
 		 */
 		if( fuse_opt_add_arg(

@@ -1,12 +1,12 @@
 AC_PREREQ([2.71])
 
 AC_INIT(
- [libolecf],
- [20240805],
- [joachim.metz@gmail.com])
+  [libolecf],
+  [20251202],
+  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
- [include/libolecf.h.in])
+  [include/libolecf.h.in])
 
 AM_INIT_AUTOMAKE([gnu 1.6 tar-ustar])
 AM_EXTRA_RECURSIVE_TARGETS([sources splint])
@@ -149,28 +149,28 @@ CFLAGS="$CFLAGS -Wall";
 
 dnl Check if requires and build requires should be set in spec file
 AS_IF(
- [test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libcthreads" = xyes || test "x$ac_cv_libcdata" = xyes || test "x$ac_cv_libclocale" = xyes || test "x$ac_cv_libcnotify" = xyes || test "x$ac_cv_libcsplit" = xyes || test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libcfile" = xyes || test "x$ac_cv_libcpath" = xyes || test "x$ac_cv_libbfio" = xyes || test "x$ac_cv_libfdatetime" = xyes || test "x$ac_cv_libfguid" = xyes || test "x$ac_cv_libfole" = xyes || test "x$ac_cv_libfvalue" = xyes || test "x$ac_cv_libfwps" = xyes],
- [AC_SUBST(
-  [libolecf_spec_requires],
-  [Requires:])
- ])
+  [test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libcthreads" = xyes || test "x$ac_cv_libcdata" = xyes || test "x$ac_cv_libclocale" = xyes || test "x$ac_cv_libcnotify" = xyes || test "x$ac_cv_libcsplit" = xyes || test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libcfile" = xyes || test "x$ac_cv_libcpath" = xyes || test "x$ac_cv_libbfio" = xyes || test "x$ac_cv_libfdatetime" = xyes || test "x$ac_cv_libfguid" = xyes || test "x$ac_cv_libfole" = xyes || test "x$ac_cv_libfvalue" = xyes || test "x$ac_cv_libfwps" = xyes],
+  [AC_SUBST(
+    [libolecf_spec_requires],
+    [Requires:])
+  ])
 
 AS_IF(
- [test "x$ac_cv_libfuse" != xno],
- [AC_SUBST(
-  [libolecf_spec_tools_build_requires],
-  [BuildRequires:])
- ])
+  [test "x$ac_cv_libfuse" != xno],
+  [AC_SUBST(
+    [libolecf_spec_tools_build_requires],
+    [BuildRequires:])
+  ])
 
 dnl Set the date for the dpkg files
 AC_SUBST(
- [DPKG_DATE],
- [`date -R 2> /dev/null`])
+  [DPKG_DATE],
+  [`date -R 2> /dev/null`])
 
 dnl Set the date for the spec file
 AC_SUBST(
- [SPEC_DATE],
- [`date +"%a %b %e %Y" 2> /dev/null`])
+  [SPEC_DATE],
+  [`date +"%a %b %e %Y" 2> /dev/null`])
 
 dnl Generate Makefiles
 AC_CONFIG_FILES([Makefile])
