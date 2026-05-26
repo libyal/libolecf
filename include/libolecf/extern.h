@@ -31,14 +31,17 @@
  */
 #if defined( LIBOLECF_DLL_EXPORT )
 #define LIBOLECF_EXTERN __declspec(dllexport)
+#define LIBOLECF_EXTERN_VARIABLE extern __declspec(dllexport)
 
 #elif defined( LIBOLECF_DLL_IMPORT )
-#define LIBOLECF_EXTERN extern __declspec(dllimport)
+#define LIBOLECF_EXTERN __declspec(dllimport)
+#define LIBOLECF_EXTERN_VARIABLE extern __declspec(dllimport)
 
 #else
 #define LIBOLECF_EXTERN extern
+#define LIBOLECF_EXTERN_VARIABLE extern
 
-#endif
+#endif /* defined( LIBOLECF_DLL_EXPORT ) */
 
 #endif /* !defined( _LIBOLECF_EXTERN_H ) */
 

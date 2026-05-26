@@ -3,7 +3,7 @@
 # Version: 20251217
 
 $Repository = "log2timeline/plaso"
-$TestDataPath = "test_data/automatic_destinations"
+$TestDataPath = "test_data/automaticDestinations-ms"
 $TestSet = "public"
 $TestInputDirectory = "tests/input"
 $TestFiles = "1b4dd67f29cb1962.automaticDestinations-ms 9d1f905ce5044aee.automaticDestinations-ms"

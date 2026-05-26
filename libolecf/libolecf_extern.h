@@ -30,12 +30,6 @@
 
 #include <libolecf/extern.h>
 
-#if defined( __CYGWIN__ ) || defined( __MINGW32__ )
-#define LIBOLECF_EXTERN_VARIABLE	extern
-#else
-#define LIBOLECF_EXTERN_VARIABLE	LIBOLECF_EXTERN
-#endif
-
 #else
 #define LIBOLECF_EXTERN		/* extern */
 #define LIBOLECF_EXTERN_VARIABLE	extern

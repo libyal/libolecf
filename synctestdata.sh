@@ -4,7 +4,7 @@
 # Version: 20251217
 
 REPOSITORY="log2timeline/plaso";
-TEST_DATA_PATH="test_data/automatic_destinations";
+TEST_DATA_PATH="test_data/automaticDestinations-ms";
 TEST_SET="public";
 TEST_INPUT_DIRECTORY="tests/input";
 TEST_FILES="1b4dd67f29cb1962.automaticDestinations-ms 9d1f905ce5044aee.automaticDestinations-ms";

@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libolecf],
-  [20260508],
+  [20260526],
   [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -211,7 +211,7 @@ AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([libolecf/libolecf.rc])
 AC_CONFIG_FILES([libolecf.pc])
 AC_CONFIG_FILES([libolecf.spec])
-AC_CONFIG_FILES([setup.cfg])
+AC_CONFIG_FILES([pyproject.toml])
 dnl Generate a source configuration file
 AC_CONFIG_HEADERS([common/config.h])
 
