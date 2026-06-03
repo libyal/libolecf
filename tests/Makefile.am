@@ -21,6 +21,10 @@ AM_CPPFLAGS = \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBOLECF_DLL_IMPORT@
 
+AM_TESTS_ENVIRONMENT = \
+	export PYTHON="@PYTHON@"; \
+	export TESTS_USE_WINAPI="@TESTS_USE_WINAPI@";
+
 if HAVE_PYTHON_TESTS
 TESTS_PYOLECF = \
 	test_python_module.sh
@@ -286,7 +290,8 @@ olecf_test_tools_output_SOURCES = \
 
 olecf_test_tools_output_LDADD = \
 	../libolecf/libolecf.la \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
+	@LIBINTL@
 
 olecf_test_tools_signal_SOURCES = \
 	../olecftools/olecftools_signal.c ../olecftools/olecftools_signal.h \

@@ -26,15 +26,23 @@
 #include <types.h>
 #include <wide_string.h>
 
-#if defined( HAVE_UNISTD_H )
-#include <unistd.h>
+#include <stdio.h>
+
+#if defined( HAVE_FCNTL_H ) || defined( WINAPI )
+#include <fcntl.h>
 #endif
 
-#if defined( HAVE_STDLIB_H )
+#if defined( HAVE_IO_H ) || defined( WINAPI )
+#include <io.h>
+#endif
+
+#if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include <stdio.h>
+#if defined( HAVE_UNISTD_H )
+#include <unistd.h>
+#endif
 
 #include "export_handle.h"
 #include "log_handle.h"
@@ -144,6 +152,11 @@ int main( int argc, char * const argv[] )
 	size_t source_length                      = 0;
 	int result                                = 0;
 	int verbose                               = 0;
+
+#if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
+	_setmode( _fileno( stdout ), _O_BINARY );
+	_setmode( _fileno( stderr ), _O_BINARY );
+#endif
 
 	libcnotify_stream_set(
 	 stderr,
@@ -278,6 +291,9 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
+#if defined( __clang_analyzer__ )
+	__builtin_assume( olecfexport_export_handle != NULL );
+#endif
 	if( export_handle_set_target_path(
 	     olecfexport_export_handle,
 	     option_target_path,

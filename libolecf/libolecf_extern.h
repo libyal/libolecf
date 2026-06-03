@@ -24,6 +24,19 @@
 
 #include <common.h>
 
+#if !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute )
+#if __has_attribute( visibility )
+#define LIBOLECF_INTERNAL	__attribute__((visibility("hidden"))) extern
+
+#else
+#define LIBOLECF_INTERNAL	extern
+
+#endif /* __has_attribute( visibility ) */
+#else
+#define LIBOLECF_INTERNAL	extern
+
+#endif /* !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute ) */
+
 /* Define HAVE_LOCAL_LIBOLECF for local use of libolecf
  */
 #if !defined( HAVE_LOCAL_LIBOLECF )
@@ -32,7 +45,7 @@
 
 #else
 #define LIBOLECF_EXTERN		/* extern */
-#define LIBOLECF_EXTERN_VARIABLE	extern
+#define LIBOLECF_EXTERN_VARIABLE	LIBOLECF_INTERNAL
 
 #endif /* !defined( HAVE_LOCAL_LIBOLECF ) */
 

@@ -682,8 +682,6 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
-			property_data_offset += read_size;
-
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -737,8 +735,6 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
-			property_data_offset += 4;
-
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -822,8 +818,6 @@ int libolecf_property_value_read_data(
 
 				goto on_error;
 			}
-			property_data_offset += value_data_size;
-
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -840,8 +834,6 @@ int libolecf_property_value_read_data(
 			 */
 			if( internal_property_value->value_type == LIBOLECF_VALUE_TYPE_STRING_ASCII )
 			{
-				string_size = 0;
-
 				for( string_size = 0;
 				     string_size < value_data_size;
 				     string_size++ )
@@ -857,8 +849,6 @@ int libolecf_property_value_read_data(
 			}
 			else if( internal_property_value->value_type == LIBOLECF_VALUE_TYPE_STRING_UNICODE )
 			{
-				string_size = 0;
-
 				for( string_size = 0;
 				     string_size < value_data_size;
 				     string_size += 2 )

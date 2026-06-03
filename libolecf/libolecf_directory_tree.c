@@ -178,6 +178,18 @@ int libolecf_directory_tree_create(
 
 		goto on_error;
 	}
+	if( directory_entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing directory entry: %d.",
+		 function,
+		 element_index );
+
+		goto on_error;
+	}
 #if defined( HAVE_VERBOSE_OUTPUT ) || defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
