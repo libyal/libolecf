@@ -321,7 +321,7 @@ int libolecf_property_set_read_header_data(
 		 "%s: format\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 internal_property_set->format );
-		
+
 		libcnotify_printf(
 		 "%s: system version\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
