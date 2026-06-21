@@ -34,7 +34,7 @@
 #include "olecf_directory.h"
 
 /* Create the directory tree from the directory entry list
- * Returns 1 if succesful, 0 if no directory entries or -1 on error
+ * Returns 1 if successful, 0 if no directory entries or -1 on error
  */
 int libolecf_directory_tree_create(
      libcdata_tree_node_t **directory_tree_root_node,
@@ -283,7 +283,7 @@ on_error:
 }
 
 /* Process the directory entry and adds it to the directory tree node
- * Returns 1 if succesful or -1 on error
+ * Returns 1 if successful or -1 on error
  */
 int libolecf_directory_tree_create_process_entry(
      libcdata_tree_node_t *directory_tree_node,

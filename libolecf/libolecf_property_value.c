@@ -206,7 +206,9 @@ int libolecf_property_value_read_data(
 	uint32_t number_of_values      = 0;
 	uint32_t read_size             = 0;
 	uint32_t string_size           = 0;
+/* TODO
 	uint32_t value_data_end_offset = 0;
+*/
 	uint32_t value_data_size       = 0;
 	uint32_t value_index           = 0;
 	uint8_t is_multi_value         = 0;

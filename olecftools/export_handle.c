@@ -33,6 +33,7 @@
 #include "olecftools_libcnotify.h"
 #include "olecftools_libcpath.h"
 #include "olecftools_libolecf.h"
+#include "olecftools_unused.h"
 
 #define EXPORT_HANDLE_BUFFER_SIZE	32768
 #define EXPORT_HANDLE_NOTIFY_STREAM	stdout
@@ -702,7 +703,7 @@ int export_handle_open_input(
 }
 
 /* Closes the export handle
- * Returns the 0 if succesful or -1 on error
+ * Returns the 0 if successful or -1 on error
  */
 int export_handle_close(
      export_handle_t *export_handle,
@@ -745,7 +746,7 @@ int export_handle_export_item(
      export_handle_t *export_handle,
      libolecf_item_t *item,
      int item_index,
-     int number_of_items,
+     int number_of_items OLECFTOOLS_ATTRIBUTE_UNUSED,
      const system_character_t *export_path,
      size_t export_path_length,
      log_handle_t *log_handle,
@@ -770,6 +771,8 @@ int export_handle_export_item(
 	uint32_t stream_data_size          = 0;
 	int print_count                    = 0;
 	int result                         = 0;
+
+	OLECFTOOLS_UNREFERENCED_PARAMETER( number_of_items )
 
 	if( export_handle == NULL )
 	{
