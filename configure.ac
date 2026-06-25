@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libolecf],
-  [20260621],
+  [20260625],
   [https://github.com/libyal/libolecf/issues])
 
 AC_CONFIG_SRCDIR(

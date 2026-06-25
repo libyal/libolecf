@@ -448,12 +448,12 @@ int libolecf_property_section_read(
 	uint32_t number_of_properties             = 0;
 	uint32_t property_index                   = 0;
 	uint32_t property_value_data_offset       = 0;
-	uint32_t section_data_size                = 0;
 	int properties_entry                      = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	uint32_t property_value_identifier        = 0;
 	uint32_t property_value_type              = 0;
+	uint32_t section_data_size                = 0;
 #endif
 
 	if( internal_property_section == NULL )
@@ -527,20 +527,22 @@ int libolecf_property_section_read(
 #endif
 	if( byte_order == LIBOLECF_ENDIAN_LITTLE )
 	{
+#if defined( HAVE_DEBUG_OUTPUT )
 		byte_stream_copy_to_uint32_little_endian(
 		 property_section_header.data_size,
 		 section_data_size );
-
+#endif
 		byte_stream_copy_to_uint32_little_endian(
 		 property_section_header.number_of_properties,
 		 number_of_properties );
 	}
 	else if( byte_order == LIBOLECF_ENDIAN_BIG )
 	{
+#if defined( HAVE_DEBUG_OUTPUT )
 		byte_stream_copy_to_uint32_big_endian(
 		 property_section_header.data_size,
 		 section_data_size );
-
+#endif
 		byte_stream_copy_to_uint32_big_endian(
 		 property_section_header.number_of_properties,
 		 number_of_properties );

@@ -59,35 +59,6 @@
 export_handle_t *olecfexport_export_handle = NULL;
 int olecfexport_abort                      = 0;
 
-/* Prints the executable usage information
- */
-void usage_fprint(
-      FILE *stream )
-{
-	if( stream == NULL )
-	{
-		return;
-	}
-	fprintf( stream, "Use olecfexport to export streams from an OLE Compound File.\n\n" );
-
-	fprintf( stream, "Usage: olecfexport [ -c codepage ] [ -l logfile ] [ -t target ]\n"
-	                 "                   [ -hvV ] source\n\n" );
-
-	fprintf( stream, "\tsource: the source file\n\n" );
-
-	fprintf( stream, "\t-c:     codepage of ASCII strings, options: ascii, windows-874,\n"
-	                 "\t        windows-932, windows-936, windows-949, windows-950,\n"
-	                 "\t        windows-1250, windows-1251, windows-1252 (default),\n"
-	                 "\t        windows-1253, windows-1254, windows-1255, windows-1256,\n"
-	                 "\t        windows-1257 or windows-1258\n" );
-	fprintf( stream, "\t-h:     shows this help\n" );
-	fprintf( stream, "\t-l:     logs information about the exported items\n" );
-	fprintf( stream, "\t-t:     specify the target directory to export to\n"
-	                 "\t        (default is the source filename followed by .export)\n" );
-	fprintf( stream, "\t-v:     verbose output to stderr\n" );
-	fprintf( stream, "\t-V:     print version\n" );
-}
-
 /* Signal handler for olecfexport
  */
 void olecfexport_signal_handler(
@@ -140,18 +111,33 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libcerror_error_t *error                  = NULL;
-	log_handle_t *log_handle                  = NULL;
-	system_character_t *log_filename          = NULL;
-	system_character_t *option_ascii_codepage = NULL;
-	system_character_t *option_target_path    = NULL;
-	system_character_t *path_separator        = NULL;
-	system_character_t *source                = NULL;
-	char *program                             = "olecfexport";
-	system_integer_t option                   = 0;
-	size_t source_length                      = 0;
-	int result                                = 0;
-	int verbose                               = 0;
+	const char *description = \
+		"Use olecfexport to export streams from an OLE Compound File.";
+
+	olecftools_option_t options[ ] = {
+		{ 'c', "codepage", "codepage of ASCII strings, options: ascii, windows-874, windows-932, windows-936, windows-949, windows-950, windows-1250, windows-1251, windows-1252 (default), windows-1253, windows-1254, windows-1255, windows-1256, windows-1257 or windows-1258" },
+		{ 'h', NULL, "shows this help" },
+		{ 'l', "log_file", "logs information about the exported items" },
+		{ 't', "target", "specify the target directory to export to (default is the source filename followed by .export)" },
+		{ 'v', NULL, "verbose output to stderr" },
+		{ 'V', NULL, "print version" },
+		{ 0, "source", "the source file" },
+	};
+	system_character_t options_string[ 32 ];
+
+	libcerror_error_t *error               = NULL;
+	log_handle_t *log_handle               = NULL;
+	system_character_t *log_filename       = NULL;
+	system_character_t *option_codepage    = NULL;
+	system_character_t *option_target_path = NULL;
+	system_character_t *path_separator     = NULL;
+	system_character_t *source             = NULL;
+	char *program                          = "olecfexport";
+	system_integer_t option                = 0;
+	size_t source_length                   = 0;
+	int number_of_options                  = (int) ( sizeof( options ) / sizeof( olecftools_option_t ) );
+	int result                             = 0;
+	int verbose                            = 0;
 
 #if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
 	_setmode( _fileno( stdout ), _O_BINARY );
@@ -188,10 +174,22 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
+	if( olecftools_getopt_get_options_string(
+	     options,
+	     number_of_options,
+	     options_string,
+	     32 ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to determine options string.\n" );
+
+		goto on_error;
+	}
 	while( ( option = olecftools_getopt(
 	                   argc,
 	                   argv,
-	                   _SYSTEM_STRING( "c:hl:t:vV" ) ) ) != (system_integer_t) -1 )
+	                   options_string ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
@@ -202,19 +200,27 @@ int main( int argc, char * const argv[] )
 				 "Invalid argument: %" PRIs_SYSTEM "\n",
 				 argv[ optind - 1 ] );
 
-				usage_fprint(
-				 stdout );
+				olecftools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_FAILURE );
 
 			case (system_integer_t) 'c':
-				option_ascii_codepage = optarg;
+				option_codepage = optarg;
 
 				break;
 
 			case (system_integer_t) 'h':
-				usage_fprint(
-				 stdout );
+				olecftools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_SUCCESS );
 
@@ -246,8 +252,12 @@ int main( int argc, char * const argv[] )
 		 stderr,
 		 "Missing source file.\n" );
 
-		usage_fprint(
-		 stdout );
+		olecftools_getopt_usage_fprint(
+		 stdout,
+		 program,
+		 description,
+		 options,
+		 number_of_options );
 
 		return( EXIT_FAILURE );
 	}
@@ -348,11 +358,11 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( option_ascii_codepage != NULL )
+	if( option_codepage != NULL )
 	{
 		result = export_handle_set_ascii_codepage(
 		          olecfexport_export_handle,
-		          option_ascii_codepage,
+		          option_codepage,
 		          &error );
 
 		if( result == -1 )

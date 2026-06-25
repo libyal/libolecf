@@ -1,23 +1,21 @@
 .Dd June 25, 2026
-.Dt OLECFEXPORT 1
+.Dt OLECFMOUNT 1
 .Os
 .Sh NAME
-.Nm olecfexport
-.Nd exports items stored in an Object Linking and Embedding (OLE) Compound \
-File (CF)
+.Nm olecfmount
+.Nd mounts an Object Linking and Embedding (OLE) Compound File (CF)
 .Sh SYNOPSIS
-.Nm olecfexport
+.Nm olecfmount
 .Op Fl c Ar codepage
-.Op Fl l Ar log_file
-.Op Fl t Ar target
+.Op Fl X Ar extended_options
 .Op Fl hvV
 .Ar source
+.Ar mount_point
 .Sh DESCRIPTION
-.Nm olecfexport
-is a utility to export items stored in an Object Linking and Embedding (OLE) \
-Compound File (CF)
+.Nm olecfmount
+is a utility to mount an Object Linking and Embedding (OLE) Compound File (CF)
 .Pp
-.Nm olecfexport
+.Nm olecfmount
 is part of the
 .Nm libolecf
 package.
@@ -26,7 +24,9 @@ is a library to access the Object Linking and Embedding (OLE) Compound File \
 (CF) format
 .Pp
 .Ar source
-is the source file.
+an Object Linking and Embedding (OLE) Compound File (CF)
+.Ar mount_point
+the directory to serve as mount point
 .Pp
 The options are as follows:
 .Bl -tag -width Ds
@@ -37,15 +37,12 @@ windows-936, windows-949, windows-950, windows-1250, windows-1251, windows-1252 
 or windows-1258
 .It Fl h
 shows this help
-.It Fl l Ar log_file
-specify the file in which to log information about the exported items
-.It Fl t Ar target
-specify the basename of the target directory to export to (default is the \
-source filename followed by .export)
 .It Fl v
-verbose output to stderr
+verbose output to stderr, while olecfmount will remain running in the foreground
 .It Fl V
 print version
+.It Fl X Ar extended_options
+extended options to pass to sub system
 .El
 .Sh ENVIRONMENT
 None
@@ -53,12 +50,8 @@ None
 None
 .Sh EXAMPLES
 .Bd -literal
-# olecfexport file.doc
-olecfexport 20260625
-.sp
-Opening file.
-Exporting items.
-Export completed
+# cregmount SYSTEM.DAT /mnt/creg
+cregmount 20260623
 .sp
 .Ed
 .Sh DIAGNOSTICS
@@ -66,8 +59,8 @@ Errors, verbose and debug output are printed to stderr when verbose output \
 \-v is enabled.
 Verbose and debug output are only printed when enabled at compilation.
 .Sh SEE ALSO
-.Xr olecfinfo 1 ,
-.Xr olecfmount 1
+.Xr olecfexport 1 ,
+.Xr olecfinfo 1
 .Sh AUTHORS
 .An Joachim Metz <joachim.metz@gmail.com>
 .Sh BUGS
