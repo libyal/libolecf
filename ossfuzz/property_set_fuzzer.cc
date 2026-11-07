@@ -1,0 +1,208 @@
+/*
+ * OSS-Fuzz target for libolecf property set type
+ *
+ * Copyright (C) 2008-2026, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include <stddef.h>
+#include <stdint.h>
+
+/* Note that some of the OSS-Fuzz engines use C++
+ */
+extern "C" {
+
+#include "ossfuzz_libbfio.h"
+#include "ossfuzz_libolecf.h"
+
+#if !defined( LIBOLECF_HAVE_BFIO )
+
+/* Opens a file using a Basic File IO (bfio) handle
+ * Returns 1 if successful or -1 on error
+ */
+LIBOLECF_EXTERN \
+int libolecf_file_open_file_io_handle(
+      libolecf_file_t *file,
+      libbfio_handle_t *file_io_handle,
+      int access_flags,
+      libolecf_error_t **error );
+
+#endif /* !defined( LIBOLECF_HAVE_BFIO ) */
+
+/* Limits the number of sub items to walk to find a property set stream
+ */
+#define FUZZER_SUB_ITEM_LIMIT	8
+
+int LLVMFuzzerTestOneInput(
+      const uint8_t *data,
+      size_t size )
+{
+	uint8_t guid_data[ 16 ] = { 0 };
+
+	libbfio_handle_t *file_io_handle       = NULL;
+	libolecf_file_t *file                  = NULL;
+	libolecf_item_t *item                  = NULL;
+	libolecf_item_t *property_set_stream   = NULL;
+	libolecf_property_set_t *property_set      = NULL;
+	libolecf_property_section_t *property_section = NULL;
+	int number_of_sections   = 0;
+	int number_of_sub_items  = 0;
+	int result               = 0;
+	int sub_item_index       = 0;
+
+	if( libbfio_memory_range_initialize(
+	     &file_io_handle,
+	     NULL ) != 1 )
+	{
+		return( 0 );
+	}
+	if( libbfio_memory_range_set(
+	     file_io_handle,
+	     (uint8_t *) data,
+	     size,
+	     NULL ) != 1 )
+	{
+		goto on_error_libbfio;
+	}
+	if( libolecf_file_initialize(
+	     &file,
+	     NULL ) != 1 )
+	{
+		goto on_error_libbfio;
+	}
+	if( libolecf_file_open_file_io_handle(
+	     file,
+	     file_io_handle,
+	     LIBOLECF_OPEN_READ,
+	     NULL ) != 1 )
+	{
+		goto on_error_libolecf_file;
+	}
+	if( libolecf_file_get_root_item(
+	     file,
+	     &item,
+	     NULL ) == 1 )
+	{
+		/* Walk the sub items to find a property set stream
+		 */
+		if( libolecf_item_get_number_of_sub_items(
+		     item,
+		     &number_of_sub_items,
+		     NULL ) == 1 )
+		{
+			for( sub_item_index = 0;
+			     sub_item_index < number_of_sub_items;
+			     sub_item_index++ )
+			{
+				property_set = NULL;
+
+				if( sub_item_index >= FUZZER_SUB_ITEM_LIMIT )
+				{
+					break;
+				}
+				if( libolecf_item_get_sub_item(
+				     item,
+				     sub_item_index,
+				     &property_set_stream,
+				     NULL ) != 1 )
+				{
+					break;
+				}
+				result = libolecf_property_set_stream_get_set(
+					 property_set_stream,
+					 &property_set,
+					 NULL );
+				if( ( result != 1 )
+				 || ( property_set == NULL ) )
+				{
+					libolecf_item_free(
+					 &property_set_stream,
+					 NULL );
+					continue;
+				}
+				/* Use the value as a sink to keep it live
+				 */
+				guid_data[ 0 ] = 0;
+				libolecf_property_set_get_class_identifier(
+				 property_set,
+				 guid_data,
+				 sizeof( guid_data ),
+				 NULL );
+				if( libolecf_property_set_get_number_of_sections(
+				     property_set,
+				     &number_of_sections,
+				     NULL ) == 1 )
+				{
+					property_section = NULL;
+					result = libolecf_property_set_get_section_by_index(
+					         property_set,
+					         0,
+					         &property_section,
+					         NULL );
+					if( ( result == 1 )
+					 && ( property_section != NULL ) )
+					{
+						libolecf_property_section_free(
+						 &property_section,
+						 NULL );
+					}
+					/* Attempt to retrieve a property section
+					 * out of range to trigger the error handler
+					 */
+					property_section = NULL;
+					libolecf_property_set_get_section_by_index(
+					 property_set,
+					 number_of_sections,
+					 &property_section,
+					 NULL );
+					if( property_section != NULL )
+					{
+						libolecf_property_section_free(
+						 &property_section,
+						 NULL );
+					}
+				}
+				libolecf_property_set_free(
+				 &property_set,
+				 NULL );
+				libolecf_item_free(
+				 &property_set_stream,
+				 NULL );
+			}
+		}
+		libolecf_item_free(
+		 &item,
+		 NULL );
+	}
+	libolecf_file_close(
+	 file,
+	 NULL );
+
+on_error_libolecf_file:
+	libolecf_file_free(
+	 &file,
+	 NULL );
+
+on_error_libbfio:
+	libbfio_handle_free(
+	 &file_io_handle,
+	 NULL );
+
+	return( 0 );
+}
+
+} /* extern "C" */
