@@ -1430,8 +1430,12 @@ ssize_t libolecf_io_handle_read_stream(
 	size_t read_size                               = 0;
 	size_t sector_size                             = 0;
 	ssize_t read_count                             = 0;
+	size64_t file_size                             = 0;
 	uint32_t sector_identifier                     = 0;
 	uint32_t short_sector_stream_sector_identifier = 0;
+	off64_t maximum_sector_identifier              = 0;
+	off64_t maximum_sat_sector_identifier          = 0;
+	off64_t sector_identifier_iterations           = 0;
 	int sector_identifier_index                    = 0;
 	int sector_identifier_iterator                 = 0;
 
@@ -1477,6 +1481,34 @@ ssize_t libolecf_io_handle_read_stream(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
 		 "%s: invalid offset value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	file_size = 0;
+
+	if( libbfio_handle_get_size(
+	     file_io_handle,
+	     &file_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve size of file IO handle.",
+		 function );
+
+		return( -1 );
+	}
+
+	if( file_size == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid size of file IO handle value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -1536,6 +1568,30 @@ ssize_t libolecf_io_handle_read_stream(
 		allocation_table = sat;
 		sector_size      = io_handle->sector_size;
 	}
+	/* Sector identifiers pointing beyond the end of the file are invalid,
+	 * a valid sector chain can not contain more sectors (or short sectors)
+	 * than the file contains and revisiting a sector indicates a cyclic
+	 * chain. The number of sectors (or short sectors) in the file therefore
+	 * bounds both the sector identifiers and the number of iterations when
+	 * walking a sector chain.
+	 *
+	 * Note that the value is rounded up to a whole sector (or short sector).
+	 */
+	maximum_sector_identifier     = ( ( off64_t ) file_size + ( off64_t ) sector_size - 1 ) / ( off64_t ) sector_size;
+	maximum_sat_sector_identifier = ( ( off64_t ) file_size + ( off64_t ) io_handle->sector_size - 1 ) / ( off64_t ) io_handle->sector_size;
+
+	if( ( ( off64_t ) ( safe_offset / sector_size ) > (off64_t) INT_MAX )
+	 || ( ( off64_t ) ( safe_offset / sector_size ) >= maximum_sector_identifier ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid sector identifier index value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
 	sector_identifier_index = (int) ( safe_offset / sector_size );
 
 	if( ( sector_identifier_index < 0 )
@@ -1564,6 +1620,18 @@ ssize_t libolecf_io_handle_read_stream(
 			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 			 "%s: invalid sector identifier.",
 			 function );
+
+			return( -1 );
+		}
+		if( ( off64_t ) sector_identifier >= maximum_sector_identifier )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 sector_identifier );
 
 			return( -1 );
 		}
@@ -1600,6 +1668,17 @@ ssize_t libolecf_io_handle_read_stream(
 	}
 	while( size > 0 )
 	{
+		if( sector_identifier_iterations >= maximum_sector_identifier )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid sector identifier iteration count value out of bounds.",
+			 function );
+
+			return( -1 );
+		}
 		if( sector_identifier == LIBOLECF_SECTOR_IDENTIFIER_END_OF_CHAIN )
 		{
 			libcerror_error_set(
@@ -1611,6 +1690,18 @@ ssize_t libolecf_io_handle_read_stream(
 
 			return( -1 );
 		}
+		if( ( off64_t ) sector_identifier >= maximum_sector_identifier )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid sector identifier: 0x%08" PRIx32 " value out of bounds.",
+			 function,
+			 sector_identifier );
+
+			return( -1 );
+		}
 		sector_boundary_offset = (off64_t) ( sector_identifier_index * sector_size );
 
 		/* Determine start offset and read size
@@ -1619,10 +1710,37 @@ ssize_t libolecf_io_handle_read_stream(
 		{
 			read_offset = sector_identifier * sector_size;
 
+			/* The offset in the short sector stream data is determined by
+			 * walking the sector chain of the root directory entry.
+			 * The number of sectors in the file bounds the walk.
+			 */
+			if( ( read_offset / ( off64_t ) io_handle->sector_size ) > maximum_sat_sector_identifier )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+				 "%s: invalid sector identifier index value out of bounds.",
+				 function );
+
+				return( -1 );
+			}
 			short_sector_stream_sector_identifier = io_handle->short_sector_stream_start_sector_identifier;
 
 			while( read_offset >= (off64_t) io_handle->sector_size )
 			{
+				if( ( off64_t ) short_sector_stream_sector_identifier >= maximum_sat_sector_identifier )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+					 "%s: invalid short sector stream sector identifier: 0x%08" PRIx32 " value out of bounds.",
+					 function,
+					 short_sector_stream_sector_identifier );
+
+					return( -1 );
+				}
 #if SIZE_OF_INT <= 4
 				if( short_sector_stream_sector_identifier > (uint32_t) INT_MAX )
 				{
@@ -1730,6 +1848,7 @@ ssize_t libolecf_io_handle_read_stream(
 			return( -1 );
 		}
 		sector_identifier_index++;
+		sector_identifier_iterations++;
 	}
 	*offset = safe_offset;
 

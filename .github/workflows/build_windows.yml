@@ -107,7 +107,7 @@ jobs:
       with:
         msystem: MINGW64
         update: true
-        install: autoconf automake curl git libtool make mingw-w64-x86_64-gcc mingw-w64-x86_64-gettext-runtime mingw-w64-x86_64-gettext-tools mingw-w64-x86_64-python3 pkg-config
+        install: autoconf automake curl git libtool make mingw-w64-x86_64-gcc mingw-w64-x86_64-gettext-runtime mingw-w64-x86_64-gettext-tools mingw-w64-x86_64-python pkg-config
     - name: Download test data
       shell: msys2 {0}
       run: |
